@@ -1,6 +1,6 @@
 /**
- * Envia lead para Supabase Edge Function submit-web-lead.
- * Uso: initLeadForm({ formId, tipoInteresse, origemPagina })
+ * Envia lead para Supabase (REST /web_leads — RLS anon).
+ * Não depende da Edge Function (evita "Failed to fetch" se a function não foi deployada).
  */
 function getUtmParams() {
   const p = new URLSearchParams(window.location.search);
@@ -21,23 +21,71 @@ function maskPhone(value) {
 async function submitLead(payload) {
   const cfg = window.DIARIA_CONFIG || {};
   if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) {
-    throw new Error("Configure Supabase em web/js/config.js");
+    throw new Error(
+      "Conexão com o servidor ainda não configurada. Aguarde o redeploy na Vercel ou contato o suporte."
+    );
   }
-  const url = `${cfg.supabaseUrl.replace(/\/$/, "")}/functions/v1/submit-web-lead`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${cfg.supabaseAnonKey}`,
-      apikey: cfg.supabaseAnonKey,
-    },
-    body: JSON.stringify(payload),
-  });
-  const data = await res.json().catch(() => ({}));
+
+  if (payload.website) {
+    return { ok: true };
+  }
+
+  const nome = (payload.nome || "").trim();
+  const celular = String(payload.celular || "").replace(/\D/g, "");
+  const cidade = (payload.cidade || "").trim();
+  const estado = (payload.estado || "").trim().slice(0, 2).toUpperCase() || null;
+
+  if (nome.length < 2) throw new Error("Informe seu nome.");
+  if (celular.length < 10) throw new Error("Informe um WhatsApp válido.");
+  if (cidade.length < 2) throw new Error("Informe sua cidade.");
+
+  const row = {
+    nome,
+    celular,
+    cidade,
+    estado,
+    email: (payload.email || "").trim() || null,
+    tipo_interesse: payload.tipo_interesse,
+    origem_pagina: payload.origem_pagina,
+    utm_source: payload.utm_source || null,
+    utm_medium: payload.utm_medium || null,
+    utm_campaign: payload.utm_campaign || null,
+  };
+
+  const base = cfg.supabaseUrl.replace(/\/$/, "");
+  let res;
+  try {
+    res = await fetch(`${base}/rest/v1/web_leads`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: cfg.supabaseAnonKey,
+        Authorization: `Bearer ${cfg.supabaseAnonKey}`,
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(row),
+    });
+  } catch {
+    throw new Error(
+      "Falha de rede ao enviar. Verifique sua internet ou tente outro navegador."
+    );
+  }
+
   if (!res.ok) {
-    throw new Error(data.error || "Não foi possível enviar. Tente de novo.");
+    let detail = "";
+    try {
+      detail = await res.text();
+    } catch {
+      /* ignore */
+    }
+    if (res.status === 401 || res.status === 403) {
+      throw new Error("Permissão negada no banco. Confira RLS da tabela web_leads.");
+    }
+    console.error("web_leads insert failed", res.status, detail);
+    throw new Error("Não foi possível salvar. Tente de novo em instantes.");
   }
-  return data;
+
+  return { ok: true };
 }
 
 function initLeadForm({ formId, tipoInteresse, origemPagina }) {
