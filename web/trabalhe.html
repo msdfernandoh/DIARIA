@@ -4,133 +4,157 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trabalhe Hoje — Diária da Cidade</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/leads.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --green:#1D9E75;--green-d:#0F6E56;--green-l:#E1F5EE;
+  --G:#1D9E75;--Gd:#065F46;--Gl:#E1F5EE;
   --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
-  --bg:#F8FAFB;--white:#fff;
+  --bg:#F8FAFB;--w:#fff;
+  --r1:10px;--r2:16px;--r3:24px;--rf:999px;
 }
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);}
-img{max-width:100%;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);overflow-x:hidden;}
 
-/* ── HERO ── */
-.hero{background:linear-gradient(160deg,#065F46 0%,#1D9E75 60%,#34D399 100%);min-height:100svh;display:flex;flex-direction:column;padding:0;position:relative;overflow:hidden;}
-.hero-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.07);}
-.o1{width:400px;height:400px;top:-120px;right:-100px;}
-.o2{width:250px;height:250px;bottom:80px;left:-80px;}
-.o3{width:120px;height:120px;top:200px;left:30px;}
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,13,20,.94);backdrop-filter:blur(16px);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
+.logo{display:flex;align-items:center;gap:8px;}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#1D9E75,#065F46);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:#fff;}
+.nav-back{color:rgba(255,255,255,.5);font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px;}
+.nav-cta{background:var(--G);color:#fff;border:none;border-radius:var(--rf);padding:7px 16px;font-family:'Sora',sans-serif;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none;}
 
-.nav{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-mark{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:20px;}
-.logo-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;}
-.nav-cta{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;text-decoration:none;backdrop-filter:blur(8px);}
+/* HERO */
+.hero{background:linear-gradient(160deg,#065F46 0%,#1D9E75 55%,#34D399 100%);min-height:100svh;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);}
+.o1{width:380px;height:380px;top:-110px;right:-100px;}
+.o2{width:220px;height:220px;bottom:100px;left:-70px;}
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 22px 48px;position:relative;z-index:2;}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.24);border-radius:var(--rf);padding:6px 14px;font-size:11px;font-weight:700;color:#fff;margin-bottom:18px;width:fit-content;}
+.hero-h1{font-family:'Sora',sans-serif;font-size:36px;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:14px;}
+.hero-h1 em{font-style:normal;color:#A7F3D0;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.8);line-height:1.65;margin-bottom:28px;}
+.hero-sub strong{color:#fff;}
 
-.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px 48px;position:relative;z-index:2;}
-.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff;margin-bottom:20px;backdrop-filter:blur(8px);width:fit-content;}
-.hero-h1{font-family:'Sora',sans-serif;font-size:38px;font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px;}
-.hero-h1 span{color:#A7F3D0;}
-.hero-sub{font-size:16px;color:rgba(255,255,255,.82);line-height:1.6;margin-bottom:32px;}
+/* numbers hero */
+.hnums{display:flex;gap:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden;margin-bottom:28px;}
+.hn{flex:1;padding:14px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.14);}
+.hn:last-child{border-right:none;}
+.hn-n{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;}
+.hn-l{font-size:9px;color:rgba(255,255,255,.6);margin-top:3px;line-height:1.3;}
 
-.cta-block{display:flex;flex-direction:column;gap:12px;}
-.btn-main{display:block;width:100%;padding:18px;background:#fff;color:var(--green-d);border:none;border-radius:16px;font-family:'Sora',sans-serif;font-size:17px;font-weight:800;text-align:center;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:all .2s;cursor:pointer;}
-.btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.22);}
-.btn-sec{display:block;width:100%;padding:15px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;text-align:center;text-decoration:none;transition:all .2s;cursor:pointer;}
-.cta-note{font-size:12px;color:rgba(255,255,255,.6);text-align:center;}
+.btn-main{display:block;width:100%;padding:17px;background:#fff;color:var(--Gd);border:none;border-radius:var(--r2);font-family:'Sora',sans-serif;font-size:16px;font-weight:800;text-align:center;text-decoration:none;cursor:pointer;box-shadow:0 8px 32px rgba(0,0,0,.2);transition:all .2s;margin-bottom:10px;}
+.btn-main:hover{transform:translateY(-2px);}
+.btn-sec{display:block;width:100%;padding:14px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.35);border-radius:var(--r2);font-family:'Sora',sans-serif;font-size:14px;font-weight:700;text-align:center;text-decoration:none;}
+.hero-note{font-size:11px;color:rgba(255,255,255,.5);text-align:center;margin-top:10px;}
+svg.wave{display:block;width:100%;}
 
-.hero-numbers{display:flex;gap:0;margin-top:40px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;}
-.hnum{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.15);}
-.hnum:last-child{border-right:none;}
-.hnum-n{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;}
-.hnum-l{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.3;}
+/* SECTIONS */
+section{padding:52px 22px;}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:var(--rf);padding:5px 13px;font-size:11px;font-weight:700;margin-bottom:14px;background:var(--Gl);color:var(--Gd);}
+.sh2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.15;margin-bottom:10px;}
+.sh2 em{font-style:normal;color:var(--G);}
+.ssub{font-size:14px;color:var(--soft);line-height:1.65;margin-bottom:24px;}
 
-/* wave */
-.wave{display:block;margin-top:-2px;}
+/* ── CATEGORIAS TOP 10 ── */
+.cat-top{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.cat-card{background:var(--w);border-radius:var(--r2);padding:16px 14px;border:1.5px solid var(--line);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;}
+.cat-card:hover{border-color:var(--G);box-shadow:0 4px 16px rgba(29,158,117,.14);transform:translateY(-1px);}
+.cat-card.destaque{border-color:var(--G);background:linear-gradient(135deg,var(--Gl),#fff);}
+.cat-card.eleitoral{border-color:#3B82F6;background:linear-gradient(135deg,#EFF6FF,#fff);}
+.cat-card.homeoffice{border-color:#7C3AED;background:linear-gradient(135deg,#F5F3FF,#fff);}
+.cat-novo{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--rf);background:#DBEAFE;color:#1D4ED8;}
+.cat-ico{font-size:28px;margin-bottom:8px;display:block;}
+.cat-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.cat-val{font-size:11px;font-weight:700;color:var(--G);}
+.cat-tag{font-size:10px;color:var(--soft);margin-top:2px;}
 
-/* ── SEÇÕES ── */
-section{padding:48px 24px;}
+/* ── GRADE COMPLETA ── */
+.cat-section-title{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.8px;margin:20px 0 10px;display:flex;align-items:center;gap:8px;}
+.cat-section-title::after{content:'';flex:1;height:1px;background:var(--line);}
+.cat-grid-full{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cat-mini{background:var(--w);border-radius:var(--r1);padding:12px;border:1.5px solid var(--line);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.cat-mini:hover{border-color:var(--G);}
+.cat-mini.eleitoral-mini{border-color:#BFDBFE;}
+.cat-mini.home-mini{border-color:#DDD6FE;}
+.cat-mini-ico{font-size:20px;flex-shrink:0;}
+.cat-mini-name{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--dark);line-height:1.3;}
+.cat-mini-val{font-size:10px;color:var(--G);font-weight:700;margin-top:1px;}
 
-.section-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-l);color:var(--green-d);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;}
-.section-h2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:10px;}
-.section-h2 span{color:var(--green);}
-.section-sub{font-size:15px;color:var(--soft);line-height:1.6;margin-bottom:28px;}
+/* toggle ver mais */
+.ver-mais-btn{width:100%;padding:13px;background:transparent;border:1.5px solid var(--line);border-radius:var(--r2);font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--soft);cursor:pointer;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.ver-mais-btn:hover{border-color:var(--G);color:var(--G);}
+.hidden-cats{display:none;}
+.hidden-cats.show{display:grid;}
 
-/* COMO FUNCIONA */
+/* PASSOS */
 .steps{display:flex;flex-direction:column;gap:0;}
-.step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);}
+.step{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);}
 .step:last-child{border-bottom:none;}
-.step-num{width:40px;height:40px;border-radius:50%;background:var(--green-l);color:var(--green-d);font-family:'Sora',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
-.step-tit{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
-.step-desc{font-size:13px;color:var(--soft);line-height:1.5;}
-.step-time{display:inline-block;background:var(--green-l);color:var(--green-d);font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px;}
-
-/* CATEGORIAS */
-.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.cat{background:var(--white);border-radius:14px;padding:16px 14px;box-shadow:0 1px 3px rgba(0,0,0,.07);display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);transition:all .2s;}
-.cat:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(29,158,117,.12);}
-.cat-ico{font-size:24px;}
-.cat-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
-.cat-val{font-size:11px;color:var(--green);font-weight:700;margin-top:1px;}
+.step-n{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--G),var(--Gd));color:#fff;font-family:'Sora',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-tit{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--soft);line-height:1.55;}
+.step-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--rf);margin-top:5px;background:var(--Gl);color:var(--Gd);}
 
 /* GANHOS */
-.earn-card{background:linear-gradient(135deg,#065F46,#1D9E75);border-radius:20px;padding:24px;margin-bottom:12px;}
-.earn-tit{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:16px;}
-.earn-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.15);}
+.earn-card{background:linear-gradient(135deg,#065F46,#1D9E75);border-radius:var(--r3);padding:22px;margin-bottom:12px;}
+.earn-tit{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:14px;}
+.earn-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.14);}
 .earn-row:last-child{border-bottom:none;}
-.earn-job{font-size:13px;color:rgba(255,255,255,.85);}
-.earn-val{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#A7F3D0;}
+.earn-job{font-size:12px;color:rgba(255,255,255,.82);}
+.earn-val{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#A7F3D0;}
 
 /* DEPOIMENTOS */
-.dep{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;border-left:4px solid var(--green);}
-.dep-txt{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:12px;font-style:italic;}
-.dep-person{display:flex;align-items:center;gap:10px;}
-.dep-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;}
-.dep-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
-.dep-role{font-size:11px;color:var(--soft);}
-.dep-stars{font-size:13px;color:#F59E0B;margin-top:1px;}
+.dep{background:var(--w);border-radius:var(--r2);padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:10px;border-left:4px solid var(--G);}
+.dep-aspas{font-size:28px;color:var(--line);font-family:Georgia,serif;line-height:1;margin-bottom:5px;}
+.dep-txt{font-size:13px;color:var(--mid);line-height:1.65;margin-bottom:12px;font-style:italic;}
+.dep-foot{display:flex;align-items:center;gap:10px;}
+.dep-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;}
+.dep-name{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--dark);}
+.dep-role{font-size:10px;color:var(--soft);}
+.dep-stars{font-size:12px;color:#F59E0B;margin-top:1px;}
 
 /* FAQ */
-.faq-item{background:var(--white);border-radius:14px;padding:18px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);cursor:pointer;}
-.faq-q{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:12px;}
-.faq-a{font-size:13px;color:var(--soft);line-height:1.6;margin-top:10px;display:none;}
+.faq-item{background:var(--w);border-radius:var(--r2);padding:16px;margin-bottom:7px;box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;}
+.faq-q{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.faq-a{font-size:12px;color:var(--soft);line-height:1.65;margin-top:9px;display:none;}
 .faq-a.open{display:block;}
-.faq-ico{flex-shrink:0;font-size:18px;transition:transform .2s;}
+.faq-ico{font-size:16px;flex-shrink:0;}
 
 /* CTA FINAL */
-.cta-final{background:linear-gradient(160deg,#065F46,#1D9E75);padding:48px 24px;text-align:center;}
-.cta-final h2{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.2;}
-.cta-final p{font-size:15px;color:rgba(255,255,255,.78);margin-bottom:28px;line-height:1.6;}
+.cta-final{background:linear-gradient(160deg,#065F46,#1D9E75);padding:52px 22px;text-align:center;}
+.cta-final h2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.2;}
+.cta-final p{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:24px;line-height:1.65;}
 
-/* FOOTER */
-footer{background:var(--dark);padding:28px 24px;text-align:center;}
-footer p{font-size:12px;color:#718096;line-height:1.8;}
-footer a{color:#A7F3D0;text-decoration:none;}
+footer{background:#060810;padding:28px 22px;border-top:1px solid rgba(255,255,255,.05);}
+footer p{font-size:11px;color:rgba(255,255,255,.28);line-height:1.9;text-align:center;}
+footer a{color:#34D399;text-decoration:none;}
 </style>
 </head>
 <body>
 
-<!-- ══════════ HERO ══════════ -->
-<section class="hero">
-  <div class="hero-orb o1"></div>
-  <div class="hero-orb o2"></div>
-  <div class="hero-orb o3"></div>
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-back">← Início</a>
+  <div class="logo">
+    <div class="logo-mark">📅</div>
+    <div class="logo-name">Diária da Cidade</div>
+  </div>
+  <a href="#cadastro" class="nav-cta">Cadastrar grátis</a>
+</nav>
 
-  <nav class="nav">
-    <div class="logo">
-      <div class="logo-mark">📅</div>
-      <div class="logo-name">Diária da Cidade</div>
-    </div>
-    <a href="#cadastro" class="nav-cta">Cadastrar grátis</a>
-  </nav>
-
+<!-- HERO -->
+<div class="hero">
+  <div class="orb o1"></div><div class="orb o2"></div>
   <div class="hero-body">
-    <div class="hero-pill">🟢 100% gratuito para profissionais</div>
-    <h1 class="hero-h1">Trabalhe hoje.<br><span>Ganhe hoje.</span><br>Perto de você.</h1>
-    <p class="hero-sub">Encontre diárias, bicos e empregos na sua cidade em minutos. Sem taxa, sem burocracia, sem espera.</p>
-
+    <div class="eyebrow">🟢 Grátis para profissionais · sempre</div>
+    <h1 class="hero-h1">Trabalhe hoje.<br><em>Ganhe hoje.</em><br>Perto de você.</h1>
+    <p class="hero-sub">Diárias, bicos e empregos na sua cidade — ou home office de qualquer lugar. <strong>Sem taxa, sem burocracia, sem espera.</strong></p>
+    <div class="hnums">
+      <div class="hn"><div class="hn-n">R$0</div><div class="hn-l">para o profissional<br>sempre grátis</div></div>
+      <div class="hn"><div class="hn-n">Hoje</div><div class="hn-l">vagas urgentes<br>disponíveis</div></div>
+      <div class="hn"><div class="hn-n">60+</div><div class="hn-l">tipos de<br>trabalho</div></div>
+    </div>
     <div class="cta-block" id="cadastro">
       <form id="lead-form" class="lead-form" autocomplete="on">
         <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -147,183 +171,393 @@ footer a{color:#A7F3D0;text-decoration:none;}
         <button type="submit" class="btn-main" style="width:100%;border:none;cursor:pointer;margin-top:4px;">Quero trabalhar agora →</button>
         <p class="lead-form-msg" role="status"></p>
       </form>
-      <a href="#como-funciona" class="btn-sec" style="margin-top:10px;display:block;">Ver como funciona</a>
-      <p class="cta-note">Grátis para sempre · Cadastro em 2 minutos</p>
-    </div>
-
-    <div class="hero-numbers">
-      <div class="hnum"><div class="hnum-n">R$150</div><div class="hnum-l">a R$300<br>por diária</div></div>
-      <div class="hnum"><div class="hnum-n">Hoje</div><div class="hnum-l">vagas<br>urgentes</div></div>
-      <div class="hnum"><div class="hnum-n">0</div><div class="hnum-l">taxa para<br>profissional</div></div>
+      <a href="#categorias" class="btn-sec" style="margin-top:10px;display:block;">Ver todos os 60+ tipos de trabalho</a>
+      <p class="hero-note">Cadastro em 2 minutos · sem cartão · sem taxa</p>
     </div>
   </div>
-
-  <svg class="wave" viewBox="0 0 390 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:40px;display:block;">
+  <svg class="wave" viewBox="0 0 390 40" preserveAspectRatio="none" style="height:40px;" xmlns="http://www.w3.org/2000/svg">
     <path d="M0,20 C80,40 310,0 390,20 L390,40 L0,40 Z" fill="#F8FAFB"/>
   </svg>
+</div>
+
+<!-- CATEGORIAS -->
+<section id="categorias" style="background:var(--bg);">
+  <div class="pill">💼 Tipos de trabalho</div>
+  <h2 class="sh2">40+ categorias.<br><em>Uma para você.</em></h2>
+  <p class="ssub">Presencial na sua cidade ou home office de qualquer lugar. Escolha o que sabe fazer e receba vagas compatíveis.</p>
+
+  <!-- aviso sem experiência -->
+  <div style="background:linear-gradient(135deg,#E1F5EE,#fff);border:1.5px solid #1D9E75;border-radius:14px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;">
+    <span style="font-size:22px;flex-shrink:0;">🙌</span>
+    <div>
+      <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:#065F46;margin-bottom:3px;">Muitas vagas não exigem experiência</div>
+      <div style="font-size:12px;color:#1D9E75;line-height:1.6;">Chapa, ajudante, apoio de eventos, panfletagem, cuidador de pets, auxiliar de churrasco e dezenas de outras funções aceitam quem está começando. O que vale é a sua disposição.</div>
+    </div>
+  </div>
+
+  <!-- TOP 12 — categorias principais -->
+  <div style="font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">🔥 Mais buscadas</div>
+  <div class="cat-top">
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">🧹</span>
+      <div class="cat-name">Diarista / Limpeza</div>
+      <div class="cat-val">R$120–200/dia</div>
+      <div class="cat-tag">Limpeza de casa, pós-evento, escritório · sem exp.</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">🍽️</span>
+      <div class="cat-name">Garçom / Eventos</div>
+      <div class="cat-val">R$120–250/dia</div>
+      <div class="cat-tag">Garçom, copeiro, auxiliar de cozinha, montagem</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">🔥</span>
+      <div class="cat-name">Churrasco / Cozinha</div>
+      <div class="cat-val">R$150–350/dia</div>
+      <div class="cat-tag">Churrasqueiro, auxiliar, cozinheiro · alta demanda</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">💪</span>
+      <div class="cat-name">Chapa / Carregador</div>
+      <div class="cat-val">R$130–280/dia</div>
+      <div class="cat-tag">Mudança, frete, carga e descarga · sem exp.</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">🔨</span>
+      <div class="cat-name">Obras e Reparos</div>
+      <div class="cat-val">R$120–280/dia</div>
+      <div class="cat-tag">Pedreiro, pintor, ajudante · com e sem exp.</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">📦</span>
+      <div class="cat-name">Fretes e Mudanças</div>
+      <div class="cat-val">R$150–300/dia</div>
+      <div class="cat-tag">Frete, mudança, ajudante de carga · sem exp.</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">🏍️</span>
+      <div class="cat-name">Motoboy / Entregador</div>
+      <div class="cat-val">R$120–220/dia</div>
+      <div class="cat-tag">Delivery, bike, moto, por turno · sem exp.</div>
+    </div>
+
+    <div class="cat-card destaque" onclick="irParaCadastro()">
+      <span class="cat-ico">👶</span>
+      <div class="cat-name">Babá / Cuidador</div>
+      <div class="cat-val">R$120–300/dia</div>
+      <div class="cat-tag">Criança, idoso, acompanhante, pets · sem exp.</div>
+    </div>
+
+    <div class="cat-card eleitoral" onclick="irParaCadastro()">
+      <div class="cat-novo">Novo</div>
+      <span class="cat-ico">🗳️</span>
+      <div class="cat-name">Cabo Eleitoral</div>
+      <div class="cat-val">R$150–400/dia</div>
+      <div class="cat-tag">Promotor, bandeireiro, panfleteiro · sem exp.</div>
+    </div>
+
+    <div class="cat-card homeoffice" onclick="irParaCadastro()">
+      <div class="cat-novo" style="background:#EDE9FE;color:#5B21B6;">Novo</div>
+      <span class="cat-ico">🏠</span>
+      <div class="cat-name">Home Office</div>
+      <div class="cat-val">R$80–200/dia</div>
+      <div class="cat-tag">Telemarketing, atendimento, leads, SDR · sem exp.</div>
+    </div>
+
+    <div class="cat-card" onclick="irParaCadastro()">
+      <span class="cat-ico">💼</span>
+      <div class="cat-name">Vendas / Captação</div>
+      <div class="cat-val">R$80–300/dia</div>
+      <div class="cat-tag">Comissão, indicação, captação · sem exp.</div>
+    </div>
+
+    <div class="cat-card" onclick="irParaCadastro()">
+      <span class="cat-ico">🌿</span>
+      <div class="cat-name">Jardineiro / Externo</div>
+      <div class="cat-val">R$120–200/dia</div>
+      <div class="cat-tag">Jardinagem, roçagem, terreno · sem exp.</div>
+    </div>
+
+    <div class="cat-card" onclick="irParaCadastro()">
+      <span class="cat-ico">🎓</span>
+      <div class="cat-name">Educação e Ensino</div>
+      <div class="cat-val">R$50–180/hora</div>
+      <div class="cat-tag">Professor, reforço, monitor, tutor, palestrante</div>
+    </div>
+
+    <div class="cat-card" onclick="irParaCadastro()">
+      <span class="cat-ico">💆</span>
+      <div class="cat-name">Beleza e Bem-estar</div>
+      <div class="cat-val">Por produção</div>
+      <div class="cat-tag">Manicure, maquiagem, massagem, cabelo</div>
+    </div>
+
+  </div>
+
+  <!-- BOTÃO VER TODAS -->
+  <button class="ver-mais-btn" id="ver-mais-btn" onclick="toggleCats()">
+    <span id="ver-mais-txt">Ver todas as 60+ categorias ↓</span>
+  </button>
+
+  <!-- GRADE COMPLETA (oculta por padrão) -->
+  <div id="todas-cats" style="display:none;">
+
+    <div class="cat-section-title">🏠 Casa e Limpeza</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧹</div><div><div class="cat-mini-name">Diarista / Limpeza de casa</div><div class="cat-mini-val">R$120–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">✨</div><div><div class="cat-mini-name">Limpeza pós-evento</div><div class="cat-mini-val">R$130–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">👔</div><div><div class="cat-mini-name">Passar roupa</div><div class="cat-mini-val">R$60–120/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🚿</div><div><div class="cat-mini-name">Limpeza de terreno/quintal</div><div class="cat-mini-val">R$120–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🚗</div><div><div class="cat-mini-name">Lavador de carros</div><div class="cat-mini-val">R$80–150/dia · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">🔥 Churrasco e Cozinha</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🔥</div><div><div class="cat-mini-name">Churrasqueiro</div><div class="cat-mini-val">R$200–350/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🥩</div><div><div class="cat-mini-name">Auxiliar de churrasqueiro</div><div class="cat-mini-val">R$120–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧑‍🍳</div><div><div class="cat-mini-name">Cozinheiro</div><div class="cat-mini-val">R$150–280/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🍳</div><div><div class="cat-mini-name">Auxiliar de cozinha</div><div class="cat-mini-val">R$100–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🍱</div><div><div class="cat-mini-name">Marmita / Bolo / Doces</div><div class="cat-mini-val">Por produção · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">🔨 Obras e Reparos</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧱</div><div><div class="cat-mini-name">Pedreiro</div><div class="cat-mini-val">R$180–280/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">⛏️</div><div><div class="cat-mini-name">Ajudante de pedreiro</div><div class="cat-mini-val">R$120–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🖌️</div><div><div class="cat-mini-name">Pintor</div><div class="cat-mini-val">R$150–250/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🪣</div><div><div class="cat-mini-name">Ajudante de pintor</div><div class="cat-mini-val">R$100–160/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🔧</div><div><div class="cat-mini-name">Serviços gerais / Reparos</div><div class="cat-mini-val">R$120–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📺</div><div><div class="cat-mini-name">Instalador básico</div><div class="cat-mini-val">R$100–180/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🔌</div><div><div class="cat-mini-name">Eletricista</div><div class="cat-mini-val">R$180–300/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📱</div><div><div class="cat-mini-name">Manutenção básica (cel/PC)</div><div class="cat-mini-val">R$80–160/dia</div></div></div>
+    </div>
+
+    <div class="cat-section-title">🎉 Eventos e Apoio</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🍽️</div><div><div class="cat-mini-name">Garçom / Copeiro</div><div class="cat-mini-val">R$150–250/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🎪</div><div><div class="cat-mini-name">Ajudante de eventos</div><div class="cat-mini-val">R$120–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏪</div><div><div class="cat-mini-name">Plantão fim de semana</div><div class="cat-mini-val">R$120–200/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📋</div><div><div class="cat-mini-name">Recepção / Balcão</div><div class="cat-mini-val">R$100–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🔐</div><div><div class="cat-mini-name">Segurança / Portaria evento</div><div class="cat-mini-val">R$150–250/dia</div></div></div>
+    </div>
+
+    <div class="cat-section-title">💪 Chapa / Logística e Transporte</div>
+    <div style="background:#FEF3C7;border:1.5px solid #FCD34D;border-radius:var(--r2);padding:12px;margin-bottom:10px;">
+      <div style="font-size:11px;color:#92400E;font-weight:700;margin-bottom:2px;">💪 Chapa — sem experiência necessária</div>
+      <div style="font-size:11px;color:#B45309;line-height:1.5;">Chapa é quem carrega, descarrega, empurra, sobe e desce. Não precisa de nenhum conhecimento técnico. Precisa de disposição e força. Alta demanda todo dia.</div>
+    </div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💪</div><div><div class="cat-mini-name">Chapa (carregador geral)</div><div class="cat-mini-val">R$130–250/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🚚</div><div><div class="cat-mini-name">Chapa de mudança</div><div class="cat-mini-val">R$150–280/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏗️</div><div><div class="cat-mini-name">Chapa de obra (carga/descarga)</div><div class="cat-mini-val">R$130–220/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📦</div><div><div class="cat-mini-name">Chapa de depósito/estoque</div><div class="cat-mini-val">R$100–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏍️</div><div><div class="cat-mini-name">Motoboy / Entregador</div><div class="cat-mini-val">R$120–220/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🚐</div><div><div class="cat-mini-name">Frete com carro/moto</div><div class="cat-mini-val">R$150–300/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📫</div><div><div class="cat-mini-name">Auxiliar de estoque</div><div class="cat-mini-val">R$100–160/dia · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">💼 Vendas e Captação</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💵</div><div><div class="cat-mini-name">Vendas por comissão</div><div class="cat-mini-val">Comissão + fixo · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📣</div><div><div class="cat-mini-name">Captação / Divulgação bairro</div><div class="cat-mini-val">R$80–160/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📜</div><div><div class="cat-mini-name">Panfletagem / Abordagem</div><div class="cat-mini-val">R$80–140/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📊</div><div><div class="cat-mini-name">Pesquisas (rua/tel/online)</div><div class="cat-mini-val">R$80–150/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🤝</div><div><div class="cat-mini-name">Indicações / Trazer clientes</div><div class="cat-mini-val">Por resultado · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏪</div><div><div class="cat-mini-name">Promotor de vendas em loja</div><div class="cat-mini-val">R$100–180/dia · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title" style="color:#1D4ED8;">🗳️ Cabo Eleitoral</div>
+    <div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:var(--r2);padding:14px;margin-bottom:10px;">
+      <div style="font-size:11px;color:#1D4ED8;font-weight:700;margin-bottom:4px;">⚡ Alta demanda em período eleitoral</div>
+      <div style="font-size:11px;color:#3B82F6;line-height:1.6;">Vagas com alta remuneração e duração definida. Perfeito para quem quer renda concentrada em poucos dias.</div>
+    </div>
+    <div class="cat-grid-full">
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🗳️</div><div><div class="cat-mini-name">Cabo eleitoral</div><div class="cat-mini-val">R$200–400/dia</div></div></div>
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📢</div><div><div class="cat-mini-name">Promotor eleitoral</div><div class="cat-mini-val">R$150–300/dia</div></div></div>
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🚩</div><div><div class="cat-mini-name">Bandeireiro</div><div class="cat-mini-val">R$120–250/dia</div></div></div>
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📋</div><div><div class="cat-mini-name">Panfleteiro eleitoral</div><div class="cat-mini-val">R$120–200/dia</div></div></div>
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏘️</div><div><div class="cat-mini-name">Pessoal de apoio de rua</div><div class="cat-mini-val">R$150–280/dia</div></div></div>
+      <div class="cat-mini eleitoral-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📊</div><div><div class="cat-mini-name">Pesquisa eleitoral</div><div class="cat-mini-val">R$100–180/dia</div></div></div>
+    </div>
+
+    <div class="cat-section-title" style="color:#5B21B6;">🏠 Home Office · Trabalho Remoto</div>
+    <div style="background:#F5F3FF;border:1.5px solid #DDD6FE;border-radius:var(--r2);padding:14px;margin-bottom:10px;">
+      <div style="font-size:11px;color:#5B21B6;font-weight:700;margin-bottom:4px;">💻 De qualquer lugar · sem precisar sair de casa</div>
+      <div style="font-size:11px;color:#7C3AED;line-height:1.6;">Ideal para quem tem computador e internet. Vagas para todo o Brasil — sem limite de cidade.</div>
+    </div>
+    <div class="cat-grid-full">
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📞</div><div><div class="cat-mini-name">Telemarketing</div><div class="cat-mini-val">R$80–160/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💬</div><div><div class="cat-mini-name">Atendimento ao cliente</div><div class="cat-mini-val">R$90–170/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🎯</div><div><div class="cat-mini-name">Atendimento de leads</div><div class="cat-mini-val">R$100–200/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📈</div><div><div class="cat-mini-name">SDR / Prospecção</div><div class="cat-mini-val">R$120–250/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📝</div><div><div class="cat-mini-name">Cadastros / Digitação</div><div class="cat-mini-val">R$80–150/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📱</div><div><div class="cat-mini-name">Assistente de redes sociais</div><div class="cat-mini-val">R$100–180/dia</div></div></div>
+      <div class="cat-mini home-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧾</div><div><div class="cat-mini-name">Emissão de boletos / Planilha</div><div class="cat-mini-val">R$80–140/dia</div></div></div>
+    </div>
+
+    <div class="cat-section-title">👶 Cuidados com Pessoas e Pets</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">👶</div><div><div class="cat-mini-name">Babá</div><div class="cat-mini-val">R$120–250/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">👴</div><div><div class="cat-mini-name">Cuidador de idoso</div><div class="cat-mini-val">R$150–300/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🐕</div><div><div class="cat-mini-name">Cuidador de pets / Dog walker</div><div class="cat-mini-val">R$80–180/dia · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">🎓 Educação e Ensino</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📚</div><div><div class="cat-mini-name">Professor horista</div><div class="cat-mini-val">R$60–180/hora</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🎤</div><div><div class="cat-mini-name">Palestrante</div><div class="cat-mini-val">Por evento</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📝</div><div><div class="cat-mini-name">Reforço escolar</div><div class="cat-mini-val">R$50–120/hora · sem exp. formal</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">👨‍🏫</div><div><div class="cat-mini-name">Monitor de turma</div><div class="cat-mini-val">R$100–180/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧑‍🎓</div><div><div class="cat-mini-name">Tutoria / Mentoria</div><div class="cat-mini-val">R$60–150/hora</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🏫</div><div><div class="cat-mini-name">Auxiliar de professor</div><div class="cat-mini-val">R$100–160/dia · sem exp.</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🔬</div><div><div class="cat-mini-name">Estágio / Trainee</div><div class="cat-mini-val">A combinar · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">✂️ Beleza e Bem-estar</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">✂️</div><div><div class="cat-mini-name">Cabeleireiro / Barbeiro</div><div class="cat-mini-val">Por produção</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💅</div><div><div class="cat-mini-name">Manicure e pedicure</div><div class="cat-mini-val">Por produção</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💄</div><div><div class="cat-mini-name">Maquiagem</div><div class="cat-mini-val">R$80–250/dia · eventos</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">💆</div><div><div class="cat-mini-name">Massagista</div><div class="cat-mini-val">R$100–300/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🧵</div><div><div class="cat-mini-name">Costura / Ajustes de roupa</div><div class="cat-mini-val">R$80–160/dia</div></div></div>
+    </div>
+
+    <div class="cat-section-title">🌿 Área Externa</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🌿</div><div><div class="cat-mini-name">Jardineiro</div><div class="cat-mini-val">R$130–200/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🌾</div><div><div class="cat-mini-name">Roçagem / Capina</div><div class="cat-mini-val">R$120–180/dia · sem exp.</div></div></div>
+    </div>
+
+    <div class="cat-section-title">📱 Digital e Conteúdo</div>
+    <div class="cat-grid-full">
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">🎬</div><div><div class="cat-mini-name">Produção de conteúdo</div><div class="cat-mini-val">R$100–250/dia</div></div></div>
+      <div class="cat-mini" onclick="irParaCadastro()"><div class="cat-mini-ico">📸</div><div><div class="cat-mini-name">Foto/vídeo para comércio</div><div class="cat-mini-val">R$100–250/dia</div></div></div>
+    </div>
+
+  </div><!-- /todas-cats -->
+
+  <div style="margin-top:20px;background:var(--Gl);border-radius:var(--r2);padding:16px;text-align:center;">
+    <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--Gd);margin-bottom:4px;">Não encontrou o que procura?</div>
+    <div style="font-size:12px;color:var(--G);">No cadastro você descreve o que sabe fazer com suas próprias palavras. Empregadores também buscam por qualquer habilidade.</div>
+  </div>
 </section>
 
-<!-- ══════════ COMO FUNCIONA ══════════ -->
-<section id="como-funciona" style="background:#F8FAFB;">
-  <div class="section-pill">⚡ Simples assim</div>
-  <h2 class="section-h2">Do cadastro à primeira<br><span>diária em menos de 1h</span></h2>
-  <p class="section-sub">Não precisa de currículo elaborado, nem experiência formal. Só o básico.</p>
-
+<!-- COMO FUNCIONA -->
+<section style="background:var(--w);" id="como-funciona">
+  <div class="pill">⚡ Simples assim</div>
+  <h2 class="sh2">Da conta à primeira<br><em>diária em horas</em></h2>
   <div class="steps">
     <div class="step">
-      <div class="step-num">1</div>
-      <div>
-        <div class="step-tit">Crie sua conta grátis</div>
-        <div class="step-desc">Nome, celular e cidade. Pronto. Sem documentos, sem aprovação.</div>
-        <span class="step-time">⏱ 2 minutos</span>
-      </div>
+      <div class="step-n">1</div>
+      <div><div class="step-tit">Crie sua conta grátis</div><div class="step-desc">Nome, celular e cidade. Sem documentos, sem aprovação, sem cartão.</div><span class="step-badge">⏱ 2 minutos</span></div>
     </div>
     <div class="step">
-      <div class="step-num">2</div>
-      <div>
-        <div class="step-tit">Escolha suas habilidades</div>
-        <div class="step-desc">Diarista, garçom, ajudante de obra, atendente — você define o que sabe fazer.</div>
-        <span class="step-time">⏱ 1 minuto</span>
-      </div>
+      <div class="step-n">2</div>
+      <div><div class="step-tit">Escolha suas habilidades e disponibilidade</div><div class="step-desc">Marque o que sabe fazer e os dias que está livre. O app mostra só vagas compatíveis com você.</div><span class="step-badge">📅 Calendário próprio</span></div>
     </div>
     <div class="step">
-      <div class="step-num">3</div>
-      <div>
-        <div class="step-tit">Veja as vagas disponíveis hoje</div>
-        <div class="step-desc">O app mostra só as vagas compatíveis com você, na sua cidade ou região.</div>
-        <span class="step-time">⏱ Na hora</span>
-      </div>
+      <div class="step-n">3</div>
+      <div><div class="step-tit">Se candidate em 1 toque</div><div class="step-desc">Viu uma vaga boa? Um botão. O contratante recebe seu perfil e te chama pelo chat do app.</div><span class="step-badge">⚡ 10 segundos</span></div>
     </div>
     <div class="step">
-      <div class="step-num">4</div>
-      <div>
-        <div class="step-tit">Se candidate em 1 toque</div>
-        <div class="step-desc">Um botão. O contratante recebe seu perfil e te chama pelo chat do app.</div>
-        <span class="step-time">⏱ 10 segundos</span>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">5</div>
-      <div>
-        <div class="step-tit">Trabalhe e receba no dia</div>
-        <div class="step-desc">Pagamento combinado diretamente com quem te contratou. Pix, dinheiro, o que combinar.</div>
-        <span class="step-time">💰 No mesmo dia</span>
-      </div>
+      <div class="step-n">4</div>
+      <div><div class="step-tit">Trabalhe e receba no dia</div><div class="step-desc">Combinam tudo pelo chat. Pagamento direto — Pix, dinheiro ou o que acordarem. Sem intermediário.</div><span class="step-badge">💰 Sem taxa</span></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════ CATEGORIAS ══════════ -->
-<section style="background:#fff;padding:40px 24px;">
-  <div class="section-pill">💼 Categorias</div>
-  <h2 class="section-h2">Vagas para<br><span>quem você é</span></h2>
-  <p class="section-sub" style="margin-bottom:20px;">Presencial perto de você ou home office de qualquer lugar.</p>
-
-  <div class="cats">
-    <div class="cat"><div class="cat-ico">🧹</div><div><div class="cat-name">Diarista</div><div class="cat-val">R$120–R$200/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">🍽️</div><div><div class="cat-name">Garçom</div><div class="cat-val">R$150–R$250/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">🔨</div><div><div class="cat-name">Ajudante obra</div><div class="cat-val">R$150–R$220/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">🎉</div><div><div class="cat-name">Eventos</div><div class="cat-val">R$120–R$200/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">📞</div><div><div class="cat-name">Atendente</div><div class="cat-val">R$100–R$160/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">💻</div><div><div class="cat-name">Home Office</div><div class="cat-val">R$100–R$200/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">🌿</div><div><div class="cat-name">Zelador</div><div class="cat-val">R$130–R$180/dia</div></div></div>
-    <div class="cat"><div class="cat-ico">👴</div><div><div class="cat-name">Cuidador</div><div class="cat-val">R$150–R$250/dia</div></div></div>
-  </div>
-</section>
-
-<!-- ══════════ QUANTO VOCÊ PODE GANHAR ══════════ -->
-<section style="background:#F8FAFB;">
-  <div class="section-pill">💰 Seus ganhos</div>
-  <h2 class="section-h2">Quanto dá pra<br><span>ganhar por mês?</span></h2>
-  <p class="section-sub">Trabalhando algumas diárias por semana, sem abrir mão da sua rotina.</p>
-
+<!-- QUANTO VOCÊ PODE GANHAR -->
+<section style="background:var(--bg);">
+  <div class="pill">💰 Seus ganhos</div>
+  <h2 class="sh2">Quanto dá pra<br><em>ganhar por mês?</em></h2>
+  <p class="ssub">Exemplos reais trabalhando algumas diárias por semana, sem largar o que já faz.</p>
   <div class="earn-card">
-    <div class="earn-tit">Exemplos reais de ganhos mensais</div>
+    <div class="earn-tit">Ganhos mensais estimados</div>
     <div class="earn-row"><span class="earn-job">🧹 Diarista · 3x por semana</span><span class="earn-val">~R$1.560</span></div>
     <div class="earn-row"><span class="earn-job">🍽️ Garçom · fins de semana</span><span class="earn-val">~R$1.200</span></div>
-    <div class="earn-row"><span class="earn-job">🔨 Ajudante · 5x por semana</span><span class="earn-val">~R$3.000</span></div>
-    <div class="earn-row"><span class="earn-job">💻 Atendente remoto · part-time</span><span class="earn-val">~R$1.000</span></div>
+    <div class="earn-row"><span class="earn-job">🔥 Churrasqueiro · fins de semana</span><span class="earn-val">~R$2.800</span></div>
+    <div class="earn-row"><span class="earn-job">💪 Chapa de mudança · 4x/semana</span><span class="earn-val">~R$2.240</span></div>
+    <div class="earn-row"><span class="earn-job">🔨 Ajudante de pedreiro · 5x/semana</span><span class="earn-val">~R$2.400</span></div>
+    <div class="earn-row"><span class="earn-job">💻 Atendente home office · part-time</span><span class="earn-val">~R$1.100</span></div>
+    <div class="earn-row"><span class="earn-job">🗳️ Cabo eleitoral · semana de eleição</span><span class="earn-val">~R$1.400</span></div>
+    <div class="earn-row"><span class="earn-job">📞 Telemarketing home office · diário</span><span class="earn-val">~R$2.200</span></div>
+    <div class="earn-row"><span class="earn-job">🏍️ Motoboy por turno · 4x/semana</span><span class="earn-val">~R$2.000</span></div>
   </div>
-
-  <div style="background:#fff;border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1.5px solid var(--green-l);">
-    <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;">✅ Sem taxa para você</div>
-    <div style="font-size:13px;color:var(--soft);line-height:1.6;">O Diária da Cidade é gratuito para profissionais. Você não paga nada para se cadastrar, se candidatar ou receber vagas. O pagamento é combinado diretamente com o contratante.</div>
-  </div>
-</section>
-
-<!-- ══════════ DEPOIMENTOS ══════════ -->
-<section style="background:#fff;">
-  <div class="section-pill">⭐ Quem já usa</div>
-  <h2 class="section-h2">Pessoas reais,<br><span>resultados reais</span></h2>
-
-  <div class="dep">
-    <p class="dep-txt">"Me cadastrei de manhã e às 14h já tinha confirmado uma diária de garçonete para a noite. Recebi R$180 em dinheiro na saída do evento."</p>
-    <div class="dep-person">
-      <div class="dep-av" style="background:linear-gradient(135deg,#1D9E75,#065F46);">MR</div>
-      <div><div class="dep-name">Maria Rosa</div><div class="dep-role">Garçonete · Sinop, MT</div><div class="dep-stars">★★★★★</div></div>
-    </div>
-  </div>
-
-  <div class="dep">
-    <p class="dep-txt">"Tava desempregado faz 3 meses. Na primeira semana no app consegui 4 diárias de ajudante de obra. Agora tenho renda toda semana."</p>
-    <div class="dep-person">
-      <div class="dep-av" style="background:linear-gradient(135deg,#378ADD,#185FA5);">JC</div>
-      <div><div class="dep-name">João Carlos</div><div class="dep-role">Ajudante de obra · Cuiabá, MT</div><div class="dep-stars">★★★★★</div></div>
-    </div>
-  </div>
-
-  <div class="dep">
-    <p class="dep-txt">"Trabalho de casa como atendente em diárias de home office. Consigo conciliar com os filhos. Ganho de R$100 a R$160 por dia trabalhado."</p>
-    <div class="dep-person">
-      <div class="dep-av" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">LS</div>
-      <div><div class="dep-name">Luiza Santos</div><div class="dep-role">Atendente remota · Rondonópolis, MT</div><div class="dep-stars">★★★★★</div></div>
-    </div>
+  <div style="background:var(--w);border-radius:var(--r2);padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1.5px solid var(--Gl);">
+    <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--Gd);margin-bottom:6px;">✅ Zero taxa para profissionais</div>
+    <div style="font-size:12px;color:var(--soft);line-height:1.6;">O app é gratuito para quem quer trabalhar. Você não paga nada para se cadastrar, ver vagas ou receber contato. O pagamento é combinado diretamente com quem te contrata.</div>
   </div>
 </section>
 
-<!-- ══════════ FAQ ══════════ -->
-<section style="background:#F8FAFB;">
-  <div class="section-pill">❓ Dúvidas</div>
-  <h2 class="section-h2">Perguntas<br><span>frequentes</span></h2>
-
-  <div class="faq-item" onclick="toggleFaq(this)">
-    <div class="faq-q">É realmente gratuito para quem quer trabalhar? <span class="faq-ico">+</span></div>
-    <div class="faq-a">Sim. O app é 100% gratuito para profissionais. Você não paga nada para se cadastrar, candidatar em vagas ou receber contato de empresas. Não existe taxa oculta.</div>
+<!-- DEPOIMENTOS -->
+<section style="background:var(--w);">
+  <div class="pill">⭐ Quem já usa</div>
+  <h2 class="sh2">Histórias de quem<br><em>trabalhou hoje</em></h2>
+  <div class="dep">
+    <div class="dep-aspas">"</div>
+    <p class="dep-txt">Me cadastrei de manhã e às 14h já tinha confirmado uma diária de garçonete para a noite. Recebi R$180 em dinheiro na saída do evento. Nunca foi tão fácil.</p>
+    <div class="dep-foot"><div class="dep-av" style="background:linear-gradient(135deg,#1D9E75,#065F46);">MR</div><div><div class="dep-name">Maria Rosa</div><div class="dep-role">Garçonete · Sinop, MT</div><div class="dep-stars">★★★★★</div></div></div>
   </div>
-  <div class="faq-item" onclick="toggleFaq(this)">
-    <div class="faq-q">Como recebo o pagamento? <span class="faq-ico">+</span></div>
-    <div class="faq-a">O pagamento é combinado diretamente com o contratante pelo chat do app. Pode ser Pix, dinheiro ou transferência — o que vocês dois decidirem. O app registra o combinado no chat para segurança.</div>
+  <div class="dep">
+    <p class="dep-txt">Me mudei pra Cuiabá faz 3 semanas. No app achei um serviço de frete no segundo dia. Já fiz 6 fretes esse mês sem sair buscando. A renda veio rápida, isso foi essencial.</p>
+    <div class="dep-foot"><div class="dep-av" style="background:linear-gradient(135deg,#1557FF,#0A2A8F);">RC</div><div><div class="dep-name">Roberto C.</div><div class="dep-role">Freteiro · Cuiabá, MT</div><div class="dep-stars">★★★★★</div></div></div>
   </div>
-  <div class="faq-item" onclick="toggleFaq(this)">
-    <div class="faq-q">Preciso ter experiência formal? <span class="faq-ico">+</span></div>
-    <div class="faq-a">Não. Você informa no seu perfil o que sabe fazer e quantos anos de prática tem. Avaliações de outros contratantes constroem sua reputação com o tempo.</div>
-  </div>
-  <div class="faq-item" onclick="toggleFaq(this)">
-    <div class="faq-q">Posso trabalhar em home office também? <span class="faq-ico">+</span></div>
-    <div class="faq-a">Sim. Tem vagas presenciais e vagas de home office. Você escolhe qual tipo quer ver no feed. Vagas remotas permitem trabalhar de qualquer cidade.</div>
-  </div>
-  <div class="faq-item" onclick="toggleFaq(this)">
-    <div class="faq-q">E se o contratante não pagar? <span class="faq-ico">+</span></div>
-    <div class="faq-a">O sistema de avaliação é público. Contratantes que não pagam recebem avaliações negativas e ficam sem candidatos. O chat do app fica registrado como prova do combinado.</div>
+  <div class="dep">
+    <p class="dep-txt">Faço telemarketing de casa, no meu horário, enquanto os filhos estão na escola. Em um mês fiz R$1.800 sem sair de casa. Mudou minha vida.</p>
+    <div class="dep-foot"><div class="dep-av" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">LS</div><div><div class="dep-name">Luiza S.</div><div class="dep-role">Atendente home office · Rondonópolis, MT</div><div class="dep-stars">★★★★★</div></div></div>
   </div>
 </section>
 
-<!-- ══════════ CTA FINAL ══════════ -->
+<!-- FAQ -->
+<section style="background:var(--bg);">
+  <div class="pill">❓ Dúvidas</div>
+  <h2 class="sh2">Perguntas<br><em>frequentes</em></h2>
+  <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">É realmente gratuito? <span class="faq-ico">+</span></div><div class="faq-a">Sim, 100% gratuito para profissionais. Você não paga nada para se cadastrar, ver vagas ou se candidatar. Nunca.</div></div>
+  <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Como recebo o pagamento? <span class="faq-ico">+</span></div><div class="faq-a">Direto com quem te contratou — Pix, dinheiro ou transferência. O app não fica no meio do pagamento. Você combina no chat e recebe na hora que acordarem.</div></div>
+  <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Preciso de experiência formal? <span class="faq-ico">+</span></div><div class="faq-a">Não para a maioria das vagas. Chapa, ajudante de eventos, panfletagem, auxiliar de churrasqueiro, cuidador de pets, limpeza de terreno, plantão de fim de semana e dezenas de outras funções aceitam quem está começando. O que importa é disposição. Você informa na hora do cadastro se tem ou não experiência, e o app só mostra vagas compatíveis.</div></div>
+  <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Posso trabalhar em home office mesmo morando no interior? <span class="faq-ico">+</span></div><div class="faq-a">Sim. Vagas remotas aparecem para qualquer cidade do Brasil. Telemarketing, atendimento, SDR e digitação não têm limite geográfico.</div></div>
+  <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">E as vagas de cabo eleitoral são seguras? <span class="faq-ico">+</span></div><div class="faq-a">Sim. Todo contratante tem avaliação pública. Você vê a nota e os comentários de quem já trabalhou com ele antes de se candidatar. O valor e as condições ficam registrados no chat.</div></div>
+</section>
+
+<!-- CTA FINAL -->
 <section class="cta-final">
   <h2>Sua próxima diária<br>começa agora</h2>
-  <p>Cadastro grátis em 2 minutos.<br>Sem cartão, sem taxa, sem complicação.</p>
+  <p>Cadastro grátis em 2 minutos.<br>40+ tipos de trabalho. Sem taxa. Sem complicação.</p>
   <a href="#cadastro" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Quero trabalhar agora →</a>
-  <p style="font-size:12px;color:rgba(255,255,255,.55);">Diária da Cidade · gratuito para profissionais</p>
+  <p style="font-size:11px;color:rgba(255,255,255,.45);">Diária da Cidade · grátis para profissionais · sempre</p>
 </section>
 
 <footer>
-  <p>© 2025 Diária da Cidade · <a href="#">Termos de Uso</a> · <a href="#">Privacidade</a><br>
-  Você está vendo a página de quem quer trabalhar. Você é uma empresa? <a href="/contrate">Clique aqui</a></p>
+  <p>© 2025 Diária da Cidade · <a href="#">Termos</a> · <a href="#">Privacidade</a><br>
+  Você é uma empresa? <a href="/contrate">Clique aqui</a> · Quer empreender? <a href="/parceiro">Clique aqui</a> · <a href="/">Página inicial</a></p>
 </footer>
 
 <script src="/js/config.js"></script>
 <script src="/js/lead-form.js"></script>
 <script>
+function irParaCadastro(){ document.getElementById('cadastro').scrollIntoView({behavior:'smooth'}); }
+
+let cats_open = false;
+function toggleCats() {
+  cats_open = !cats_open;
+  const el = document.getElementById('todas-cats');
+  const btn = document.getElementById('ver-mais-txt');
+  if (cats_open) {
+    el.style.display = 'block';
+    btn.textContent = 'Ver menos ↑';
+  } else {
+    el.style.display = 'none';
+    btn.textContent = 'Ver todas as 60+ categorias ↓';
+  }
+}
+
 function toggleFaq(el) {
   const a = el.querySelector('.faq-a');
   const ico = el.querySelector('.faq-ico');
