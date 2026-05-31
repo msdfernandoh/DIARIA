@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrate Hoje — Diária da Cidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#1557FF;--blue-d:#0A3DBF;--blue-l:#E8EEFF;
+  --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
+  --bg:#F8FAFB;--white:#fff;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);}
+
+.hero{background:linear-gradient(160deg,#0A2A8F 0%,#1557FF 60%,#3B72FF 100%);min-height:100svh;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.hero-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);}
+.o1{width:420px;height:420px;top:-130px;right:-110px;}
+.o2{width:260px;height:260px;bottom:60px;left:-90px;}
+.o3{width:130px;height:130px;top:180px;left:20px;}
+
+.nav{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.logo-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.nav-cta{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;text-decoration:none;backdrop-filter:blur(8px);}
+
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px 48px;position:relative;z-index:2;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff;margin-bottom:20px;backdrop-filter:blur(8px);width:fit-content;}
+.hero-h1{font-family:'Sora',sans-serif;font-size:38px;font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px;}
+.hero-h1 span{color:#BFDBFE;}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.82);line-height:1.6;margin-bottom:32px;}
+
+.cta-block{display:flex;flex-direction:column;gap:12px;}
+.btn-main{display:block;width:100%;padding:18px;background:#fff;color:var(--blue-d);border:none;border-radius:16px;font-family:'Sora',sans-serif;font-size:17px;font-weight:800;text-align:center;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:all .2s;cursor:pointer;}
+.btn-main:hover{transform:translateY(-2px);}
+.btn-sec{display:block;width:100%;padding:15px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;}
+.cta-note{font-size:12px;color:rgba(255,255,255,.6);text-align:center;}
+
+.hero-numbers{display:flex;gap:0;margin-top:40px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;}
+.hnum{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.15);}
+.hnum:last-child{border-right:none;}
+.hnum-n{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.hnum-l{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.3;}
+
+.wave{display:block;}
+
+section{padding:48px 24px;}
+.section-pill{display:inline-flex;align-items:center;gap:6px;background:var(--blue-l);color:var(--blue-d);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;}
+.section-h2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:10px;}
+.section-h2 span{color:var(--blue);}
+.section-sub{font-size:15px;color:var(--soft);line-height:1.6;margin-bottom:28px;}
+
+/* dores */
+.dor-card{background:var(--white);border-radius:16px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
+.dor-ico{font-size:26px;flex-shrink:0;margin-top:2px;}
+.dor-tit{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.dor-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+.dor-sol{font-size:12px;font-weight:700;color:var(--blue);margin-top:6px;background:var(--blue-l);display:inline-block;padding:2px 9px;border-radius:999px;}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);}
+.step:last-child{border-bottom:none;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--blue-l);color:var(--blue-d);font-family:'Sora',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-tit{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+.step-time{display:inline-block;background:var(--blue-l);color:var(--blue-d);font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px;}
+
+/* perfil candidato */
+.cand-card{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;}
+.cand-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.cand-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;}
+.cand-name{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);}
+.cand-sub{font-size:12px;color:var(--soft);margin-top:2px;}
+.cand-stars{display:flex;align-items:center;gap:4px;font-size:14px;color:#F59E0B;margin-top:3px;}
+.cand-num{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);margin-left:2px;}
+.cand-count{font-size:11px;color:var(--soft);}
+.cand-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;}
+.chip-g{background:#E1F5EE;color:#065F46;}
+.chip-b{background:var(--blue-l);color:var(--blue-d);}
+.cand-bar{height:4px;background:#E2E8F0;border-radius:999px;overflow:hidden;margin-bottom:4px;}
+.cand-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#FBBF24);}
+.cand-dist{font-size:10px;color:var(--soft);}
+
+/* pricing */
+.price-section{background:linear-gradient(160deg,#0A2A8F,#1557FF);padding:48px 24px;text-align:center;}
+.price-tit{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:8px;}
+.price-sub{font-size:14px;color:rgba(255,255,255,.72);margin-bottom:28px;line-height:1.6;}
+.price-box{background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.22);border-radius:20px;padding:24px;margin-bottom:14px;}
+.price-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.price-val{font-family:'Sora',sans-serif;font-size:36px;font-weight:800;color:#fff;margin-bottom:4px;}
+.price-period{font-size:13px;color:rgba(255,255,255,.65);}
+.price-feats{text-align:left;margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+.pf{font-size:13px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:8px;}
+
+/* deps */
+.dep{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;border-left:4px solid var(--blue);}
+.dep-txt{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.dep-person{display:flex;align-items:center;gap:10px;}
+.dep-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
+.dep-role{font-size:11px;color:var(--soft);}
+.dep-stars{font-size:13px;color:#F59E0B;margin-top:1px;}
+
+/* faq */
+.faq-item{background:var(--white);border-radius:14px;padding:18px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);cursor:pointer;}
+.faq-q{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-a{font-size:13px;color:var(--soft);line-height:1.6;margin-top:10px;display:none;}
+.faq-a.open{display:block;}
+.faq-ico{flex-shrink:0;font-size:18px;}
+
+.cta-final{background:linear-gradient(160deg,#0A2A8F,#1557FF);padding:48px 24px;text-align:center;}
+.cta-final h2{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.2;}
+.cta-final p{font-size:15px;color:rgba(255,255,255,.78);margin-bottom:28px;line-height:1.6;}
+
+footer{background:var(--dark);padding:28px 24px;text-align:center;}
+footer p{font-size:12px;color:#718096;line-height:1.8;}
+footer a{color:#BFDBFE;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb o1"></div><div class="hero-orb o2"></div><div class="hero-orb o3"></div>
+  <nav class="nav">
+    <div class="logo"><div class="logo-mark">📅</div><div class="logo-name">Diária da Cidade</div></div>
+    <a href="#cadastro" class="nav-cta">Contratar grátis</a>
+  </nav>
+  <div class="hero-body">
+    <div class="hero-pill">🔵 Publicar vaga é gratuito</div>
+    <h1 class="hero-h1">Contrate hoje.<br><span>Profissional na porta<br>em horas.</span></h1>
+    <p class="hero-sub">Garçom, diarista, ajudante — encontre profissionais avaliados na sua cidade sem agência, sem taxa e sem espera de dias.</p>
+    <div class="cta-block" id="cadastro">
+      <a href="#" class="btn-main">Publicar minha vaga agora →</a>
+      <a href="#como-funciona" class="btn-sec">Ver como funciona</a>
+      <p class="cta-note">Gratuito para publicar · Sem comissão sobre o contrato</p>
+    </div>
+    <div class="hero-numbers">
+      <div class="hnum"><div class="hnum-n">2h</div><div class="hnum-l">tempo médio<br>para contratar</div></div>
+      <div class="hnum"><div class="hnum-n">⭐ 4.8</div><div class="hnum-l">nota média<br>dos profissionais</div></div>
+      <div class="hnum"><div class="hnum-n">R$0</div><div class="hnum-l">taxa para<br>publicar</div></div>
+    </div>
+  </div>
+  <svg viewBox="0 0 390 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:40px;display:block;">
+    <path d="M0,20 C80,40 310,0 390,20 L390,40 L0,40 Z" fill="#F8FAFB"/>
+  </svg>
+</section>
+
+<!-- DORES -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">😤 O problema que resolvemos</div>
+  <h2 class="section-h2">Você já passou<br><span>por isso?</span></h2>
+
+  <div class="dor-card">
+    <div class="dor-ico">😰</div>
+    <div>
+      <div class="dor-tit">Precisa de alguém para amanhã e não tem ninguém</div>
+      <div class="dor-desc">Agência demora dias. Grupos de WhatsApp não têm garantia. Indicação nem sempre está disponível.</div>
+      <span class="dor-sol">→ Vagas urgentes preenchidas em horas</span>
+    </div>
+  </div>
+  <div class="dor-card">
+    <div class="dor-ico">😬</div>
+    <div>
+      <div class="dor-tit">Não sabe se a pessoa vai aparecer</div>
+      <div class="dor-desc">Confirma, confirma — e no dia ninguém aparece. Prejuízo no evento, serviço parado.</div>
+      <span class="dor-sol">→ Candidatos com histórico e avaliações reais</span>
+    </div>
+  </div>
+  <div class="dor-card">
+    <div class="dor-ico">💸</div>
+    <div>
+      <div class="dor-tit">Agência cobra caro e ainda demora</div>
+      <div class="dor-desc">Taxa de 30%, contrato longo, processo burocrático — para uma diária que precisa ser resolvida hoje.</div>
+      <span class="dor-sol">→ Zero taxa para contratar, combinado direto</span>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" style="background:#fff;">
+  <div class="section-pill">⚡ Como funciona</div>
+  <h2 class="section-h2">Vaga publicada,<br><span>candidatos em minutos</span></h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><div class="step-tit">Crie sua conta gratuita</div><div class="step-desc">Nome, celular e cidade. Pessoa física, MEI ou CNPJ — qualquer formato.</div><span class="step-time">⏱ 2 minutos</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><div class="step-tit">Publique a vaga</div><div class="step-desc">Título, categoria, data, horário e valor. Presencial ou home office. Sua vaga aparece na hora para profissionais da região.</div><span class="step-time">⏱ 3 minutos</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><div class="step-tit">Receba candidatos com avaliações</div><div class="step-desc">Você vê o perfil, as estrelas, o histórico e os tópicos de cada candidato antes de escolher.</div><span class="step-time">⏱ Em horas</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div><div class="step-tit">Fale pelo chat do app</div><div class="step-desc">Converse, confirme detalhes e combine o pagamento direto com o profissional. Simples e registrado.</div><span class="step-time">⏱ Minutos</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div><div class="step-tit">Pague diretamente ao profissional</div><div class="step-desc">Pix, dinheiro ou transferência — sem intermediário. O app não cobra comissão sobre o contrato.</div><span class="step-time">💰 Sem taxa</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CANDIDATOS COM ESTRELAS -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">⭐ Perfis verificados</div>
+  <h2 class="section-h2">Veja as estrelas<br><span>antes de contratar</span></h2>
+  <p class="section-sub">Todo candidato tem avaliações reais de contratantes anteriores. Você decide com informação.</p>
+
+  <div class="cand-card">
+    <div class="cand-top">
+      <div class="cand-av" style="background:linear-gradient(135deg,#1D9E75,#065F46);">MR</div>
+      <div>
+        <div class="cand-name">Maria Rosa</div>
+        <div class="cand-sub">Diarista · Sinop, MT · 0,8km</div>
+        <div class="cand-stars">★★★★★ <span class="cand-num">4.9</span><span class="cand-count"> · 38 avaliações</span></div>
+      </div>
+    </div>
+    <div class="cand-chips">
+      <span class="chip chip-g">✅ Pontual (35x)</span>
+      <span class="chip chip-g">🔒 Confiável (32x)</span>
+      <span class="chip chip-g">🧹 Caprichosa (28x)</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--soft);margin-bottom:3px;"><span>100% recomendado</span><span>47 diárias</span></div>
+    <div class="cand-bar"><div class="cand-bar-fill" style="width:100%;"></div></div>
+  </div>
+
+  <div class="cand-card">
+    <div class="cand-top">
+      <div class="cand-av" style="background:linear-gradient(135deg,#378ADD,#185FA5);">JC</div>
+      <div>
+        <div class="cand-name">João Carlos</div>
+        <div class="cand-sub">Garçom / Eventos · Sinop, MT · 2,1km</div>
+        <div class="cand-stars">★★★★<span style="color:#E2E8F0;">★</span> <span class="cand-num">4.2</span><span class="cand-count"> · 15 avaliações</span></div>
+      </div>
+    </div>
+    <div class="cand-chips">
+      <span class="chip chip-g">✅ Comunicativo (14x)</span>
+      <span class="chip chip-b">📍 Presencial</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--soft);margin-bottom:3px;"><span>93% recomendado</span><span>18 diárias</span></div>
+    <div class="cand-bar"><div class="cand-bar-fill" style="width:93%;"></div></div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="price-section">
+  <div class="price-tit">Quanto custa?</div>
+  <div class="price-sub">Publicar vaga é grátis. Sempre. Pague só se quiser aparecer em destaque.</div>
+
+  <div class="price-box">
+    <div class="price-label">Publicar vagas</div>
+    <div class="price-val">R$ 0</div>
+    <div class="price-period">para sempre</div>
+    <div class="price-feats">
+      <div class="pf">✅ Vagas ilimitadas</div>
+      <div class="pf">✅ Ver candidatos com estrelas</div>
+      <div class="pf">✅ Chat com candidatos</div>
+      <div class="pf">✅ Presencial e home office</div>
+      <div class="pf">✅ Sem comissão sobre o contrato</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:16px;margin-bottom:14px;">
+    <div class="price-label">Opcional · Destaque</div>
+    <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;">R$ 19<span style="font-size:14px;font-weight:600;color:rgba(255,255,255,.7);">/semana</span></div>
+    <div class="price-feats">
+      <div class="pf">📌 Vaga fixada no topo dos resultados</div>
+      <div class="pf">🔥 Mais candidatos, mais rápido</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section style="background:#fff;">
+  <div class="section-pill">⭐ Quem já usa</div>
+  <h2 class="section-h2">Empresas que<br><span>contratam toda semana</span></h2>
+
+  <div class="dep">
+    <p class="dep-txt">"Precisei de 3 garçons para um evento no sábado. Publiquei na sexta à tarde e até às 18h já tinha os 3 confirmados, com avaliação ótima. Nunca mais ligo para agência."</p>
+    <div class="dep-person">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1557FF,#0A2A8F);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">BE</div>
+      <div><div class="dep-name">Buffet Estrela</div><div class="dep-role">Eventos · Sinop, MT</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+  <div class="dep">
+    <p class="dep-txt">"A gente precisa de diarista toda semana. Antes era sempre uma correria. Agora tenho as mesmas pessoas salvas no app e é só publicar. Simples demais."</p>
+    <div class="dep-person">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">FC</div>
+      <div><div class="dep-name">Família Carvalho</div><div class="dep-role">Residência · Cuiabá, MT</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+  <div class="dep">
+    <p class="dep-txt">"Contratei 2 ajudantes de obra para uma reforma urgente. Vi as avaliações e escolhi os dois que tinham melhor nota em pontualidade. Apareceram no horário, sem enrolação."</p>
+    <div class="dep-person">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1D9E75,#065F46);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">CA</div>
+      <div><div class="dep-name">Construtora Avança</div><div class="dep-role">Construção · Santo André, SP</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">❓ Dúvidas</div>
+  <h2 class="section-h2">Perguntas<br><span>frequentes</span></h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Publicar vaga é realmente grátis? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. Você publica quantas vagas quiser sem pagar nada. O único custo opcional é destacar sua vaga no topo para aparecer para mais candidatos — isso custa R$19 por semana e é completamente opcional.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Como funciona o pagamento ao profissional? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Você combina diretamente com o profissional pelo chat do app — Pix, dinheiro ou transferência. O app não cobra comissão e não fica no meio do pagamento.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">E se o profissional não aparecer? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Você pode avaliar a ocorrência. Profissionais que dão no-show recebem avaliações negativas públicas e deixam de receber candidaturas da plataforma. O sistema de reputação cria responsabilidade.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso contratar para home office? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. Ao publicar a vaga você escolhe se é presencial, home office ou híbrido. Vagas remotas alcançam profissionais de qualquer cidade.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Pessoa física pode contratar ou só empresa? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Qualquer pessoa pode contratar — família, MEI, empresa. Não tem exigência de CNPJ para publicar vaga.</div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>Seu profissional<br>está aqui agora</h2>
+  <p>Publique sua vaga em 3 minutos.<br>Grátis, sem burocracia, sem comissão.</p>
+  <a href="#cadastro" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Publicar minha vaga agora →</a>
+  <p style="font-size:12px;color:rgba(255,255,255,.55);">Diária da Cidade · publicar é sempre gratuito</p>
+</section>
+
+<footer>
+  <p>© 2025 Diária da Cidade · <a href="#">Termos de Uso</a> · <a href="#">Privacidade</a><br>
+  Você está vendo a página de quem quer contratar. Quer trabalhar? <a href="trabalhe-hoje.html">Clique aqui</a></p>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const a = el.querySelector('.faq-a');
+  const ico = el.querySelector('.faq-ico');
+  const open = a.classList.toggle('open');
+  ico.textContent = open ? '−' : '+';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabalhe Hoje — Diária da Cidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#1D9E75;--green-d:#0F6E56;--green-l:#E1F5EE;
+  --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
+  --bg:#F8FAFB;--white:#fff;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);}
+img{max-width:100%;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,#065F46 0%,#1D9E75 60%,#34D399 100%);min-height:100svh;display:flex;flex-direction:column;padding:0;position:relative;overflow:hidden;}
+.hero-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.07);}
+.o1{width:400px;height:400px;top:-120px;right:-100px;}
+.o2{width:250px;height:250px;bottom:80px;left:-80px;}
+.o3{width:120px;height:120px;top:200px;left:30px;}
+
+.nav{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.logo-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.nav-cta{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;text-decoration:none;backdrop-filter:blur(8px);}
+
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px 48px;position:relative;z-index:2;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff;margin-bottom:20px;backdrop-filter:blur(8px);width:fit-content;}
+.hero-h1{font-family:'Sora',sans-serif;font-size:38px;font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px;}
+.hero-h1 span{color:#A7F3D0;}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.82);line-height:1.6;margin-bottom:32px;}
+
+.cta-block{display:flex;flex-direction:column;gap:12px;}
+.btn-main{display:block;width:100%;padding:18px;background:#fff;color:var(--green-d);border:none;border-radius:16px;font-family:'Sora',sans-serif;font-size:17px;font-weight:800;text-align:center;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:all .2s;cursor:pointer;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.22);}
+.btn-sec{display:block;width:100%;padding:15px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;text-align:center;text-decoration:none;transition:all .2s;cursor:pointer;}
+.cta-note{font-size:12px;color:rgba(255,255,255,.6);text-align:center;}
+
+.hero-numbers{display:flex;gap:0;margin-top:40px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;}
+.hnum{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.15);}
+.hnum:last-child{border-right:none;}
+.hnum-n{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.hnum-l{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.3;}
+
+/* wave */
+.wave{display:block;margin-top:-2px;}
+
+/* ── SEÇÕES ── */
+section{padding:48px 24px;}
+
+.section-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-l);color:var(--green-d);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;}
+.section-h2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:10px;}
+.section-h2 span{color:var(--green);}
+.section-sub{font-size:15px;color:var(--soft);line-height:1.6;margin-bottom:28px;}
+
+/* COMO FUNCIONA */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);}
+.step:last-child{border-bottom:none;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--green-l);color:var(--green-d);font-family:'Sora',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-tit{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+.step-time{display:inline-block;background:var(--green-l);color:var(--green-d);font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px;}
+
+/* CATEGORIAS */
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cat{background:var(--white);border-radius:14px;padding:16px 14px;box-shadow:0 1px 3px rgba(0,0,0,.07);display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);transition:all .2s;}
+.cat:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(29,158,117,.12);}
+.cat-ico{font-size:24px;}
+.cat-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
+.cat-val{font-size:11px;color:var(--green);font-weight:700;margin-top:1px;}
+
+/* GANHOS */
+.earn-card{background:linear-gradient(135deg,#065F46,#1D9E75);border-radius:20px;padding:24px;margin-bottom:12px;}
+.earn-tit{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:16px;}
+.earn-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.15);}
+.earn-row:last-child{border-bottom:none;}
+.earn-job{font-size:13px;color:rgba(255,255,255,.85);}
+.earn-val{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#A7F3D0;}
+
+/* DEPOIMENTOS */
+.dep{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;border-left:4px solid var(--green);}
+.dep-txt{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.dep-person{display:flex;align-items:center;gap:10px;}
+.dep-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;}
+.dep-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
+.dep-role{font-size:11px;color:var(--soft);}
+.dep-stars{font-size:13px;color:#F59E0B;margin-top:1px;}
+
+/* FAQ */
+.faq-item{background:var(--white);border-radius:14px;padding:18px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);cursor:pointer;}
+.faq-q{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-a{font-size:13px;color:var(--soft);line-height:1.6;margin-top:10px;display:none;}
+.faq-a.open{display:block;}
+.faq-ico{flex-shrink:0;font-size:18px;transition:transform .2s;}
+
+/* CTA FINAL */
+.cta-final{background:linear-gradient(160deg,#065F46,#1D9E75);padding:48px 24px;text-align:center;}
+.cta-final h2{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.2;}
+.cta-final p{font-size:15px;color:rgba(255,255,255,.78);margin-bottom:28px;line-height:1.6;}
+
+/* FOOTER */
+footer{background:var(--dark);padding:28px 24px;text-align:center;}
+footer p{font-size:12px;color:#718096;line-height:1.8;}
+footer a{color:#A7F3D0;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-orb o1"></div>
+  <div class="hero-orb o2"></div>
+  <div class="hero-orb o3"></div>
+
+  <nav class="nav">
+    <div class="logo">
+      <div class="logo-mark">📅</div>
+      <div class="logo-name">Diária da Cidade</div>
+    </div>
+    <a href="#cadastro" class="nav-cta">Cadastrar grátis</a>
+  </nav>
+
+  <div class="hero-body">
+    <div class="hero-pill">🟢 100% gratuito para profissionais</div>
+    <h1 class="hero-h1">Trabalhe hoje.<br><span>Ganhe hoje.</span><br>Perto de você.</h1>
+    <p class="hero-sub">Encontre diárias, bicos e empregos na sua cidade em minutos. Sem taxa, sem burocracia, sem espera.</p>
+
+    <div class="cta-block" id="cadastro">
+      <a href="#" class="btn-main">Quero trabalhar agora →</a>
+      <a href="#como-funciona" class="btn-sec">Ver como funciona</a>
+      <p class="cta-note">Grátis para sempre · Cadastro em 2 minutos</p>
+    </div>
+
+    <div class="hero-numbers">
+      <div class="hnum"><div class="hnum-n">R$150</div><div class="hnum-l">a R$300<br>por diária</div></div>
+      <div class="hnum"><div class="hnum-n">Hoje</div><div class="hnum-l">vagas<br>urgentes</div></div>
+      <div class="hnum"><div class="hnum-n">0</div><div class="hnum-l">taxa para<br>profissional</div></div>
+    </div>
+  </div>
+
+  <svg class="wave" viewBox="0 0 390 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:40px;display:block;">
+    <path d="M0,20 C80,40 310,0 390,20 L390,40 L0,40 Z" fill="#F8FAFB"/>
+  </svg>
+</section>
+
+<!-- ══════════ COMO FUNCIONA ══════════ -->
+<section id="como-funciona" style="background:#F8FAFB;">
+  <div class="section-pill">⚡ Simples assim</div>
+  <h2 class="section-h2">Do cadastro à primeira<br><span>diária em menos de 1h</span></h2>
+  <p class="section-sub">Não precisa de currículo elaborado, nem experiência formal. Só o básico.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-tit">Crie sua conta grátis</div>
+        <div class="step-desc">Nome, celular e cidade. Pronto. Sem documentos, sem aprovação.</div>
+        <span class="step-time">⏱ 2 minutos</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-tit">Escolha suas habilidades</div>
+        <div class="step-desc">Diarista, garçom, ajudante de obra, atendente — você define o que sabe fazer.</div>
+        <span class="step-time">⏱ 1 minuto</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-tit">Veja as vagas disponíveis hoje</div>
+        <div class="step-desc">O app mostra só as vagas compatíveis com você, na sua cidade ou região.</div>
+        <span class="step-time">⏱ Na hora</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-tit">Se candidate em 1 toque</div>
+        <div class="step-desc">Um botão. O contratante recebe seu perfil e te chama pelo chat do app.</div>
+        <span class="step-time">⏱ 10 segundos</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-tit">Trabalhe e receba no dia</div>
+        <div class="step-desc">Pagamento combinado diretamente com quem te contratou. Pix, dinheiro, o que combinar.</div>
+        <span class="step-time">💰 No mesmo dia</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CATEGORIAS ══════════ -->
+<section style="background:#fff;padding:40px 24px;">
+  <div class="section-pill">💼 Categorias</div>
+  <h2 class="section-h2">Vagas para<br><span>quem você é</span></h2>
+  <p class="section-sub" style="margin-bottom:20px;">Presencial perto de você ou home office de qualquer lugar.</p>
+
+  <div class="cats">
+    <div class="cat"><div class="cat-ico">🧹</div><div><div class="cat-name">Diarista</div><div class="cat-val">R$120–R$200/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">🍽️</div><div><div class="cat-name">Garçom</div><div class="cat-val">R$150–R$250/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">🔨</div><div><div class="cat-name">Ajudante obra</div><div class="cat-val">R$150–R$220/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">🎉</div><div><div class="cat-name">Eventos</div><div class="cat-val">R$120–R$200/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">📞</div><div><div class="cat-name">Atendente</div><div class="cat-val">R$100–R$160/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">💻</div><div><div class="cat-name">Home Office</div><div class="cat-val">R$100–R$200/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">🌿</div><div><div class="cat-name">Zelador</div><div class="cat-val">R$130–R$180/dia</div></div></div>
+    <div class="cat"><div class="cat-ico">👴</div><div><div class="cat-name">Cuidador</div><div class="cat-val">R$150–R$250/dia</div></div></div>
+  </div>
+</section>
+
+<!-- ══════════ QUANTO VOCÊ PODE GANHAR ══════════ -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">💰 Seus ganhos</div>
+  <h2 class="section-h2">Quanto dá pra<br><span>ganhar por mês?</span></h2>
+  <p class="section-sub">Trabalhando algumas diárias por semana, sem abrir mão da sua rotina.</p>
+
+  <div class="earn-card">
+    <div class="earn-tit">Exemplos reais de ganhos mensais</div>
+    <div class="earn-row"><span class="earn-job">🧹 Diarista · 3x por semana</span><span class="earn-val">~R$1.560</span></div>
+    <div class="earn-row"><span class="earn-job">🍽️ Garçom · fins de semana</span><span class="earn-val">~R$1.200</span></div>
+    <div class="earn-row"><span class="earn-job">🔨 Ajudante · 5x por semana</span><span class="earn-val">~R$3.000</span></div>
+    <div class="earn-row"><span class="earn-job">💻 Atendente remoto · part-time</span><span class="earn-val">~R$1.000</span></div>
+  </div>
+
+  <div style="background:#fff;border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.07);border:1.5px solid var(--green-l);">
+    <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;">✅ Sem taxa para você</div>
+    <div style="font-size:13px;color:var(--soft);line-height:1.6;">O Diária da Cidade é gratuito para profissionais. Você não paga nada para se cadastrar, se candidatar ou receber vagas. O pagamento é combinado diretamente com o contratante.</div>
+  </div>
+</section>
+
+<!-- ══════════ DEPOIMENTOS ══════════ -->
+<section style="background:#fff;">
+  <div class="section-pill">⭐ Quem já usa</div>
+  <h2 class="section-h2">Pessoas reais,<br><span>resultados reais</span></h2>
+
+  <div class="dep">
+    <p class="dep-txt">"Me cadastrei de manhã e às 14h já tinha confirmado uma diária de garçonete para a noite. Recebi R$180 em dinheiro na saída do evento."</p>
+    <div class="dep-person">
+      <div class="dep-av" style="background:linear-gradient(135deg,#1D9E75,#065F46);">MR</div>
+      <div><div class="dep-name">Maria Rosa</div><div class="dep-role">Garçonete · Sinop, MT</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+
+  <div class="dep">
+    <p class="dep-txt">"Tava desempregado faz 3 meses. Na primeira semana no app consegui 4 diárias de ajudante de obra. Agora tenho renda toda semana."</p>
+    <div class="dep-person">
+      <div class="dep-av" style="background:linear-gradient(135deg,#378ADD,#185FA5);">JC</div>
+      <div><div class="dep-name">João Carlos</div><div class="dep-role">Ajudante de obra · Cuiabá, MT</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+
+  <div class="dep">
+    <p class="dep-txt">"Trabalho de casa como atendente em diárias de home office. Consigo conciliar com os filhos. Ganho de R$100 a R$160 por dia trabalhado."</p>
+    <div class="dep-person">
+      <div class="dep-av" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);">LS</div>
+      <div><div class="dep-name">Luiza Santos</div><div class="dep-role">Atendente remota · Rondonópolis, MT</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">❓ Dúvidas</div>
+  <h2 class="section-h2">Perguntas<br><span>frequentes</span></h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">É realmente gratuito para quem quer trabalhar? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. O app é 100% gratuito para profissionais. Você não paga nada para se cadastrar, candidatar em vagas ou receber contato de empresas. Não existe taxa oculta.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Como recebo o pagamento? <span class="faq-ico">+</span></div>
+    <div class="faq-a">O pagamento é combinado diretamente com o contratante pelo chat do app. Pode ser Pix, dinheiro ou transferência — o que vocês dois decidirem. O app registra o combinado no chat para segurança.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Preciso ter experiência formal? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Não. Você informa no seu perfil o que sabe fazer e quantos anos de prática tem. Avaliações de outros contratantes constroem sua reputação com o tempo.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso trabalhar em home office também? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. Tem vagas presenciais e vagas de home office. Você escolhe qual tipo quer ver no feed. Vagas remotas permitem trabalhar de qualquer cidade.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">E se o contratante não pagar? <span class="faq-ico">+</span></div>
+    <div class="faq-a">O sistema de avaliação é público. Contratantes que não pagam recebem avaliações negativas e ficam sem candidatos. O chat do app fica registrado como prova do combinado.</div>
+  </div>
+</section>
+
+<!-- ══════════ CTA FINAL ══════════ -->
+<section class="cta-final">
+  <h2>Sua próxima diária<br>começa agora</h2>
+  <p>Cadastro grátis em 2 minutos.<br>Sem cartão, sem taxa, sem complicação.</p>
+  <a href="#cadastro" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Quero trabalhar agora →</a>
+  <p style="font-size:12px;color:rgba(255,255,255,.55);">Diária da Cidade · gratuito para profissionais</p>
+</section>
+
+<footer>
+  <p>© 2025 Diária da Cidade · <a href="#">Termos de Uso</a> · <a href="#">Privacidade</a><br>
+  Você está vendo a página de quem quer trabalhar. Você é uma empresa? <a href="contrate-hoje.html">Clique aqui</a></p>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const a = el.querySelector('.faq-a');
+  const ico = el.querySelector('.faq-ico');
+  const open = a.classList.toggle('open');
+  ico.textContent = open ? '−' : '+';
+  ico.style.transform = open ? 'rotate(0deg)' : '';
+}
+</script>
+</body>
+</html>

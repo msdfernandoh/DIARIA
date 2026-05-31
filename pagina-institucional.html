@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diária da Cidade — Trabalhe hoje. Contrate hoje. Perto de você.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --P:#1557FF;--Pd:#0A3DBF;--Pl:#E8EEFF;
+  --G:#1D9E75;--Gl:#E1F5EE;
+  --A:#D97706;--Al:#FFFBEB;
+  --V:#7C3AED;--Vl:#F5F3FF;
+  --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
+  --bg:#F8FAFB;--white:#fff;
+  --r1:10px;--r2:16px;--r3:24px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);overflow-x:hidden;}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,13,20,.85);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:9px;}
+.nav-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#1557FF,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-name{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;}
+.nav-cta{background:var(--P);color:#fff;border:none;border-radius:999px;padding:8px 18px;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;}
+.nav-cta:hover{background:var(--Pd);}
+
+/* ─── HERO ─── */
+.hero{min-height:100svh;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden;text-align:center;}
+
+/* mesh gradient background */
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 50% at 20% 30%, rgba(21,87,255,.25) 0%, transparent 70%),
+  radial-gradient(ellipse 50% 40% at 80% 70%, rgba(29,158,117,.2) 0%, transparent 70%),
+  radial-gradient(ellipse 40% 50% at 60% 20%, rgba(124,58,237,.15) 0%, transparent 70%),
+  var(--dark);}
+
+/* floating orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.4;}
+.orb1{width:300px;height:300px;background:#1557FF;top:-80px;left:-60px;}
+.orb2{width:250px;height:250px;background:#1D9E75;bottom:-60px;right:-40px;}
+.orb3{width:180px;height:180px;background:#7C3AED;top:40%;left:60%;}
+
+/* grid pattern overlay */
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;}
+
+.hero-content{position:relative;z-index:2;}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:7px 16px;font-size:12px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:24px;backdrop-filter:blur(8px);}
+.hero-dot{width:7px;height:7px;border-radius:50%;background:#1D9E75;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+
+.hero-h1{font-family:'Sora',sans-serif;font-size:42px;font-weight:800;color:#fff;line-height:1.08;letter-spacing:-.8px;margin-bottom:20px;}
+.hero-h1 .line2{background:linear-gradient(90deg,#60A5FA,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-h1 .line3{color:rgba(255,255,255,.6);}
+
+.hero-slogan{font-size:15px;color:rgba(255,255,255,.55);margin-bottom:36px;font-style:italic;letter-spacing:.3px;}
+
+/* 3 perfis CTA */
+.perfis-grid{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;margin:0 auto 40px;}
+.perfil-btn{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:var(--r2);border:1.5px solid;text-decoration:none;transition:all .22s;text-align:left;}
+.perfil-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3);}
+.perfil-btn.green{background:rgba(29,158,117,.12);border-color:rgba(29,158,117,.4);}
+.perfil-btn.green:hover{background:rgba(29,158,117,.2);border-color:#1D9E75;}
+.perfil-btn.blue{background:rgba(21,87,255,.12);border-color:rgba(21,87,255,.4);}
+.perfil-btn.blue:hover{background:rgba(21,87,255,.2);border-color:#1557FF;}
+.perfil-btn.gold{background:rgba(217,119,6,.12);border-color:rgba(217,119,6,.4);}
+.perfil-btn.gold:hover{background:rgba(217,119,6,.2);border-color:#D97706;}
+.pb-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.pb-ico.g{background:rgba(29,158,117,.2);}
+.pb-ico.b{background:rgba(21,87,255,.2);}
+.pb-ico.a{background:rgba(217,119,6,.2);}
+.pb-txt{flex:1;}
+.pb-label{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;}
+.pb-sub{font-size:11px;color:rgba(255,255,255,.55);}
+.pb-arrow{color:rgba(255,255,255,.4);font-size:18px;}
+
+/* números hero */
+.hero-nums{display:flex;gap:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;overflow:hidden;backdrop-filter:blur(10px);}
+.hn{flex:1;padding:16px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.08);}
+.hn:last-child{border-right:none;}
+.hn-n{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;}
+.hn-l{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;line-height:1.3;}
+
+/* ─── SEÇÕES ─── */
+section{padding:64px 24px;}
+
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 14px;font-size:11px;font-weight:700;margin-bottom:16px;}
+.pill.g{background:var(--Gl);color:#065F46;}
+.pill.b{background:var(--Pl);color:var(--Pd);}
+.pill.a{background:var(--Al);color:#92400E;}
+.pill.v{background:var(--Vl);color:#5B21B6;}
+.pill.dark{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
+
+.sh2{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:var(--dark);line-height:1.15;margin-bottom:10px;}
+.sh2 span{color:var(--P);}
+.sh2 .sg{color:var(--G);}
+.sh2 .sa{color:var(--A);}
+.ssub{font-size:15px;color:var(--soft);line-height:1.65;margin-bottom:28px;}
+
+/* ─── PROBLEMA / SOLUÇÃO ─── */
+.prob-sol{display:flex;flex-direction:column;gap:8px;}
+.ps-card{background:var(--white);border-radius:var(--r2);padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;gap:14px;border:1.5px solid var(--line);}
+.ps-ico{font-size:24px;flex-shrink:0;margin-top:2px;}
+.ps-tit{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.ps-before{font-size:12px;color:var(--soft);line-height:1.5;margin-bottom:6px;}
+.ps-after{font-size:12px;font-weight:700;color:var(--G);display:flex;align-items:center;gap:4px;}
+
+/* ─── 3 PERFIS SEÇÃO ─── */
+.perfil-cards{display:flex;flex-direction:column;gap:14px;}
+.pc{border-radius:var(--r3);padding:24px;position:relative;overflow:hidden;}
+.pc.green{background:linear-gradient(135deg,#065F46,#1D9E75);}
+.pc.blue{background:linear-gradient(135deg,#0A2A8F,#1557FF);}
+.pc.gold{background:linear-gradient(135deg,#451A03,#D97706);}
+.pc-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.07);}
+.pc-orb1{width:180px;height:180px;top:-60px;right:-60px;}
+.pc-orb2{width:100px;height:100px;bottom:-30px;left:-30px;}
+.pc-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 12px;font-size:10px;font-weight:700;color:#fff;margin-bottom:14px;backdrop-filter:blur(8px);}
+.pc-tit{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;}
+.pc-sub{font-size:13px;color:rgba(255,255,255,.75);line-height:1.55;margin-bottom:18px;}
+.pc-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.pc-feat{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:7px;}
+.pc-btn{display:block;background:#fff;border-radius:12px;padding:13px;font-family:'Sora',sans-serif;font-size:14px;font-weight:800;text-align:center;text-decoration:none;transition:all .2s;}
+.pc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.pc-btn.g{color:#065F46;}
+.pc-btn.b{color:#0A2A8F;}
+.pc-btn.a{color:#451A03;}
+
+/* ─── COMO FUNCIONA GERAL ─── */
+.flow{display:flex;flex-direction:column;gap:0;}
+.flow-item{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);}
+.flow-item:last-child{border-bottom:none;}
+.flow-num{width:38px;height:38px;border-radius:50%;background:var(--dark);color:#fff;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.flow-tit{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px;}
+.flow-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+
+/* ─── MODELO DE NEGÓCIO ─── */
+.modelo-dark{background:var(--dark);padding:64px 24px;}
+.modelo-row{display:flex;flex-direction:column;gap:10px;}
+.modelo-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:18px;backdrop-filter:blur(8px);}
+.mc-ico{font-size:22px;margin-bottom:8px;}
+.mc-tit{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.mc-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.55;}
+.mc-val{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-top:8px;}
+
+/* ─── TERMÔMETRO ─── */
+.thermo-section{background:var(--dark);padding:0 24px 64px;}
+.thermo-visual{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r3);padding:24px;margin-bottom:14px;}
+.thermo-bar{height:20px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin:12px 0 6px;}
+.thermo-fill{height:100%;background:linear-gradient(90deg,#1D9E75,#34D399);border-radius:999px;width:34%;position:relative;}
+.thermo-fill::after{content:'34%';position:absolute;right:-2px;top:-22px;font-family:'Sora',sans-serif;font-size:11px;font-weight:800;color:#34D399;}
+.thermo-phases{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+.tp{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;}
+.tp.active{background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);}
+.tp.future{opacity:.5;}
+.tp-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.tp-txt{font-size:12px;color:rgba(255,255,255,.75);line-height:1.4;}
+.tp-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);flex-shrink:0;min-width:40px;text-align:right;}
+
+/* ─── MAPA / EXPANSÃO ─── */
+.map-section{background:#fff;padding:64px 24px;}
+.city-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.city-card{background:var(--bg);border-radius:12px;padding:14px;border:1.5px solid var(--line);position:relative;overflow:hidden;}
+.city-card.active{border-color:var(--G);background:var(--Gl);}
+.city-card.soon{opacity:.6;}
+.city-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px;}
+.city-stat{font-size:10px;color:var(--soft);}
+.city-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;}
+.cb-active{background:var(--Gl);color:#065F46;}
+.cb-open{background:var(--Pl);color:var(--Pd);}
+.cb-soon{background:#F3F4F6;color:var(--soft);}
+
+/* ─── NÚMEROS IMPACTO ─── */
+.impact{background:linear-gradient(160deg,#0A0D14 0%,#0A2A8F 50%,#065F46 100%);padding:64px 24px;}
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.impact-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--r2);padding:20px;text-align:center;backdrop-filter:blur(8px);}
+.impact-n{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;color:#fff;line-height:1;}
+.impact-u{font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.5);}
+.impact-l{font-size:11px;color:rgba(255,255,255,.55);margin-top:6px;line-height:1.4;}
+
+/* ─── MANIFESTO ─── */
+.manifesto{background:var(--dark);padding:64px 24px;}
+.manifesto-card{background:linear-gradient(135deg,rgba(21,87,255,.15),rgba(29,158,117,.1));border:1px solid rgba(255,255,255,.1);border-radius:var(--r3);padding:28px;text-align:center;}
+.manifesto-quote{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:12px;}
+.manifesto-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:20px;}
+.manifesto-items{display:flex;flex-direction:column;gap:8px;text-align:left;}
+.mi{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;}
+.mi-dot{width:6px;height:6px;border-radius:50%;background:#34D399;flex-shrink:0;margin-top:5px;}
+
+/* ─── FAQ ─── */
+.faq-item{background:var(--white);border-radius:var(--r2);padding:18px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);cursor:pointer;}
+.faq-q{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-a{font-size:13px;color:var(--soft);line-height:1.65;margin-top:10px;display:none;}
+.faq-a.open{display:block;}
+.faq-ico{flex-shrink:0;font-size:18px;transition:all .2s;}
+
+/* ─── CTA FINAL ─── */
+.cta-final{background:var(--dark);padding:64px 24px;text-align:center;position:relative;overflow:hidden;}
+.cta-final-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(21,87,255,.2) 0%,transparent 70%);}
+.cta-final-content{position:relative;z-index:2;}
+.cta-h2{font-family:'Sora',sans-serif;font-size:30px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;}
+.cta-slogan{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:36px;font-style:italic;}
+.cta-3{display:flex;flex-direction:column;gap:10px;}
+.cta-btn{display:block;padding:16px;border-radius:14px;font-family:'Sora',sans-serif;font-size:14px;font-weight:800;text-align:center;text-decoration:none;transition:all .2s;}
+.cta-btn:hover{transform:translateY(-2px);}
+.cta-btn.green{background:#1D9E75;color:#fff;box-shadow:0 4px 20px rgba(29,158,117,.3);}
+.cta-btn.blue{background:#1557FF;color:#fff;box-shadow:0 4px 20px rgba(21,87,255,.3);}
+.cta-btn.gold{background:#D97706;color:#fff;box-shadow:0 4px 20px rgba(217,119,6,.3);}
+.cta-note{font-size:11px;color:rgba(255,255,255,.35);margin-top:16px;}
+
+/* ─── FOOTER ─── */
+footer{background:#060810;padding:36px 24px;border-top:1px solid rgba(255,255,255,.06);}
+.footer-logo{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+.footer-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#1557FF,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.footer-name{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#fff;}
+.footer-slogan{font-size:12px;color:rgba(255,255,255,.35);font-style:italic;margin-bottom:20px;}
+.footer-links{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.footer-links a{font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:rgba(255,255,255,.8);}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.25);line-height:1.7;}
+
+/* ─── UTILITIES ─── */
+.btn-primary{display:block;width:100%;padding:16px;background:var(--P);color:#fff;border:none;border-radius:14px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(21,87,255,.3);}
+.btn-primary:hover{background:var(--Pd);transform:translateY(-1px);}
+
+.divider{height:1px;background:var(--line);margin:0 24px;}
+
+/* scroll reveal simplificado */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-mark">📅</div>
+    <div class="nav-name">Diária da Cidade</div>
+  </div>
+  <a href="#escolha" class="nav-cta">Começar grátis</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content reveal">
+    <div class="hero-eyebrow">
+      <div class="hero-dot"></div>
+      Plataforma aberta · 100% gratuita para usuários
+    </div>
+
+    <h1 class="hero-h1">
+      Diária<br>
+      <span class="line2">da Cidade</span>
+    </h1>
+
+    <p class="hero-slogan">"Trabalhe hoje. Contrate hoje. Perto de você."</p>
+
+    <div class="perfis-grid" id="escolha">
+      <a href="pagina-trabalhe-hoje.html" class="perfil-btn green">
+        <div class="pb-ico g">👷</div>
+        <div class="pb-txt">
+          <div class="pb-label">Quero trabalhar</div>
+          <div class="pb-sub">Diárias, bicos e empregos na sua cidade</div>
+        </div>
+        <span class="pb-arrow">→</span>
+      </a>
+      <a href="pagina-contrate-hoje.html" class="perfil-btn blue">
+        <div class="pb-ico b">🏢</div>
+        <div class="pb-txt">
+          <div class="pb-label">Quero contratar</div>
+          <div class="pb-sub">Profissionais avaliados em horas</div>
+        </div>
+        <span class="pb-arrow">→</span>
+      </a>
+      <a href="pagina-abra-sua-diaria.html" class="perfil-btn gold">
+        <div class="pb-ico a">💡</div>
+        <div class="pb-txt">
+          <div class="pb-label">Quero abrir minha Diária</div>
+          <div class="pb-sub">Empreenda na sua cidade · grátis</div>
+        </div>
+        <span class="pb-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="hero-nums">
+      <div class="hn"><div class="hn-n">R$0</div><div class="hn-l">para profissionais<br>e contratantes</div></div>
+      <div class="hn"><div class="hn-n">Hoje</div><div class="hn-l">vagas urgentes<br>disponíveis</div></div>
+      <div class="hn"><div class="hn-n">Local</div><div class="hn-l">perto de<br>onde você está</div></div>
+      <div class="hn"><div class="hn-n">🇧🇷</div><div class="hn-l">em expansão<br>pelo Brasil</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROBLEMA / SOLUÇÃO ─── -->
+<section style="background:var(--bg);" class="reveal">
+  <div class="pill g">🔍 O problema que resolvemos</div>
+  <h2 class="sh2">O mercado informal<br><span class="sg">sem estrutura</span></h2>
+  <p class="ssub">Milhões de brasileiros dependem de diárias e bicos. Mas até agora, quem precisava de trabalho ou de mão de obra dependia de grupos de WhatsApp, panfletos e indicações sem nenhuma garantia.</p>
+
+  <div class="prob-sol">
+    <div class="ps-card">
+      <div class="ps-ico">😰</div>
+      <div>
+        <div class="ps-tit">Precisa de alguém para hoje</div>
+        <div class="ps-before">Agência cobra 30% e demora dias. Grupos de WhatsApp não têm como filtrar.</div>
+        <div class="ps-after">✅ Profissional encontrado em horas, com avaliação</div>
+      </div>
+    </div>
+    <div class="ps-card">
+      <div class="ps-ico">💸</div>
+      <div>
+        <div class="ps-tit">Quer renda extra mas não sabe onde</div>
+        <div class="ps-before">Apps grandes são para CLT. Informais não têm plataforma séria com visibilidade real.</div>
+        <div class="ps-after">✅ Feed de vagas na sua cidade, na hora</div>
+      </div>
+    </div>
+    <div class="ps-card">
+      <div class="ps-ico">🌆</div>
+      <div>
+        <div class="ps-tit">Cidades pequenas sem solução</div>
+        <div class="ps-before">Plataformas grandes só funcionam em capitais. Interior fica sem opção.</div>
+        <div class="ps-after">✅ Instâncias locais para cada cidade do Brasil</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── 3 PERFIS ─── -->
+<section style="background:var(--white);" class="reveal">
+  <div class="pill b">👥 Para quem é</div>
+  <h2 class="sh2">Três perfis.<br><span>Um só app.</span></h2>
+  <p class="ssub">Cada perfil tem sua própria experiência, cores e funcionalidades. Mas todos estão no mesmo banco de dados e se conectam entre si.</p>
+
+  <div class="perfil-cards">
+    <div class="pc green">
+      <div class="pc-orb pc-orb1"></div>
+      <div class="pc-orb pc-orb2"></div>
+      <div class="pc-tag">👷 Empregado / Profissional</div>
+      <div class="pc-tit">Trabalhe hoje</div>
+      <div class="pc-sub">Diárias, bicos, empregos fixos e trabalho remoto. Você define quando quer trabalhar e só recebe vagas compatíveis.</div>
+      <div class="pc-feats">
+        <div class="pc-feat">✅ Feed filtrado por disponibilidade e localização</div>
+        <div class="pc-feat">✅ Presencial ou home office</div>
+        <div class="pc-feat">✅ Candidatura em 1 toque</div>
+        <div class="pc-feat">✅ Chat direto com o contratante</div>
+        <div class="pc-feat">✅ Perfil com avaliações e estrelas</div>
+        <div class="pc-feat">✅ 100% gratuito para sempre</div>
+      </div>
+      <a href="pagina-trabalhe-hoje.html" class="pc-btn g">Quero trabalhar →</a>
+    </div>
+
+    <div class="pc blue">
+      <div class="pc-orb pc-orb1"></div>
+      <div class="pc-orb pc-orb2"></div>
+      <div class="pc-tag">🏢 Empregador / Contratante</div>
+      <div class="pc-tit">Contrate hoje</div>
+      <div class="pc-sub">Publique vagas e encontre profissionais avaliados em horas. Pessoa física, MEI ou empresa — sem burocracia.</div>
+      <div class="pc-feats">
+        <div class="pc-feat">✅ Publicar vagas ilimitadas gratuitamente</div>
+        <div class="pc-feat">✅ Ver estrelas e avaliações dos candidatos</div>
+        <div class="pc-feat">✅ Chat integrado com candidatos</div>
+        <div class="pc-feat">✅ Vagas presenciais e home office</div>
+        <div class="pc-feat">✅ Sem comissão sobre o contrato</div>
+        <div class="pc-feat">✅ Destaque opcional por R$19/semana</div>
+      </div>
+      <a href="pagina-contrate-hoje.html" class="pc-btn b">Quero contratar →</a>
+    </div>
+
+    <div class="pc gold">
+      <div class="pc-orb pc-orb1"></div>
+      <div class="pc-orb pc-orb2"></div>
+      <div class="pc-tag">💡 Empreendedor / Parceiro</div>
+      <div class="pc-tit">Abra sua Diária</div>
+      <div class="pc-sub">Crie a Diária da sua cidade com link personalizado, sua logo e sua chave Pix. Venda destaques e fique com 90%.</div>
+      <div class="pc-feats">
+        <div class="pc-feat">✅ Link e app próprio da sua cidade</div>
+        <div class="pc-feat">✅ Logo e cor personalizadas</div>
+        <div class="pc-feat">✅ Receba direto no seu Pix</div>
+        <div class="pc-feat">✅ 90% de cada venda é seu</div>
+        <div class="pc-feat">✅ Repasse automático em planos premium</div>
+        <div class="pc-feat">✅ Grátis por 3 meses</div>
+      </div>
+      <a href="pagina-abra-sua-diaria.html" class="pc-btn a">Quero ser parceiro →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMO FUNCIONA GERAL ─── -->
+<section style="background:var(--bg);" class="reveal">
+  <div class="pill dark">⚡ Funcionamento</div>
+  <h2 class="sh2">Simples para<br><span>todos os lados</span></h2>
+  <p class="ssub">Do cadastro à primeira conexão em menos de 10 minutos. Para qualquer um dos três perfis.</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-num">1</div>
+      <div>
+        <div class="flow-tit">Usuário abre a instância da sua cidade</div>
+        <div class="flow-desc">Cada cidade tem seu link: diaria.suacidade.com.br. Ou acesse a nacional em diaria.cidade.com.br</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">2</div>
+      <div>
+        <div class="flow-tit">Escolhe o perfil e cria a conta</div>
+        <div class="flow-desc">Profissional, contratante ou empreendedor. Cadastro em 2 minutos com nome, celular e cidade.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">3</div>
+      <div>
+        <div class="flow-tit">Feed personalizado na hora</div>
+        <div class="flow-desc">Vagas filtradas por localização, disponibilidade e habilidades. Candidatos filtrados por avaliação e distância.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">4</div>
+      <div>
+        <div class="flow-tit">Conectam pelo chat do app</div>
+        <div class="flow-desc">Chat interno com opção de compartilhar celular. Ou ligação direta se ambos permitirem.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">5</div>
+      <div>
+        <div class="flow-tit">Pagamento direto entre as partes</div>
+        <div class="flow-desc">Pix, dinheiro ou transferência — combinado no chat. O app não está no meio. Zero comissão sobre o contrato.</div>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">6</div>
+      <div>
+        <div class="flow-tit">Avaliação constrói reputação</div>
+        <div class="flow-desc">Após a diária, ambos se avaliam. Estrelas e tópicos ficam públicos e constroem credibilidade progressiva.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MODELO DE NEGÓCIO ─── -->
+<section class="modelo-dark reveal">
+  <div class="pill dark">💰 Modelo de negócio</div>
+  <h2 class="sh2" style="color:#fff;">Gratuito para usar.<br><span style="color:#60A5FA;">Pago só para destacar.</span></h2>
+  <p class="ssub" style="color:rgba(255,255,255,.6);">O app nunca cobra de quem trabalha ou de quem contrata. A receita vem exclusivamente de quem quer mais visibilidade.</p>
+
+  <div class="modelo-row">
+    <div class="modelo-card">
+      <div class="mc-ico">📌</div>
+      <div class="mc-tit">Fixar vaga no topo</div>
+      <div class="mc-desc">Empresa paga para sua vaga aparecer primeiro na região. Parceiro cobra e fica com 90%.</div>
+      <div class="mc-val" style="color:#FDE68A;">R$19 <span style="font-size:12px;color:rgba(255,255,255,.4);">/semana</span></div>
+    </div>
+    <div class="modelo-card">
+      <div class="mc-ico">⭐</div>
+      <div class="mc-tit">Fixar candidato no topo</div>
+      <div class="mc-desc">Profissional paga para aparecer primeiro na busca dos empregadores da região.</div>
+      <div class="mc-val" style="color:#FDE68A;">R$9 <span style="font-size:12px;color:rgba(255,255,255,.4);">/semana</span></div>
+    </div>
+    <div class="modelo-card">
+      <div class="mc-ico">🏷️</div>
+      <div class="mc-tit">Banner regional</div>
+      <div class="mc-desc">Anunciante local exibido discretamente para usuários da instância. 1 banner por tela, sem poluição.</div>
+      <div class="mc-val" style="color:#FDE68A;">R$49 <span style="font-size:12px;color:rgba(255,255,255,.4);">/mês</span></div>
+    </div>
+    <div class="modelo-card">
+      <div class="mc-ico">🌐</div>
+      <div class="mc-tit">Planos premium de alcance</div>
+      <div class="mc-desc">Aparecer em toda a cidade, estado ou Brasil inteiro. Parceiro que indicou recebe 20–30% automaticamente.</div>
+      <div class="mc-val" style="color:#FDE68A;">R$149–R$799 <span style="font-size:12px;color:rgba(255,255,255,.4);">/mês</span></div>
+    </div>
+    <div style="background:rgba(21,87,255,.15);border:1px solid rgba(21,87,255,.3);border-radius:var(--r2);padding:18px;">
+      <div style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:#60A5FA;margin-bottom:6px;">🔁 Como o dinheiro circula</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.7;">Cliente paga direto no Pix do parceiro → Parceiro retém 90% → Plataforma cobra 10% quando atingir limite → Em planos premium, parceiro recebe repasse automático de 20–30%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TERMÔMETRO ─── -->
+<section class="thermo-section reveal">
+  <div class="pill dark">🌡️ Crescimento</div>
+  <h2 class="sh2" style="color:#fff;">Quanto mais cresce,<br><span style="color:#34D399;">mais todos ganham</span></h2>
+  <p class="ssub" style="color:rgba(255,255,255,.6);">Estamos no lançamento. Tudo é gratuito. À medida que a plataforma cresce, os limites são ativados gradualmente — sem surpresa para ninguém.</p>
+
+  <div class="thermo-visual">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:#fff;">Crescimento atual</span>
+      <span style="font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:#34D399;">34% 🟢</span>
+    </div>
+    <div class="thermo-bar"><div class="thermo-fill"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.3);"><span>0%</span><span>40%</span><span>70%</span><span>90%</span><span>100%</span></div>
+
+    <div class="thermo-phases">
+      <div class="tp active">
+        <div class="tp-dot" style="background:#1D9E75;"></div>
+        <div class="tp-txt"><strong style="color:#34D399;">Fase atual (0–40%)</strong> — tudo gratuito sem limites para todos os perfis</div>
+        <div class="tp-label">AGORA</div>
+      </div>
+      <div class="tp future">
+        <div class="tp-dot" style="background:#F59E0B;"></div>
+        <div class="tp-txt">Fase 2 (40–70%) — alcance cidade/estado limitado para não assinantes</div>
+        <div class="tp-label">Em breve</div>
+      </div>
+      <div class="tp future">
+        <div class="tp-dot" style="background:#EF4444;"></div>
+        <div class="tp-txt">Fase 3 (70–90%) — vagas gratuitas só na instância local</div>
+        <div class="tp-label">Depois</div>
+      </div>
+      <div class="tp future">
+        <div class="tp-dot" style="background:#7C3AED;"></div>
+        <div class="tp-txt">Fase 4 (90–100%) — modelo freemium completo ativado</div>
+        <div class="tp-label">Futuro</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);border-radius:var(--r2);padding:16px;">
+    <div style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.7;">💡 <strong style="color:#34D399;">Aproveite agora:</strong> quem se cadastra durante a Fase 1 constrói histórico, avaliações e reputação antes dos limites entrarem. Quando o freemium vier, quem já tem reputação sai na frente.</div>
+  </div>
+</section>
+
+<!-- ─── CIDADES ─── -->
+<section class="map-section reveal">
+  <div class="pill g">🗺️ Expansão</div>
+  <h2 class="sh2">Uma instância<br><span class="sg">para cada cidade</span></h2>
+  <p class="ssub">O banco de dados é nacional e compartilhado. Cada cidade tem sua instância local com identidade própria. Quanto mais cidades, mais rico o ecossistema para todos.</p>
+
+  <div class="city-grid">
+    <div class="city-card active">
+      <div class="city-name">Sinop, MT</div>
+      <div class="city-stat">diaria.sinop.com.br</div>
+      <span class="city-badge cb-active">Ativo</span>
+    </div>
+    <div class="city-card active">
+      <div class="city-name">Cuiabá, MT</div>
+      <div class="city-stat">diaria.cuiaba.com.br</div>
+      <span class="city-badge cb-active">Ativo</span>
+    </div>
+    <div class="city-card">
+      <div class="city-name">Rondonópolis</div>
+      <div class="city-stat">diaria.rondonopolis.com</div>
+      <span class="city-badge cb-open">Aberta</span>
+    </div>
+    <div class="city-card">
+      <div class="city-name">Alta Floresta</div>
+      <div class="city-stat">Em aprovação</div>
+      <span class="city-badge cb-open">Em breve</span>
+    </div>
+    <div class="city-card soon">
+      <div class="city-name">São Paulo, SP</div>
+      <div class="city-stat">Sem instância local ainda</div>
+      <span class="city-badge cb-soon">Disponível</span>
+    </div>
+    <div class="city-card soon">
+      <div class="city-name">Sua cidade</div>
+      <div class="city-stat">Abra a sua agora</div>
+      <span class="city-badge cb-soon">Grátis</span>
+    </div>
+  </div>
+
+  <a href="pagina-abra-sua-diaria.html" class="btn-primary" style="margin-top:20px;">Abrir instância na minha cidade →</a>
+</section>
+
+<!-- ─── IMPACTO ─── -->
+<section class="impact reveal">
+  <div class="pill dark">📊 Impacto</div>
+  <h2 class="sh2" style="color:#fff;">Números que<br><span style="color:#60A5FA;">importam</span></h2>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-n">38<span class="impact-u">M</span></div>
+      <div class="impact-l">trabalhadores informais no Brasil que precisam desta plataforma</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-n">R$0</div>
+      <div class="impact-l">custo para o profissional se cadastrar e usar para sempre</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-n">&lt;2h</div>
+      <div class="impact-l">tempo médio para um profissional conseguir sua primeira diária</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-n">5k+</div>
+      <div class="impact-l">cidades brasileiras que ainda não têm plataforma local de diárias</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MANIFESTO ─── -->
+<section class="manifesto reveal">
+  <div class="manifesto-card">
+    <div class="manifesto-quote">"O trabalho informal merece a mesma tecnologia que o formal."</div>
+    <div class="manifesto-sub">O Diária da Cidade não é mais um app de empregos. É uma infraestrutura aberta para o trabalho real, que acontece todo dia, na padaria, no evento, na obra, na casa ao lado.</div>
+    <div class="manifesto-items">
+      <div class="mi"><div class="mi-dot"></div>Gratuito para quem trabalha e para quem contrata — sempre</div>
+      <div class="mi"><div class="mi-dot"></div>Descentralizado — cada cidade tem sua identidade local</div>
+      <div class="mi"><div class="mi-dot"></div>Transparente — avaliações públicas para os dois lados</div>
+      <div class="mi"><div class="mi-dot"></div>Sem intermediário no pagamento — o dinheiro vai direto a quem fez o trabalho</div>
+      <div class="mi"><div class="mi-dot"></div>Crescimento gradual — limite só entra quando a plataforma sustentar</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section style="background:var(--bg);" class="reveal">
+  <div class="pill b">❓ Dúvidas gerais</div>
+  <h2 class="sh2">Perguntas<br><span>frequentes</span></h2>
+
+  <div class="faq-item" onclick="tf(this)">
+    <div class="faq-q">O app é mesmo gratuito ou tem pegadinha? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Para profissionais e contratantes: gratuito para sempre, sem limitação de uso. Destaques são opcionais e pagos. Para parceiros: gratuito por 3 meses com meta simples de engajamento; depois R$29/mês se não cumprir a meta.</div>
+  </div>
+  <div class="faq-item" onclick="tf(this)">
+    <div class="faq-q">Como o app garante a segurança dos pagamentos? <span class="faq-ico">+</span></div>
+    <div class="faq-a">O app não processa pagamentos — eles acontecem diretamente entre as partes (Pix, dinheiro, transferência). O chat do app registra tudo que foi combinado. O sistema de avaliações públicas cria responsabilidade natural para os dois lados.</div>
+  </div>
+  <div class="faq-item" onclick="tf(this)">
+    <div class="faq-q">Qual a diferença entre instância local e o app nacional? <span class="faq-ico">+</span></div>
+    <div class="faq-a">O banco de dados é único e nacional — todos compartilham as mesmas vagas e candidatos. A instância local adiciona uma camada de identidade regional: logo, nome, cor e filtro geográfico padrão para a cidade. O usuário pode a qualquer momento expandir para ver todo o Brasil.</div>
+  </div>
+  <div class="faq-item" onclick="tf(this)">
+    <div class="faq-q">É possível usar para emprego fixo CLT também? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. O app tem três abas: Trabalho (diárias), Emprego (CLT, PJ, estágio) e Oportunidades (franquias, parcerias, negócios). Cada perfil de usuário vê o que é mais relevante para ele.</div>
+  </div>
+  <div class="faq-item" onclick="tf(this)">
+    <div class="faq-q">Funciona para home office? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. Vagas presenciais aparecem com localização. Vagas de home office aparecem para todos — independente da cidade. O profissional escolhe se quer ver apenas locais, apenas remotas, ou as duas.</div>
+  </div>
+</section>
+
+<!-- ─── CTA FINAL ─── -->
+<section class="cta-final reveal">
+  <div class="cta-final-bg"></div>
+  <div class="cta-final-content">
+    <div class="pill dark" style="margin:0 auto 20px;">📅 Comece agora</div>
+    <h2 class="cta-h2">Qual é o seu<br>próximo passo?</h2>
+    <p class="cta-slogan">"Trabalhe hoje. Contrate hoje. Perto de você."</p>
+    <div class="cta-3">
+      <a href="pagina-trabalhe-hoje.html" class="cta-btn green">👷 Quero trabalhar — ver vagas</a>
+      <a href="pagina-contrate-hoje.html" class="cta-btn blue">🏢 Quero contratar — publicar vaga</a>
+      <a href="pagina-abra-sua-diaria.html" class="cta-btn gold">💡 Quero abrir minha Diária</a>
+    </div>
+    <p class="cta-note">Cadastro gratuito · Sem cartão · Sem burocracia</p>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">
+    <div class="footer-mark">📅</div>
+    <div class="footer-name">Diária da Cidade</div>
+  </div>
+  <div class="footer-slogan">"Trabalhe hoje. Contrate hoje. Perto de você."</div>
+  <div class="footer-links">
+    <a href="pagina-trabalhe-hoje.html">Quero trabalhar</a>
+    <a href="pagina-contrate-hoje.html">Quero contratar</a>
+    <a href="pagina-abra-sua-diaria.html">Ser parceiro</a>
+    <a href="#">Termos de Uso</a>
+    <a href="#">Privacidade</a>
+    <a href="#">Contato</a>
+  </div>
+  <div class="footer-copy">
+    © 2025 Diária da Cidade · Plataforma aberta de trabalho informal · Brasil<br>
+    Gratuito para profissionais e contratantes · Powered by Diária da Cidade
+  </div>
+</footer>
+
+<script>
+// faq
+function tf(el) {
+  const a = el.querySelector('.faq-a');
+  const ico = el.querySelector('.faq-ico');
+  const open = a.classList.toggle('open');
+  ico.textContent = open ? '−' : '+';
+}
+
+// scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "diaria-cidade-root",
+  "private": true,
+  "scripts": {
+    "web:config": "node scripts/inject-web-config.js",
+    "vercel-build": "node scripts/inject-web-config.js"
+  }
+}

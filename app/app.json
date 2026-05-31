@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Diária da Cidade",
+    "slug": "diaria-cidade",
+    "scheme": "diaria",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.diariacidade.app"
+    },
+    "android": {
+      "package": "com.diariacidade.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#1557FF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router"],
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
+  }
+}

@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conecta Diária v2 — Protótipo Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1557FF;
+  --primary-d: #0A3DBF;
+  --primary-l: #E8EEFF;
+  --accent: #FF5C35;
+  --accent-l: #FFF0EB;
+  --gold: #F59E0B;
+  --gold-l: #FFFBEB;
+  --success: #10B981;
+  --success-l: #ECFDF5;
+  --purple: #7C3AED;
+  --purple-l: #F5F3FF;
+  --t9: #0A0D14;
+  --t7: #2D3748;
+  --t5: #718096;
+  --t3: #E2E8F0;
+  --bg: #F0F2F7;
+  --white: #FFFFFF;
+  --s1: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --s2: 0 4px 16px rgba(21,87,255,.10);
+  --s3: 0 8px 32px rgba(21,87,255,.14);
+  --r1: 8px; --r2: 14px; --r3: 20px; --rf: 999px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#D8DCE8;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:32px 16px 60px;
+}
+
+/* ── page chrome ── */
+.page-head { text-align:center; margin-bottom:10px; }
+.page-head h1 { font-family:'Sora',sans-serif; font-size:26px; font-weight:800; color:#0A0D14; }
+.page-head p { font-size:13px; color:#718096; margin-top:4px; }
+
+/* URL bar demo */
+.url-demo {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center;
+  margin-bottom:20px;
+}
+.url-pill {
+  background:#fff; border:1.5px solid #E2E8F0; border-radius:var(--rf);
+  padding:6px 14px; font-size:12px; color:#2D3748; cursor:pointer;
+  transition:all .2s; font-family:'Plus Jakarta Sans',sans-serif;
+}
+.url-pill.active { border-color:var(--primary); background:var(--primary); color:#fff; }
+.url-label { font-size:11px; color:#718096; font-weight:600; }
+
+/* ── nav tabs top ── */
+.screen-nav {
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:24px;
+}
+.snav { padding:7px 16px; border:1.5px solid #CBD5E0; border-radius:var(--rf);
+  background:#fff; font-size:12px; font-weight:600; color:#4A5568;
+  cursor:pointer; transition:all .2s; font-family:'Plus Jakarta Sans',sans-serif;
+}
+.snav.active,.snav:hover { border-color:var(--primary); background:var(--primary); color:#fff; }
+
+/* ── phone ── */
+.phone {
+  width:390px; height:844px;
+  background:var(--white);
+  border-radius:52px;
+  box-shadow:0 40px 100px rgba(0,0,0,.28), 0 0 0 10px #111827, 0 0 0 12px #1F2937;
+  overflow:hidden; position:relative;
+}
+
+/* status bar */
+.sbar {
+  height:48px; display:flex; align-items:center;
+  justify-content:space-between; padding:0 28px;
+  position:absolute; top:0; left:0; right:0; z-index:200;
+  pointer-events:none;
+}
+.stime { font-family:'Sora',sans-serif; font-size:15px; font-weight:700; }
+.sicons { font-size:13px; display:flex; gap:5px; align-items:center; }
+
+/* screens */
+.screen {
+  position:absolute; inset:0;
+  display:none; flex-direction:column;
+  animation:slideIn .28s ease;
+}
+.screen.on { display:flex; }
+@keyframes slideIn { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:none} }
+
+/* scrollable area */
+.scrl {
+  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.scrl::-webkit-scrollbar{display:none;}
+
+/* ────────────────────────────────────────────
+   SCREEN 1 — SPLASH
+──────────────────────────────────────────── */
+#s1 { background:linear-gradient(155deg,#0A2A8F 0%,#1557FF 55%,#3B72FF 100%); }
+
+.splash-orb {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,.055);
+}
+.orb1{width:360px;height:360px;top:-100px;right:-100px;}
+.orb2{width:220px;height:220px;bottom:160px;left:-70px;}
+.orb3{width:100px;height:100px;top:220px;left:50px;}
+
+.splash-body {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:56px 32px 40px; position:relative; z-index:2;
+}
+
+.logo-box {
+  width:88px; height:88px; border-radius:26px;
+  background:rgba(255,255,255,.16);
+  backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,.28);
+  display:flex; align-items:center; justify-content:center;
+  font-size:40px; margin-bottom:28px;
+}
+.app-name {
+  font-family:'Sora',sans-serif; font-size:30px; font-weight:800;
+  color:#fff; letter-spacing:-.5px; margin-bottom:6px;
+}
+.app-tag {
+  font-size:14px; color:rgba(255,255,255,.72);
+  text-align:center; line-height:1.5; margin-bottom:44px;
+}
+
+.splash-tabs {
+  display:flex; gap:10px; margin-bottom:44px; flex-wrap:wrap; justify-content:center;
+}
+.stab {
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:var(--rf); padding:9px 16px;
+  color:#fff; font-size:12px; font-weight:600;
+  display:flex; align-items:center; gap:5px;
+  backdrop-filter:blur(8px);
+}
+
+.url-badge {
+  background:rgba(0,0,0,.25); border-radius:var(--r1);
+  padding:10px 16px; margin-bottom:28px; width:100%;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.12);
+}
+.url-badge span { font-size:11px; color:rgba(255,255,255,.55); display:block; margin-bottom:2px; }
+.url-badge strong { font-size:13px; color:rgba(255,255,255,.9); font-family:'Sora',sans-serif; }
+
+.btn-w { width:100%; padding:18px; background:#fff; color:var(--primary);
+  border:none; border-radius:var(--r2); font-family:'Sora',sans-serif;
+  font-size:16px; font-weight:800; cursor:pointer;
+  box-shadow:0 6px 24px rgba(0,0,0,.18); transition:all .2s;
+}
+.btn-w:hover { transform:translateY(-2px); }
+.splash-login { color:rgba(255,255,255,.65); font-size:13px; text-align:center; margin-top:14px; }
+.splash-login b { color:#fff; cursor:pointer; text-decoration:underline; }
+
+/* ────────────────────────────────────────────
+   SCREEN 2 — ESCOLHA PERFIL
+──────────────────────────────────────────── */
+#s2 { background:var(--bg); }
+
+.hdr {
+  background:#fff; padding:54px 22px 20px;
+  box-shadow:0 1px 0 #E2E8F0;
+}
+.back { display:inline-flex; align-items:center; gap:5px;
+  font-size:13px; color:var(--primary); font-weight:600;
+  cursor:pointer; background:none; border:none; margin-bottom:14px; padding:0;
+}
+.hdr h2 { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; color:var(--t9); margin-bottom:5px; }
+.hdr p { font-size:13px; color:var(--t5); line-height:1.5; }
+
+.pcards { padding:20px 20px 0; display:flex; flex-direction:column; gap:14px; flex:1; }
+
+.pcard {
+  background:#fff; border-radius:var(--r3); padding:24px 20px;
+  border:2.5px solid transparent; cursor:pointer;
+  transition:all .22s; box-shadow:var(--s1);
+  position:relative; overflow:hidden;
+}
+.pcard::after {
+  content:''; position:absolute; top:0; right:0;
+  width:72px; height:72px; border-radius:0 0 0 72px; opacity:.07;
+}
+.pcard.prof::after { background:var(--primary); }
+.pcard.emp::after { background:var(--accent); }
+.pcard.op::after { background:var(--gold); }
+.pcard:hover { transform:translateY(-2px); box-shadow:var(--s3); }
+.pcard.sel { border-color:var(--primary); box-shadow:var(--s3); }
+.pcard.emp.sel { border-color:var(--accent); }
+.pcard.op.sel { border-color:var(--gold); box-shadow:0 8px 32px rgba(245,158,11,.18); }
+
+.pico { width:52px; height:52px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:14px;
+}
+.prof .pico { background:var(--primary-l); }
+.emp .pico { background:var(--accent-l); }
+.op .pico { background:var(--gold-l); }
+
+.pcard h3 { font-family:'Sora',sans-serif; font-size:17px; font-weight:700;
+  color:var(--t9); margin-bottom:5px; }
+.pcard p { font-size:12px; color:var(--t5); line-height:1.5; }
+.ptags { display:flex; flex-wrap:wrap; gap:5px; margin-top:12px; }
+.ptag { font-size:10px; font-weight:700; padding:3px 9px;
+  border-radius:var(--rf); background:var(--primary-l); color:var(--primary); }
+.emp .ptag { background:var(--accent-l); color:var(--accent); }
+.op .ptag { background:var(--gold-l); color:#B45309; }
+
+.pfooter { padding:16px 20px 36px; }
+.btn-b { width:100%; padding:17px; background:var(--primary); color:#fff;
+  border:none; border-radius:var(--r2); font-family:'Sora',sans-serif;
+  font-size:16px; font-weight:700; cursor:pointer;
+  box-shadow:var(--s2); transition:all .2s;
+}
+.btn-b:hover { background:var(--primary-d); transform:translateY(-1px); }
+
+/* ────────────────────────────────────────────
+   SCREEN 3 — CADASTRO + DISPONIBILIDADE
+──────────────────────────────────────────── */
+#s3 { background:var(--bg); }
+
+.fg { background:#fff; border-radius:var(--r2); overflow:hidden;
+  box-shadow:var(--s1); margin-bottom:14px; }
+.fi { padding:13px 16px; border-bottom:1px solid #F7FAFC; display:flex; flex-direction:column; gap:3px; }
+.fi:last-child { border-bottom:none; }
+.fl { font-size:10px; font-weight:700; color:var(--t5); text-transform:uppercase; letter-spacing:.6px; }
+.fi input { font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--t9);
+  border:none; outline:none; background:transparent; width:100%; }
+.fi input::placeholder { color:var(--t3); }
+
+.sec-ttl { font-family:'Sora',sans-serif; font-size:11px; font-weight:700;
+  color:var(--t5); text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:10px; margin-top:20px; }
+.sec-ttl:first-child { margin-top:0; }
+
+/* Skills grid */
+.sgrid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.schip {
+  background:#fff; border:2px solid var(--t3); border-radius:var(--r1);
+  padding:11px 8px; text-align:center; font-size:12px; font-weight:600;
+  color:var(--t7); cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+}
+.schip.on { border-color:var(--primary); background:var(--primary-l); color:var(--primary); }
+
+/* Mini calendar disponibilidade */
+.cal-wrap {
+  background:#fff; border-radius:var(--r2); padding:16px; box-shadow:var(--s1); margin-bottom:14px;
+}
+.cal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.cal-head span { font-family:'Sora',sans-serif; font-size:14px; font-weight:700; color:var(--t9); }
+.cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:8px; }
+.cal-weekdays span { font-size:10px; font-weight:700; color:var(--t5); }
+.cal-days { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cday {
+  aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--t7); cursor:pointer; transition:all .18s;
+}
+.cday:hover { background:var(--primary-l); color:var(--primary); }
+.cday.on { background:var(--primary); color:#fff; font-weight:700; }
+.cday.off { color:var(--t3); cursor:default; }
+.cday.today { font-weight:700; color:var(--primary); }
+
+.time-slots { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; padding-top:12px; border-top:1px solid #F7FAFC; }
+.tslot {
+  padding:6px 12px; border-radius:var(--rf); border:1.5px solid var(--t3);
+  font-size:11px; font-weight:600; color:var(--t7); cursor:pointer; transition:all .18s;
+  background:#fff;
+}
+.tslot.on { border-color:var(--primary); background:var(--primary-l); color:var(--primary); }
+
+/* ────────────────────────────────────────────
+   SCREEN 4 — FEED (3 abas)
+──────────────────────────────────────────── */
+#s4 { background:var(--bg); }
+
+.feed-hdr {
+  background:#fff; padding:52px 18px 0;
+  box-shadow:0 1px 0 #E2E8F0;
+}
+.feed-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.feed-greet { font-size:12px; color:var(--t5); }
+.feed-title { font-family:'Sora',sans-serif; font-size:19px; font-weight:800; color:var(--t9); }
+.avy { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--purple));
+  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; }
+
+/* url region chip */
+.region-chip {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--primary-l); color:var(--primary); border-radius:var(--rf);
+  padding:5px 12px; font-size:11px; font-weight:700; margin-bottom:12px;
+}
+.region-chip svg { width:12px; height:12px; }
+
+/* search */
+.sbar2 { display:flex; align-items:center; background:var(--bg); border-radius:var(--r1);
+  padding:10px 14px; gap:8px; margin-bottom:12px; }
+.sbar2 input { border:none; background:transparent; font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px; color:var(--t7); outline:none; flex:1; }
+
+/* 3-tab switcher */
+.tab3 { display:flex; gap:0; background:var(--bg); border-radius:var(--r1);
+  overflow:hidden; margin-bottom:0; }
+.t3btn {
+  flex:1; padding:10px 4px; border:none; background:transparent;
+  font-family:'Sora',sans-serif; font-size:11px; font-weight:700;
+  color:var(--t5); cursor:pointer; transition:all .2s;
+  border-bottom:2.5px solid transparent;
+}
+.t3btn.on { color:var(--primary); border-bottom-color:var(--primary); background:#fff; }
+.t3btn.gold.on { color:#B45309; border-bottom-color:var(--gold); }
+
+/* filter row */
+.frow { display:flex; gap:6px; overflow-x:auto; padding:12px 0 14px; }
+.frow::-webkit-scrollbar{display:none;}
+.fchip { white-space:nowrap; padding:6px 14px; border-radius:var(--rf);
+  font-size:12px; font-weight:600; border:1.5px solid var(--t3);
+  background:#fff; color:var(--t7); cursor:pointer; transition:all .2s; }
+.fchip.on { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+/* cards */
+.card {
+  background:#fff; border-radius:var(--r2); padding:16px; margin-bottom:10px;
+  box-shadow:var(--s1); cursor:pointer; transition:all .2s;
+  border:1.5px solid transparent;
+}
+.card:hover { border-color:var(--primary); box-shadow:var(--s3); }
+.card.pin { border-color:var(--gold); background:linear-gradient(135deg,#fff 80%,var(--gold-l)); }
+
+.ctop { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.cico { width:40px; height:40px; border-radius:var(--r1);
+  display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.cico.blue{background:var(--primary-l);} .cico.org{background:var(--accent-l);}
+.cico.grn{background:var(--success-l);} .cico.pur{background:var(--purple-l);}
+.cico.gld{background:var(--gold-l);}
+
+.cinfo { flex:1; padding-left:10px; }
+.ctitle { font-family:'Sora',sans-serif; font-size:14px; font-weight:700; color:var(--t9); }
+.csub { font-size:11px; color:var(--t5); margin-top:1px; }
+
+.cval { text-align:right; }
+.cprice { font-family:'Sora',sans-serif; font-size:17px; font-weight:800; color:var(--primary); }
+.cper { font-size:10px; color:var(--t5); }
+
+.cmeta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.cmeta span { font-size:11px; color:var(--t5); display:flex; align-items:center; gap:3px; }
+.badge-urg { background:#FEE2E2; color:#DC2626; font-size:10px; font-weight:700;
+  padding:2px 7px; border-radius:var(--rf); display:inline-flex; align-items:center; gap:3px; }
+.badge-pin { background:var(--gold-l); color:#92400E; font-size:10px; font-weight:700;
+  padding:2px 7px; border-radius:var(--rf); display:inline-flex; align-items:center; gap:3px; }
+.badge-new { background:var(--success-l); color:#065F46; font-size:10px; font-weight:700;
+  padding:2px 7px; border-radius:var(--rf); }
+
+/* mass-view toggle */
+.mass-bar { display:flex; align-items:center; justify-content:space-between;
+  padding:10px 18px 10px; background:#fff; border-bottom:1px solid var(--t3); }
+.mass-bar span { font-size:12px; color:var(--t5); font-weight:600; }
+.mass-toggle { display:flex; gap:4px; }
+.mbt { padding:5px 10px; border-radius:var(--r1); border:1px solid var(--t3);
+  background:#fff; font-size:11px; font-weight:700; color:var(--t5); cursor:pointer; transition:all .2s; }
+.mbt.on { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+/* clt card extra */
+.clt-badge { display:inline-block; background:var(--success-l); color:#065F46;
+  font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--rf); margin-left:6px; }
+
+/* opp card (gold) */
+.opp-card { background:linear-gradient(135deg,#fff 0%,var(--gold-l) 100%);
+  border:1.5px solid var(--gold); }
+.opp-label { font-size:10px; font-weight:700; color:#B45309; text-transform:uppercase; letter-spacing:.8px; }
+
+/* bottom nav */
+.bnav { background:#fff; border-top:1px solid #F0F4F8;
+  display:flex; padding:8px 0 28px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.06); }
+.bni { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:5px; cursor:pointer; font-size:9px; color:var(--t5); font-weight:600;
+  border:none; background:none; transition:color .2s; }
+.bni.on { color:var(--primary); }
+.bni span:first-child { font-size:21px; }
+.notif-dot { width:6px; height:6px; background:var(--accent); border-radius:50%;
+  position:absolute; top:0; right:-2px; }
+.bni-wrap { position:relative; display:inline-block; }
+
+/* ────────────────────────────────────────────
+   SCREEN 5 — DETALHES
+──────────────────────────────────────────── */
+#s5 { background:var(--bg); }
+
+.det-hero {
+  background:linear-gradient(155deg,#0A2A8F,#1557FF);
+  padding:52px 22px 44px; position:relative; overflow:hidden;
+}
+.det-hero::after {
+  content:''; position:absolute; bottom:-28px; left:0; right:0;
+  height:56px; background:var(--bg); border-radius:28px 28px 0 0;
+}
+.det-back { display:inline-flex; align-items:center; gap:5px;
+  color:rgba(255,255,255,.78); font-size:13px; cursor:pointer;
+  background:none; border:none; padding:0; margin-bottom:20px;
+}
+.det-badge { display:inline-block; background:rgba(255,255,255,.18); color:#fff;
+  font-size:11px; font-weight:700; padding:4px 12px; border-radius:var(--rf);
+  backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.3); margin-bottom:10px; }
+.det-title { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; color:#fff; margin-bottom:5px; }
+.det-co { font-size:13px; color:rgba(255,255,255,.75); }
+
+.det-scrl { flex:1; overflow-y:auto; padding:8px 18px 0; }
+.det-scrl::-webkit-scrollbar{display:none;}
+
+.price-card { background:#fff; border-radius:var(--r2); padding:18px;
+  box-shadow:var(--s2); display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; margin-top:-4px; }
+.big-price { font-family:'Sora',sans-serif; font-size:28px; font-weight:800; color:var(--primary); }
+.per-d { font-size:11px; color:var(--t5); margin-top:1px; }
+
+.info-g { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.ibox { background:#fff; border-radius:var(--r1); padding:12px; box-shadow:var(--s1); }
+.ibl { font-size:10px; color:var(--t5); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+.ibv { font-family:'Sora',sans-serif; font-size:13px; font-weight:700; color:var(--t9);
+  display:flex; align-items:center; gap:3px; }
+
+.dsec { background:#fff; border-radius:var(--r2); padding:18px; box-shadow:var(--s1); margin-bottom:14px; }
+.dsec h3 { font-family:'Sora',sans-serif; font-size:14px; font-weight:700; color:var(--t9); margin-bottom:10px; }
+.dsec p { font-size:13px; color:var(--t7); line-height:1.6; }
+
+.req-item { display:flex; align-items:center; gap:8px; padding:7px 0;
+  border-bottom:1px solid #F7FAFC; font-size:13px; color:var(--t7); }
+.req-item:last-child{border-bottom:none;}
+.rdot { width:7px; height:7px; background:var(--primary); border-radius:50%; flex-shrink:0; }
+
+/* schedule preview in details */
+.sched-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.sched-chip { background:var(--primary-l); color:var(--primary); font-size:11px;
+  font-weight:700; padding:4px 10px; border-radius:var(--rf); }
+.sched-chip.rec { background:#F5F3FF; color:var(--purple); }
+
+.co-row { display:flex; align-items:center; gap:12px; }
+.co-ico { width:48px; height:48px; background:var(--primary-l); border-radius:14px;
+  display:flex; align-items:center; justify-content:center; font-size:22px; }
+.co-name { font-family:'Sora',sans-serif; font-size:15px; font-weight:700; color:var(--t9); }
+.co-rat { font-size:12px; color:var(--t5); }
+
+.det-foot { padding:14px 18px 32px; background:#fff; border-top:1px solid #F0F4F8; }
+
+/* ────────────────────────────────────────────
+   SCREEN 6 — CHAT / MENSAGENS
+──────────────────────────────────────────── */
+#s6 { background:var(--bg); }
+
+.chat-hdr {
+  background:#fff; padding:52px 18px 14px;
+  box-shadow:0 1px 0 #E2E8F0;
+}
+.chat-hdr-top { display:flex; align-items:center; gap:12px; }
+.chat-avy { width:44px; height:44px; border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--purple));
+  display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:16px; }
+.chat-name { font-family:'Sora',sans-serif; font-size:16px; font-weight:800; color:var(--t9); }
+.chat-status { font-size:11px; color:var(--success); font-weight:600; display:flex; align-items:center; gap:4px; }
+.chat-status::before { content:''; width:6px; height:6px; background:var(--success); border-radius:50%; }
+.chat-job { background:var(--primary-l); border-radius:var(--r1); padding:10px 14px; margin-top:12px; }
+.chat-job span { font-size:11px; color:var(--primary); font-weight:700; display:block; margin-bottom:2px; }
+.chat-job p { font-size:12px; color:var(--t7); }
+
+.chat-contact-bar { background:#F7FAFC; border-bottom:1px solid var(--t3);
+  padding:8px 18px; display:flex; align-items:center; justify-content:space-between; }
+.chat-contact-bar span { font-size:11px; color:var(--t5); }
+.chat-contact-toggle {
+  display:flex; align-items:center; gap:8px; font-size:11px; color:var(--t7); font-weight:600;
+}
+.toggle-pill {
+  width:36px; height:20px; border-radius:var(--rf); background:var(--success); position:relative; cursor:pointer;
+}
+.toggle-pill::after {
+  content:''; position:absolute; top:3px; right:3px;
+  width:14px; height:14px; border-radius:50%; background:#fff;
+  transition:transform .2s;
+}
+.toggle-pill.off { background:var(--t3); }
+.toggle-pill.off::after { transform:translateX(-16px); }
+
+.msgs { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
+.msgs::-webkit-scrollbar{display:none;}
+
+.msg { max-width:78%; }
+.msg.me { align-self:flex-end; }
+.msg.them { align-self:flex-start; }
+.mbubble {
+  padding:10px 14px; border-radius:18px; font-size:13px; line-height:1.5;
+}
+.me .mbubble { background:var(--primary); color:#fff; border-bottom-right-radius:4px; }
+.them .mbubble { background:#fff; color:var(--t9); border-bottom-left-radius:4px; box-shadow:var(--s1); }
+.mtime { font-size:10px; color:var(--t5); margin-top:3px; }
+.me .mtime { text-align:right; }
+
+.sys-msg { text-align:center; font-size:11px; color:var(--t5); padding:4px 12px;
+  background:#fff; border-radius:var(--rf); box-shadow:var(--s1); align-self:center; }
+
+.chat-input-area {
+  background:#fff; padding:12px 14px 32px;
+  border-top:1px solid #F0F4F8; display:flex; align-items:center; gap:8px;
+}
+.chat-input {
+  flex:1; padding:10px 14px; background:var(--bg);
+  border:1.5px solid transparent; border-radius:var(--rf);
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--t9);
+  outline:none; transition:border-color .2s;
+}
+.chat-input:focus { border-color:var(--primary); background:#fff; }
+.send-btn {
+  width:40px; height:40px; border-radius:50%; background:var(--primary);
+  border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff;
+  transition:all .2s; flex-shrink:0;
+}
+.send-btn:hover { background:var(--primary-d); transform:scale(1.08); }
+.call-btn {
+  width:36px; height:36px; border-radius:50%; background:var(--success-l);
+  border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  color:var(--success); font-size:17px; flex-shrink:0;
+}
+
+/* ────────────────────────────────────────────
+   SCREEN 7 — PAINEL CONTRATANTE
+──────────────────────────────────────────── */
+#s7 { background:var(--bg); }
+
+.panel-hdr {
+  background:linear-gradient(155deg,#0A2A8F,#1557FF);
+  padding:52px 22px 44px; position:relative; overflow:hidden;
+}
+.panel-hdr::after { content:''; position:absolute; bottom:-28px; left:0; right:0;
+  height:56px; background:var(--bg); border-radius:28px 28px 0 0; }
+.panel-name { font-family:'Sora',sans-serif; font-size:20px; font-weight:800; color:#fff; margin-top:8px; }
+.panel-role { font-size:12px; color:rgba(255,255,255,.7); margin-bottom:16px; }
+.panel-stats { display:flex; gap:10px; }
+.pstat { background:rgba(255,255,255,.15); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.22); border-radius:var(--r2);
+  padding:12px 16px; flex:1; text-align:center; }
+.pstat-n { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; color:#fff; }
+.pstat-l { font-size:10px; color:rgba(255,255,255,.7); margin-top:2px; }
+
+.panel-scrl { flex:1; overflow-y:auto; padding:8px 18px 0; }
+.panel-scrl::-webkit-scrollbar{display:none;}
+
+.section-head { font-family:'Sora',sans-serif; font-size:11px; font-weight:700;
+  color:var(--t5); text-transform:uppercase; letter-spacing:1px;
+  margin:16px 0 10px; }
+
+/* candidates mass view */
+.cand-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.cand-card { background:#fff; border-radius:var(--r2); padding:14px; box-shadow:var(--s1);
+  cursor:pointer; transition:all .2s; border:1.5px solid transparent; }
+.cand-card:hover { border-color:var(--primary); box-shadow:var(--s3); }
+.cand-card.pin { border-color:var(--gold); }
+.cand-avy { width:44px; height:44px; border-radius:50%; margin:0 auto 8px;
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; color:#fff; }
+.cand-name { font-family:'Sora',sans-serif; font-size:12px; font-weight:700; color:var(--t9); text-align:center; }
+.cand-role { font-size:10px; color:var(--t5); text-align:center; margin-top:2px; }
+.cand-tags { display:flex; flex-wrap:wrap; gap:3px; justify-content:center; margin-top:6px; }
+.ctg { font-size:9px; font-weight:700; padding:2px 6px; border-radius:var(--rf);
+  background:var(--primary-l); color:var(--primary); }
+.cand-rat { text-align:center; margin-top:6px; font-size:11px; color:var(--t5); }
+
+/* cal empresa */
+.emp-cal { background:#fff; border-radius:var(--r2); padding:16px; box-shadow:var(--s1); margin-bottom:14px; }
+.ec-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.ec-head span { font-family:'Sora',sans-serif; font-size:14px; font-weight:700; color:var(--t9); }
+.ec-add { background:var(--primary); color:#fff; border:none; border-radius:var(--r1);
+  padding:5px 12px; font-size:11px; font-weight:700; cursor:pointer; }
+.ec-rec-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.ert { padding:6px 12px; border-radius:var(--rf); border:1.5px solid var(--t3);
+  font-size:11px; font-weight:700; color:var(--t7); cursor:pointer; background:#fff; transition:all .2s; }
+.ert.on { border-color:var(--purple); background:var(--purple-l); color:var(--purple); }
+
+.promote-card {
+  background:linear-gradient(135deg,var(--gold-l),#fff); border:1.5px solid var(--gold);
+  border-radius:var(--r2); padding:16px; margin-bottom:14px; box-shadow:var(--s1);
+}
+.promote-card h4 { font-family:'Sora',sans-serif; font-size:14px; font-weight:700; color:#92400E; margin-bottom:6px; }
+.promote-card p { font-size:12px; color:#B45309; line-height:1.5; margin-bottom:12px; }
+.promote-opts { display:flex; gap:8px; }
+.promo-btn { flex:1; padding:10px; border-radius:var(--r1); border:1.5px solid var(--gold);
+  background:#fff; font-size:11px; font-weight:700; color:#92400E; cursor:pointer; text-align:center; transition:all .2s; }
+.promo-btn:hover { background:var(--gold); color:#fff; }
+
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>🔗 Conecta Diária v2</h1>
+  <p>Protótipo completo · 3 abas + Calendário + Chat + Painel Contratante</p>
+</div>
+
+<!-- URL demo -->
+<div class="url-demo">
+  <span class="url-label">Instância ativa:</span>
+  <div class="url-pill active" onclick="setUrl(this,'conectadiaria.com.br/78000-000')">🌎 conectadiaria.com.br/78000-000</div>
+  <div class="url-pill" onclick="setUrl(this,'conectadiaria.com.br/01310-000')">🏙️ .../01310-000 (SP)</div>
+  <div class="url-pill" onclick="setUrl(this,'sinop.conectadiaria.com.br')">📍 sinop.conectadiaria.com.br</div>
+  <div class="url-pill" onclick="setUrl(this,'buffetestrela.conectadiaria.com.br')">🏢 buffetestrela.conectadiaria.com.br</div>
+</div>
+
+<div class="screen-nav">
+  <button class="snav active" onclick="go(1)">1 · Splash</button>
+  <button class="snav" onclick="go(2)">2 · Perfil</button>
+  <button class="snav" onclick="go(3)">3 · Cadastro</button>
+  <button class="snav" onclick="go(4)">4 · Feed (3 abas)</button>
+  <button class="snav" onclick="go(5)">5 · Detalhes</button>
+  <button class="snav" onclick="go(6)">6 · Chat</button>
+  <button class="snav" onclick="go(7)">7 · Painel Empresa</button>
+</div>
+
+<div class="phone">
+
+<!-- ════════════════════════════════
+     S1 — SPLASH
+════════════════════════════════ -->
+<div class="screen on" id="s1">
+  <div class="sbar" style="color:#fff">
+    <span class="stime">9:41</span>
+    <span class="sicons">📶 🔋</span>
+  </div>
+  <div class="splash-orb orb1"></div>
+  <div class="splash-orb orb2"></div>
+  <div class="splash-orb orb3"></div>
+  <div class="splash-body">
+    <div class="logo-box">🔗</div>
+    <div class="app-name">Conecta Diária</div>
+    <div class="app-tag">Trabalho, emprego e oportunidades<br>para todo o Brasil — gratuito sempre</div>
+
+    <div class="splash-tabs">
+      <div class="stab">💼 Trabalho</div>
+      <div class="stab">📋 Emprego</div>
+      <div class="stab">💡 Oportunidades</div>
+    </div>
+
+    <div class="url-badge" id="url-show">
+      <span>Sua instância regional</span>
+      <strong id="url-txt">conectadiaria.com.br/78000-000</strong>
+    </div>
+
+    <div style="width:100%">
+      <button class="btn-w" onclick="go(2)">Começar agora — é grátis</button>
+      <div class="splash-login">Já tem conta? <b onclick="go(4)">Entrar →</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S2 — ESCOLHA PERFIL
+════════════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="sbar" style="color:var(--t9)">
+    <span class="stime">9:41</span>
+    <span class="sicons">📶 🔋</span>
+  </div>
+  <div class="hdr">
+    <button class="back" onclick="go(1)">← Voltar</button>
+    <h2>Como você quer usar?</h2>
+    <p>Escolha seu perfil — pode mudar depois nas configurações</p>
+  </div>
+  <div class="pcards scrl">
+    <div class="pcard prof" onclick="selCard(this)">
+      <div class="pico">👷</div>
+      <h3>Sou Profissional</h3>
+      <p>Quero trabalhar por diária, encontrar emprego fixo ou divulgar meus serviços na minha região</p>
+      <div class="ptags">
+        <span class="ptag">Diárias</span>
+        <span class="ptag">CLT / PJ</span>
+        <span class="ptag">Freelancer</span>
+      </div>
+    </div>
+    <div class="pcard emp" onclick="selCard(this)">
+      <div class="pico">🏢</div>
+      <h3>Sou Contratante</h3>
+      <p>Preciso contratar para diárias, vagas fixas ou publicar eventos e oportunidades de negócio</p>
+      <div class="ptags">
+        <span class="ptag">Empresa</span>
+        <span class="ptag">Eventos</span>
+        <span class="ptag">Residência</span>
+      </div>
+    </div>
+    <div class="pcard op" onclick="selCard(this)">
+      <div class="pico">💡</div>
+      <h3>Sou Empreendedor Regional</h3>
+      <p>Quero criar minha instância local do Conecta Diária e conectar profissionais e empresas da minha cidade</p>
+      <div class="ptags">
+        <span class="ptag">Link próprio</span>
+        <span class="ptag">Gestão regional</span>
+        <span class="ptag">Grátis</span>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+  </div>
+  <div class="pfooter">
+    <button class="btn-b" onclick="go(3)">Continuar →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S3 — CADASTRO + DISPONIBILIDADE
+════════════════════════════════ -->
+<div class="screen" id="s3">
+  <div class="sbar" style="color:var(--t9)">
+    <span class="stime">9:41</span>
+    <span class="sicons">📶 🔋</span>
+  </div>
+  <div class="hdr" style="padding-bottom:14px">
+    <button class="back" onclick="go(2)">← Voltar</button>
+    <h2>Criar sua conta</h2>
+    <p>Menos de 2 minutos · grátis para sempre</p>
+  </div>
+  <div class="scrl" style="padding:20px 18px">
+
+    <div class="sec-ttl">Dados pessoais</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Nome completo</span><input placeholder="Ex: João Carlos Silva"/></div>
+      <div class="fi"><span class="fl">Celular (WhatsApp)</span><input placeholder="(65) 99999-0000"/></div>
+      <div class="fi"><span class="fl">CEP / Cidade</span><input placeholder="78000-000 · Cuiabá, MT"/></div>
+      <div class="fi"><span class="fl">E-mail</span><input placeholder="joao@email.com"/></div>
+    </div>
+
+    <div class="sec-ttl">Habilidades (máx. 4)</div>
+    <div class="sgrid">
+      <div class="schip on" onclick="this.classList.toggle('on')">🧹 Diarista</div>
+      <div class="schip" onclick="this.classList.toggle('on')">🍽️ Garçom</div>
+      <div class="schip" onclick="this.classList.toggle('on')">🔨 Obras</div>
+      <div class="schip" onclick="this.classList.toggle('on')">🌿 Zelador</div>
+      <div class="schip" onclick="this.classList.toggle('on')">🎉 Eventos</div>
+      <div class="schip" onclick="this.classList.toggle('on')">👴 Cuidador</div>
+      <div class="schip" onclick="this.classList.toggle('on')">🚗 Motorista</div>
+      <div class="schip" onclick="this.classList.toggle('on')">📦 Mudanças</div>
+    </div>
+
+    <div class="sec-ttl">📅 Minha disponibilidade</div>
+    <div class="cal-wrap">
+      <div class="cal-head">
+        <span>Junho 2025</span>
+        <div style="display:flex;gap:8px">
+          <button style="background:none;border:none;color:var(--t5);cursor:pointer;font-size:16px">‹</button>
+          <button style="background:none;border:none;color:var(--t5);cursor:pointer;font-size:16px">›</button>
+        </div>
+      </div>
+      <div class="cal-weekdays">
+        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+      </div>
+      <div class="cal-days" id="cal"></div>
+      <div style="font-size:11px;color:var(--t5);margin-top:10px;">Toque para marcar dias disponíveis · azul = disponível</div>
+      <div class="time-slots">
+        <span class="tslot on" onclick="this.classList.toggle('on')">Manhã</span>
+        <span class="tslot on" onclick="this.classList.toggle('on')">Tarde</span>
+        <span class="tslot" onclick="this.classList.toggle('on')">Noite</span>
+        <span class="tslot" onclick="this.classList.toggle('on')">Madrugada</span>
+      </div>
+    </div>
+
+    <div class="sec-ttl">Contato visível</div>
+    <div class="fg">
+      <div class="fi" style="flex-direction:row;align-items:center;justify-content:space-between">
+        <div>
+          <span class="fl">Exibir celular para contratantes</span>
+          <div style="font-size:12px;color:var(--t5);margin-top:2px">Eles poderão ligar/WhatsApp direto</div>
+        </div>
+        <div class="toggle-pill" id="tg-phone" onclick="this.classList.toggle('off')"></div>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:0">
+      <div class="fi"><span class="fl">Senha</span><input type="password" placeholder="Mínimo 8 caracteres"/></div>
+    </div>
+
+    <button class="btn-b" onclick="go(4)" style="margin:18px 0 4px">Criar conta grátis 🎉</button>
+    <div style="font-size:11px;color:var(--t5);text-align:center;padding-bottom:32px">Ao criar, você aceita os Termos de Uso · App 100% gratuito</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S4 — FEED 3 ABAS
+════════════════════════════════ -->
+<div class="screen" id="s4">
+  <div class="sbar" style="color:var(--t9)">
+    <span class="stime">9:41</span>
+    <span class="sicons">📶 🔋</span>
+  </div>
+  <div class="feed-hdr">
+    <div class="feed-top">
+      <div>
+        <div class="feed-greet">Olá, João 👋</div>
+        <div class="feed-title">Sua região</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="bni-wrap">
+          <div class="avy">J</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- região baseada no CEP/URL -->
+    <div class="region-chip" id="region-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <span id="region-name">Cuiabá, MT · 78000-000</span>
+      <span style="opacity:.6;margin-left:2px">· ver tudo</span>
+    </div>
+
+    <div class="sbar2">
+      <span>🔍</span>
+      <input placeholder="Buscar cargo, bairro, empresa..."/>
+    </div>
+
+    <!-- 3 tabs -->
+    <div class="tab3">
+      <button class="t3btn on" id="tab-trab" onclick="switchTab('trab')">💼 Trabalho</button>
+      <button class="t3btn" id="tab-emp" onclick="switchTab('emp')">📋 Emprego</button>
+      <button class="t3btn gold" id="tab-opp" onclick="switchTab('opp')">💡 Oportunidades</button>
+    </div>
+  </div>
+
+  <!-- mass view + filters -->
+  <div class="mass-bar">
+    <span id="mass-count">18 vagas · sua área</span>
+    <div class="mass-toggle">
+      <button class="mbt on" onclick="setMass('lista',this)">Lista</button>
+      <button class="mbt" onclick="setMass('mapa',this)">Mapa</button>
+    </div>
+  </div>
+
+  <!-- filter chips -->
+  <div style="padding:0 18px;background:#fff;border-bottom:1px solid var(--t3)">
+    <div class="frow" id="frow-trab">
+      <div class="fchip on">Todos</div>
+      <div class="fchip">Urgente</div>
+      <div class="fchip">Limpeza</div>
+      <div class="fchip">Eventos</div>
+      <div class="fchip">Construção</div>
+      <div class="fchip">Gastronomia</div>
+      <div class="fchip">Cuidados</div>
+    </div>
+    <div class="frow" id="frow-emp" style="display:none">
+      <div class="fchip on">Todos</div>
+      <div class="fchip">CLT</div>
+      <div class="fchip">PJ</div>
+      <div class="fchip">Estágio</div>
+      <div class="fchip">Aprendiz</div>
+      <div class="fchip">Remoto</div>
+    </div>
+    <div class="frow" id="frow-opp" style="display:none">
+      <div class="fchip on">Todos</div>
+      <div class="fchip">Franquia</div>
+      <div class="fchip">Parceria</div>
+      <div class="fchip">Revenda</div>
+      <div class="fchip">Temporada</div>
+    </div>
+  </div>
+
+  <!-- FEED LISTS -->
+  <div class="scrl" style="padding:14px 16px" id="feed-area">
+
+    <!-- ABA TRABALHO -->
+    <div id="list-trab">
+      <div style="font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🔥 Urgente hoje</div>
+
+      <!-- CARD PINNED (pago) -->
+      <div class="card pin" onclick="go(5)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span class="badge-pin">📌 Destaque patrocinado</span>
+          <span style="font-size:10px;color:var(--t5)">3km</span>
+        </div>
+        <div class="ctop">
+          <div class="cico org">🍽️</div>
+          <div class="cinfo">
+            <div class="ctitle">Garçom / Garçonete</div>
+            <div class="csub">Buffet Estrela · Moema</div>
+          </div>
+          <div class="cval"><div class="cprice">R$180</div><div class="cper">por dia</div></div>
+        </div>
+        <div class="cmeta">
+          <span>📅 Hoje 18h–23h</span>
+          <span>⏱ 5h</span>
+          <span class="badge-urg">🔴 Urgente</span>
+        </div>
+      </div>
+
+      <div class="card" onclick="go(5)">
+        <div class="ctop">
+          <div class="cico blue">🧹</div>
+          <div class="cinfo">
+            <div class="ctitle">Diarista Residencial</div>
+            <div class="csub">Família Costa · Centro</div>
+          </div>
+          <div class="cval"><div class="cprice">R$160</div><div class="cper">por dia</div></div>
+        </div>
+        <div class="cmeta">
+          <span>📅 Amanhã 8h–17h</span><span>⏱ 8h</span>
+          <span class="badge-urg">🔴 Urgente</span>
+        </div>
+      </div>
+
+      <div style="font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin:12px 0 8px">📋 Próximas</div>
+
+      <div class="card" onclick="go(5)">
+        <div class="ctop">
+          <div class="cico grn">🔨</div>
+          <div class="cinfo">
+            <div class="ctitle">Ajudante de Obra</div>
+            <div class="csub">Construtora Avança · Zona Norte</div>
+          </div>
+          <div class="cval"><div class="cprice">R$200</div><div class="cper">por dia</div></div>
+        </div>
+        <div class="cmeta"><span>📅 Sex 7h–16h</span><span>⏱ 8h</span><span class="badge-new">Novo</span></div>
+      </div>
+
+      <div class="card" onclick="go(5)">
+        <div class="ctop">
+          <div class="cico pur">🎉</div>
+          <div class="cinfo">
+            <div class="ctitle">Auxiliar de Eventos</div>
+            <div class="csub">Casa Alegria · Savassi</div>
+          </div>
+          <div class="cval"><div class="cprice">R$140</div><div class="cper">por dia</div></div>
+        </div>
+        <div class="cmeta"><span>📅 Sáb 14h–22h</span><span>⏱ 8h</span></div>
+      </div>
+
+      <!-- Recorrente (domingos) -->
+      <div class="card" onclick="go(5)">
+        <div class="ctop">
+          <div class="cico org">☕</div>
+          <div class="cinfo">
+            <div class="ctitle">Barista / Caixa</div>
+            <div class="csub">Café do Mercado · Mercado Central</div>
+          </div>
+          <div class="cval"><div class="cprice">R$120</div><div class="cper">por dia</div></div>
+        </div>
+        <div class="cmeta">
+          <span>🔄 Todo domingo</span>
+          <span>⏱ 6h</span>
+          <span style="background:var(--purple-l);color:var(--purple);font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--rf)">Recorrente</span>
+        </div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+    <!-- ABA EMPREGO (oculta por padrão) -->
+    <div id="list-emp" style="display:none">
+      <div style="font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🏢 Vagas permanentes</div>
+
+      <div class="card pin">
+        <span class="badge-pin" style="display:inline-block;margin-bottom:8px">📌 Destaque patrocinado</span>
+        <div class="ctop">
+          <div class="cico blue">👩‍💼</div>
+          <div class="cinfo">
+            <div class="ctitle">Auxiliar Administrativo <span class="clt-badge">CLT</span></div>
+            <div class="csub">MedCenter Clínica · Lourdes</div>
+          </div>
+          <div class="cval"><div class="cprice">R$1.8k</div><div class="cper">/mês</div></div>
+        </div>
+        <div class="cmeta"><span>🕐 Full-time</span><span>📍 Presencial</span><span class="badge-new">6 vagas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="ctop">
+          <div class="cico grn">🧑‍🍳</div>
+          <div class="cinfo">
+            <div class="ctitle">Cozinheiro <span class="clt-badge">CLT</span></div>
+            <div class="csub">Restaurante Sabor Mineiro</div>
+          </div>
+          <div class="cval"><div class="cprice">R$2.2k</div><div class="cper">/mês</div></div>
+        </div>
+        <div class="cmeta"><span>🕐 Full-time</span><span>📍 Presencial</span></div>
+      </div>
+
+      <div class="card">
+        <div class="ctop">
+          <div class="cico pur">💻</div>
+          <div class="cinfo">
+            <div class="ctitle">Atendente SAC <span class="clt-badge" style="background:var(--purple-l);color:var(--purple)">PJ</span></div>
+            <div class="csub">StartTech · Remoto</div>
+          </div>
+          <div class="cval"><div class="cprice">R$1.5k</div><div class="cper">/mês</div></div>
+        </div>
+        <div class="cmeta"><span>🕐 Part-time</span><span>🌐 Remoto</span><span class="badge-new">Novo</span></div>
+      </div>
+
+      <div class="card">
+        <div class="ctop">
+          <div class="cico gld">📦</div>
+          <div class="cinfo">
+            <div class="ctitle">Auxiliar de Logística <span class="clt-badge">CLT</span></div>
+            <div class="csub">TransLog Transportes</div>
+          </div>
+          <div class="cval"><div class="cprice">R$1.6k</div><div class="cper">/mês</div></div>
+        </div>
+        <div class="cmeta"><span>🕐 Full-time</span><span>📍 Presencial</span></div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+    <!-- ABA OPORTUNIDADES (oculta) -->
+    <div id="list-opp" style="display:none">
+      <div style="font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:#B45309;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">💡 Oportunidades de negócio</div>
+
+      <div class="card opp-card" onclick="go(5)">
+        <div class="opp-label">Franquia · Varejo</div>
+        <div class="ctop" style="margin-top:6px">
+          <div class="cico gld">🛍️</div>
+          <div class="cinfo">
+            <div class="ctitle">Revendedora Linha Premium</div>
+            <div class="csub">Cosméticos NaturBela · Regional</div>
+          </div>
+          <div class="cval"><div class="cprice" style="color:#B45309">R$0</div><div class="cper">entrada</div></div>
+        </div>
+        <div class="cmeta">
+          <span>📦 Produto consignado</span>
+          <span>💰 30% comissão</span>
+          <span class="badge-pin">Hot</span>
+        </div>
+      </div>
+
+      <div class="card opp-card">
+        <div class="opp-label">Parceria · Serviços</div>
+        <div class="ctop" style="margin-top:6px">
+          <div class="cico gld">🔧</div>
+          <div class="cinfo">
+            <div class="ctitle">Técnico Parceiro — Instalações</div>
+            <div class="csub">TecnoFix · por demanda</div>
+          </div>
+          <div class="cval"><div class="cprice" style="color:#B45309">R$80</div><div class="cper">por OS</div></div>
+        </div>
+        <div class="cmeta"><span>📍 Sua cidade</span><span>🔄 Recorrente</span></div>
+      </div>
+
+      <div class="card opp-card" style="border-color:var(--primary)">
+        <div class="opp-label" style="color:var(--primary)">🚀 Empreendedor Regional · Conecta Diária</div>
+        <div style="font-size:13px;color:var(--t7);margin-top:8px;line-height:1.6">
+          Crie a instância do Conecta Diária para sua cidade.<br>
+          <strong>Link próprio · grátis · você vende os destaques localmente</strong>
+        </div>
+        <button class="btn-b" onclick="go(7)" style="margin-top:12px;padding:12px">Quero ser empreendedor →</button>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+  </div><!-- /scrl -->
+
+  <div class="bnav">
+    <button class="bni on"><span>🏠</span><span>Início</span></button>
+    <button class="bni" onclick="go(4)"><span>🔍</span><span>Buscar</span></button>
+    <button class="bni" style="position:relative">
+      <div class="bni-wrap"><span>💬</span><div class="notif-dot"></div></div>
+      <span onclick="go(6)" style="pointer-events:none">Chat</span>
+    </button>
+    <button class="bni" onclick="go(7)"><span>👤</span><span>Perfil</span></button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S5 — DETALHES
+════════════════════════════════ -->
+<div class="screen" id="s5">
+  <div class="det-hero">
+    <div class="sbar" style="color:#fff;position:static;height:auto;padding:0;margin-bottom:14px">
+      <span class="stime">9:41</span><span class="sicons">📶 🔋</span>
+    </div>
+    <button class="det-back" onclick="go(4)">← Voltar</button>
+    <span class="det-badge">🍽️ Gastronomia · Diária</span>
+    <div class="det-title">Garçom / Garçonete</div>
+    <div class="det-co">Buffet Estrela · Moema, SP · 1,2km</div>
+  </div>
+
+  <div class="det-scrl">
+    <div class="price-card">
+      <div>
+        <div class="big-price">R$ 180</div>
+        <div class="per-d">por diária · pagamento no mesmo dia</div>
+      </div>
+      <span class="badge-urg" style="font-size:12px;padding:6px 12px">🔴 Urgente</span>
+    </div>
+
+    <div class="info-g">
+      <div class="ibox"><div class="ibl">Data</div><div class="ibv">📅 Hoje</div></div>
+      <div class="ibox"><div class="ibl">Horário</div><div class="ibv">⏰ 18h–23h</div></div>
+      <div class="ibox"><div class="ibl">Duração</div><div class="ibv">⏱ 5 horas</div></div>
+      <div class="ibox"><div class="ibl">Vagas</div><div class="ibv" style="color:var(--accent)">⚠️ 2 restam</div></div>
+    </div>
+
+    <!-- recorrência -->
+    <div class="dsec">
+      <h3>📅 Recorrência desta vaga</h3>
+      <div class="sched-row">
+        <span class="sched-chip rec">🔄 Todo fim de semana</span>
+        <span class="sched-chip">Sex 18h–23h</span>
+        <span class="sched-chip">Sáb 14h–23h</span>
+        <span class="sched-chip">Dom 12h–20h</span>
+      </div>
+      <div style="font-size:12px;color:var(--t5);margin-top:10px">Candidatura única vale para todas as datas</div>
+    </div>
+
+    <div class="dsec">
+      <h3>Descrição</h3>
+      <p>Garçons/garçonetes para jantar corporativo com 80 convidados. Porte elegante, comunicação clara. Uniforme fornecido. Refeição incluída.</p>
+    </div>
+
+    <div class="dsec">
+      <h3>Requisitos</h3>
+      <div class="req-item"><span class="rdot"></span>Experiência mínima 6 meses em eventos</div>
+      <div class="req-item"><span class="rdot"></span>Boa apresentação pessoal</div>
+      <div class="req-item"><span class="rdot"></span>Pontualidade — chegada 30 min antes</div>
+      <div class="req-item"><span class="rdot"></span>Calça preta + camisa branca próprias</div>
+    </div>
+
+    <div class="dsec">
+      <h3>Contratante</h3>
+      <div class="co-row">
+        <div class="co-ico">🏢</div>
+        <div>
+          <div class="co-name">Buffet Estrela</div>
+          <div class="co-rat">⭐ 4.8 · 127 avaliações · desde 2019</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+  </div>
+
+  <div class="det-foot">
+    <div style="display:flex;gap:10px">
+      <button onclick="go(6)" style="padding:16px;background:var(--success-l);color:var(--success);border:1.5px solid var(--success);border-radius:var(--r2);font-weight:700;font-size:13px;cursor:pointer;flex:1">💬 Perguntar</button>
+      <button onclick="go(6)" class="btn-b" style="flex:2;padding:16px">Me candidatar · R$180 💼</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S6 — CHAT
+════════════════════════════════ -->
+<div class="screen" id="s6">
+  <div class="chat-hdr">
+    <div class="sbar" style="color:var(--t9);position:static;height:auto;padding:0;margin-bottom:12px">
+      <button class="back" onclick="go(5)" style="margin:0">← Vagas</button>
+      <span class="sicons" style="color:var(--t7)">📶 🔋</span>
+    </div>
+    <div class="chat-hdr-top">
+      <div class="chat-avy">BE</div>
+      <div>
+        <div class="chat-name">Buffet Estrela</div>
+        <div class="chat-status">Online agora</div>
+      </div>
+    </div>
+    <div class="chat-job">
+      <span>Vaga relacionada</span>
+      <p>Garçom / Garçonete · Hoje 18h–23h · R$ 180</p>
+    </div>
+  </div>
+
+  <!-- contato direto toggle -->
+  <div class="chat-contact-bar">
+    <span>Compartilhar celular com contratante</span>
+    <div class="chat-contact-toggle">
+      <span id="phone-lbl">Não</span>
+      <div class="toggle-pill off" id="tg-share" onclick="togglePhone()"></div>
+    </div>
+  </div>
+
+  <div class="msgs" id="msgs">
+    <div class="sys-msg">Candidatura enviada · 14:22</div>
+
+    <div class="msg them">
+      <div class="mbubble">Olá! Vi sua candidatura. Tem experiência com eventos corporativos?</div>
+      <div class="mtime">14h23</div>
+    </div>
+    <div class="msg me">
+      <div class="mbubble">Oi! Sim, trabalhei em 3 eventos assim ano passado. Posso levar referências!</div>
+      <div class="mtime">14h24</div>
+    </div>
+    <div class="msg them">
+      <div class="mbubble">Ótimo! Confirma então para hoje às 17h30 para orientação antes do evento?</div>
+      <div class="mtime">14h25</div>
+    </div>
+    <div class="msg me">
+      <div class="mbubble">Confirmado! Estarei lá às 17h30 ✅</div>
+      <div class="mtime">14h26</div>
+    </div>
+    <div class="sys-msg">Candidatura confirmada pelo contratante 🎉</div>
+  </div>
+
+  <div class="chat-input-area">
+    <button class="call-btn" title="Ligar">📞</button>
+    <input class="chat-input" placeholder="Digite uma mensagem..." id="msg-input" onkeydown="sendMsg(event)"/>
+    <button class="send-btn" onclick="sendMsg({key:'Enter'})">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     S7 — PAINEL CONTRATANTE
+════════════════════════════════ -->
+<div class="screen" id="s7">
+  <div class="panel-hdr">
+    <div class="sbar" style="color:#fff;position:static;height:auto;padding:0;margin-bottom:4px">
+      <button class="back" onclick="go(4)" style="color:rgba(255,255,255,.8);font-size:13px;background:none;border:none;cursor:pointer">← Feed</button>
+      <span class="sicons">📶 🔋</span>
+    </div>
+    <div class="panel-name">Buffet Estrela</div>
+    <div class="panel-role">Contratante · sinop.conectadiaria.com.br</div>
+    <div class="panel-stats">
+      <div class="pstat"><div class="pstat-n">3</div><div class="pstat-l">Vagas ativas</div></div>
+      <div class="pstat"><div class="pstat-n">48</div><div class="pstat-l">Candidatos</div></div>
+      <div class="pstat"><div class="pstat-n">4.8★</div><div class="pstat-l">Avaliação</div></div>
+    </div>
+  </div>
+
+  <div class="panel-scrl">
+
+    <!-- CALENDÁRIO EMPRESA -->
+    <div class="section-head">📅 Calendário de demanda</div>
+    <div class="emp-cal">
+      <div class="ec-head">
+        <span>Recorrência semanal</span>
+        <button class="ec-add">+ Adicionar</button>
+      </div>
+      <div class="ec-rec-tags">
+        <div class="ert">Seg</div>
+        <div class="ert">Ter</div>
+        <div class="ert">Qua</div>
+        <div class="ert">Qui</div>
+        <div class="ert">Sex</div>
+        <div class="ert on">Sáb</div>
+        <div class="ert on">Dom</div>
+      </div>
+      <div style="font-size:12px;color:var(--t7);margin-bottom:8px;font-weight:600">Períodos de evento</div>
+      <div class="cal-days" id="emp-cal" style="gap:3px"></div>
+      <div style="font-size:11px;color:var(--t5);margin-top:8px">Toque para marcar datas com necessidade de pessoal</div>
+    </div>
+
+    <!-- CANDIDATOS (visão em massa) -->
+    <div class="section-head">👷 Candidatos disponíveis na região</div>
+    <div class="cand-grid">
+      <div class="cand-card pin" onclick="go(6)">
+        <div class="cand-avy" style="background:linear-gradient(135deg,#1557FF,#7C3AED)">MR</div>
+        <div class="cand-name">Maria Rosa</div>
+        <div class="cand-role">Diarista · 5 anos exp.</div>
+        <div class="cand-tags"><span class="ctg">🧹 Limpeza</span><span class="ctg">🎉 Eventos</span></div>
+        <div class="cand-rat">⭐ 4.9 · <span style="font-size:9px;background:var(--gold-l);color:#92400E;padding:1px 5px;border-radius:var(--rf);font-weight:700">Fixado</span></div>
+      </div>
+      <div class="cand-card" onclick="go(6)">
+        <div class="cand-avy" style="background:linear-gradient(135deg,#10B981,#059669)">JC</div>
+        <div class="cand-name">João Carlos</div>
+        <div class="cand-role">Garçom · 3 anos exp.</div>
+        <div class="cand-tags"><span class="ctg">🍽️ Eventos</span></div>
+        <div class="cand-rat">⭐ 4.7</div>
+      </div>
+      <div class="cand-card" onclick="go(6)">
+        <div class="cand-avy" style="background:linear-gradient(135deg,#F59E0B,#D97706)">AC</div>
+        <div class="cand-name">Ana Clara</div>
+        <div class="cand-role">Cozinheira · 8 anos</div>
+        <div class="cand-tags"><span class="ctg">🧑‍🍳 Cozinha</span></div>
+        <div class="cand-rat">⭐ 5.0</div>
+      </div>
+      <div class="cand-card" onclick="go(6)">
+        <div class="cand-avy" style="background:linear-gradient(135deg,#7C3AED,#5B21B6)">PS</div>
+        <div class="cand-name">Paulo Souza</div>
+        <div class="cand-role">Manobrista · 2 anos</div>
+        <div class="cand-tags"><span class="ctg">🚗 Valets</span></div>
+        <div class="cand-rat">⭐ 4.6</div>
+      </div>
+    </div>
+
+    <!-- PROMOVER -->
+    <div class="section-head">⚡ Destaques (monetização)</div>
+    <div class="promote-card">
+      <h4>Apareça na frente — impulsione</h4>
+      <p>Fixe sua vaga no topo por região ou destaque candidatos preferidos. Sem anúncios invasivos — apenas prioridade.</p>
+      <div class="promote-opts">
+        <div class="promo-btn">📌 Fixar vaga<br><strong>R$19/semana</strong></div>
+        <div class="promo-btn">⭐ Fixar candidato<br><strong>R$9/semana</strong></div>
+        <div class="promo-btn">🏷️ Banner<br><strong>R$49/mês</strong></div>
+      </div>
+    </div>
+
+    <!-- banner exemplo -->
+    <div style="background:linear-gradient(90deg,#1557FF,#7C3AED);border-radius:var(--r2);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:24px">🧹</span>
+      <div style="flex:1">
+        <div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">PATROCINADO</div>
+        <div style="font-size:13px;color:#fff;font-weight:700">Produto Limpa Tudo Pro</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.75)">Ideal para diaristas · ver oferta</div>
+      </div>
+    </div>
+
+    <div style="height:24px"></div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<p style="margin-top:28px;font-size:11px;color:#9CA3AF;text-align:center">
+  Clique nos botões dentro do app para navegar · 7 telas · Conecta Diária v2<br>
+  URLs regionais: /CEP ou subdomínio próprio · banco de dados universal
+</p>
+
+<script>
+// ── nav ──
+let currentUrl = 'conectadiaria.com.br/78000-000';
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.snav').forEach(b => b.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('on');
+  document.querySelectorAll('.snav')[n - 1].classList.add('active');
+}
+
+function setUrl(el, url) {
+  document.querySelectorAll('.url-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  currentUrl = url;
+  document.getElementById('url-txt').textContent = url;
+  // update region chip based on url
+  const map = {
+    'conectadiaria.com.br/78000-000': 'Cuiabá, MT · 78000-000',
+    'conectadiaria.com.br/01310-000': 'São Paulo, SP · 01310-000',
+    'sinop.conectadiaria.com.br': 'Sinop, MT · instância regional',
+    'buffetestrela.conectadiaria.com.br': 'Buffet Estrela · instância empresa'
+  };
+  if (document.getElementById('region-name')) {
+    document.getElementById('region-name').textContent = map[url] || url;
+  }
+}
+
+function selCard(el) {
+  document.querySelectorAll('.pcard').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── 3-tab feed ──
+function switchTab(t) {
+  ['trab','emp','opp'].forEach(x => {
+    document.getElementById('list-' + x).style.display = x === t ? 'block' : 'none';
+    document.getElementById('frow-' + x).style.display = x === t ? 'flex' : 'none';
+    const btn = document.getElementById('tab-' + x);
+    btn.classList.toggle('on', x === t);
+  });
+  const counts = { trab:'18 vagas · sua área', emp:'11 empregos · sua área', opp:'5 oportunidades' };
+  document.getElementById('mass-count').textContent = counts[t];
+}
+
+function setMass(m, el) {
+  document.querySelectorAll('.mbt').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── mini calendar ──
+function buildCal(id, highlights) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = '';
+  for (let i = 1; i <= 30; i++) {
+    const d = document.createElement('div');
+    d.className = 'cday' + (highlights.includes(i) ? ' on' : '') + (i < 3 ? ' off' : '') + (i === 10 ? ' today' : '');
+    d.textContent = i;
+    if (i >= 3) d.onclick = () => d.classList.toggle('on');
+    el.appendChild(d);
+  }
+}
+buildCal('cal', [5, 7, 12, 14, 19, 21, 26, 28]);
+buildCal('emp-cal', [7, 8, 14, 15, 21, 22, 28, 29]);
+
+// ── filter chips click ──
+document.querySelectorAll('.fchip').forEach(c => {
+  c.addEventListener('click', function() {
+    const row = this.closest('.frow');
+    row.querySelectorAll('.fchip').forEach(x => x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+// ── chat ──
+function sendMsg(e) {
+  if (e.key !== 'Enter') return;
+  const inp = document.getElementById('msg-input');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const msgs = document.getElementById('msgs');
+  const m = document.createElement('div');
+  m.className = 'msg me';
+  m.innerHTML = `<div class="mbubble">${txt}</div><div class="mtime">agora</div>`;
+  msgs.appendChild(m);
+  inp.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function togglePhone() {
+  const pill = document.getElementById('tg-share');
+  const lbl = document.getElementById('phone-lbl');
+  const isOff = pill.classList.contains('off');
+  pill.classList.toggle('off');
+  lbl.textContent = isOff ? 'Sim — celular visível' : 'Não';
+  if (isOff) {
+    const msgs = document.getElementById('msgs');
+    const sys = document.createElement('div');
+    sys.className = 'sys-msg';
+    sys.textContent = '📱 Seu celular foi compartilhado com o contratante';
+    msgs.appendChild(sys);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+</script>
+</body>
+</html>

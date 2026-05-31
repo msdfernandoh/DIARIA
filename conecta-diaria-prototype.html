@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conecta Diária – Protótipo UX/UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1A6EF5;
+    --primary-dark: #0F4FBF;
+    --primary-light: #EBF2FF;
+    --accent: #FF6B35;
+    --accent-light: #FFF0EB;
+    --success: #22C55E;
+    --success-light: #F0FDF4;
+    --text-900: #0D1117;
+    --text-700: #374151;
+    --text-500: #6B7280;
+    --text-300: #D1D5DB;
+    --bg: #F5F7FA;
+    --white: #FFFFFF;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --card-shadow-lg: 0 8px 32px rgba(26,110,245,0.12);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #E8EDF5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  h1.page-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-900);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .page-subtitle {
+    font-size: 15px;
+    color: var(--text-500);
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  /* Screen navigation row */
+  .screens-nav {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .nav-btn {
+    padding: 8px 18px;
+    border: 2px solid var(--text-300);
+    border-radius: var(--radius-full);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-700);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-btn.active, .nav-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+  }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 375px;
+    height: 812px;
+    background: var(--white);
+    border-radius: 48px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.22), 0 0 0 10px #1a1a2e, 0 0 0 12px #2a2a4e;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 44px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+  }
+  .status-time { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; }
+  .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+
+  /* SCREENS */
+  .screen {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    overflow: hidden;
+  }
+  .screen.active { display: flex; }
+
+  /* ===== SCREEN 1: SPLASH / INICIAL ===== */
+  #screen1 {
+    background: linear-gradient(160deg, #0F4FBF 0%, #1A6EF5 50%, #3B82F6 100%);
+  }
+  .splash-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .splash-circle1 { width: 320px; height: 320px; top: -80px; right: -80px; }
+  .splash-circle2 { width: 200px; height: 200px; bottom: 180px; left: -60px; }
+  .splash-circle3 { width: 120px; height: 120px; top: 200px; left: 40px; }
+
+  .splash-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    position: relative;
+    z-index: 2;
+  }
+  .splash-logo-wrap {
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.3);
+  }
+  .splash-logo-icon { font-size: 42px; }
+  .splash-app-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .splash-tagline {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 56px;
+  }
+  .splash-illustration {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+  .splash-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: var(--radius-full);
+    padding: 10px 16px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(8px);
+  }
+  .splash-cta {
+    width: 100%;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 18px;
+    background: var(--white);
+    color: var(--primary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(0,0,0,0.2); }
+  .btn-primary-blue {
+    width: 100%;
+    padding: 18px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(26,110,245,0.35);
+  }
+  .btn-primary-blue:hover { transform: translateY(-1px); background: var(--primary-dark); }
+  .btn-outline {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-md);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  .btn-outline:hover { background: var(--primary-light); }
+
+  .splash-login {
+    margin-top: 16px;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    text-align: center;
+  }
+  .splash-login span { color: white; font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+  /* ===== SCREEN 2: ESCOLHA PERFIL ===== */
+  #screen2 { background: var(--bg); }
+
+  .screen-header {
+    background: var(--white);
+    padding: 60px 24px 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  }
+  .screen-header h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-900);
+    margin-bottom: 6px;
+  }
+  .screen-header p { font-size: 14px; color: var(--text-500); line-height: 1.5; }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 16px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .profile-cards {
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .profile-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    border: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 0 0 0 80px;
+    opacity: 0.08;
+  }
+  .profile-card.profissional::before { background: var(--primary); }
+  .profile-card.contratante::before { background: var(--accent); }
+  .profile-card:hover, .profile-card.selected {
+    border-color: var(--primary);
+    box-shadow: var(--card-shadow-lg);
+    transform: translateY(-2px);
+  }
+  .profile-card.contratante:hover, .profile-card.contratante.selected {
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(255,107,53,0.15);
+  }
+  .profile-icon-wrap {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+  .profissional .profile-icon-wrap { background: var(--primary-light); }
+  .contratante .profile-icon-wrap { background: var(--accent-light); }
+  .profile-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-900);
+    margin-bottom: 6px;
+  }
+  .profile-card p { font-size: 13px; color: var(--text-500); line-height: 1.5; }
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .tag {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+  }
+  .contratante .tag { background: var(--accent-light); color: var(--accent); }
+
+  .profile-footer {
+    padding: 0 24px 40px;
+  }
+
+  /* ===== SCREEN 3: CADASTRO ===== */
+  #screen3 { background: var(--bg); }
+
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-area::-webkit-scrollbar { display: none; }
+
+  .form-section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-500);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    margin-top: 24px;
+  }
+  .form-section-title:first-child { margin-top: 0; }
+
+  .field-group {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+  }
+  .field-item {
+    padding: 14px 18px;
+    border-bottom: 1px solid #F3F4F6;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field-item:last-child { border-bottom: none; }
+  .field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .field-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text-900);
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-weight: 400;
+  }
+  .field-input::placeholder { color: var(--text-300); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .skill-chip {
+    background: var(--white);
+    border: 2px solid var(--text-300);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .skill-chip.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+
+  /* ===== SCREEN 4: LISTA DE DIÁRIAS ===== */
+  #screen4 { background: var(--bg); }
+
+  .list-header {
+    background: var(--white);
+    padding: 56px 20px 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  }
+  .list-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .list-greeting { font-size: 13px; color: var(--text-500); }
+  .list-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-900);
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary), #7C3AED);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .search-bar span { font-size: 16px; }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text-700);
+    outline: none;
+    flex: 1;
+  }
+
+  .filter-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-scroll::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    white-space: nowrap;
+    padding: 7px 16px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid var(--text-300);
+    background: var(--white);
+    color: var(--text-700);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+
+  .list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .list-scroll::-webkit-scrollbar { display: none; }
+
+  .section-label {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-500);
+    margin-bottom: 12px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .diaria-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+  .diaria-card:hover { border-color: var(--primary); box-shadow: var(--card-shadow-lg); }
+
+  .diaria-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .diaria-category {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .category-icon {
+    width: 42px; height: 42px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .category-icon.blue { background: var(--primary-light); }
+  .category-icon.orange { background: var(--accent-light); }
+  .category-icon.green { background: var(--success-light); }
+  .category-icon.purple { background: #F3EEFF; }
+
+  .diaria-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-900);
+  }
+  .diaria-company { font-size: 12px; color: var(--text-500); }
+
+  .diaria-price {
+    text-align: right;
+  }
+  .price-value {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .price-label { font-size: 11px; color: var(--text-500); }
+
+  .diaria-info {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-500);
+  }
+  .urgente-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #FEF2F2;
+    color: #DC2626;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    margin-left: auto;
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    background: var(--white);
+    border-top: 1px solid #F3F4F6;
+    display: flex;
+    padding: 8px 0 24px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 10px;
+    color: var(--text-500);
+    font-weight: 500;
+    border: none;
+    background: none;
+    transition: color 0.2s;
+  }
+  .nav-item.active { color: var(--primary); }
+  .nav-item span:first-child { font-size: 22px; }
+
+  /* ===== SCREEN 5: DETALHES ===== */
+  #screen5 { background: var(--bg); }
+
+  .details-hero {
+    background: linear-gradient(160deg, #0F4FBF, #1A6EF5);
+    padding: 56px 24px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .details-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 0; right: 0;
+    height: 60px;
+    background: var(--bg);
+    border-radius: 30px 30px 0 0;
+  }
+  .details-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.8);
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .details-hero-content { position: relative; z-index: 1; }
+  .details-category-badge {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    display: inline-block;
+    margin-bottom: 12px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .details-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 8px;
+  }
+  .details-company { color: rgba(255,255,255,0.8); font-size: 14px; }
+
+  .details-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .details-scroll::-webkit-scrollbar { display: none; }
+
+  .details-price-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    margin-top: -8px;
+  }
+  .big-price {
+    font-family: 'Sora', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .per-day { font-size: 12px; color: var(--text-500); }
+  .urgente-tag {
+    background: #FEF2F2;
+    color: #DC2626;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .info-box {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    box-shadow: var(--card-shadow);
+  }
+  .info-box-label { font-size: 11px; color: var(--text-500); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
+  .info-box-value {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-900);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .detail-section {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+  }
+  .detail-section h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-900);
+    margin-bottom: 12px;
+  }
+  .detail-section p { font-size: 14px; color: var(--text-700); line-height: 1.6; }
+
+  .requirement-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 14px;
+    color: var(--text-700);
+  }
+  .requirement-item:last-child { border-bottom: none; }
+  .req-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; flex-shrink: 0; }
+
+  .company-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .company-avatar {
+    width: 52px; height: 52px;
+    background: var(--primary-light);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .company-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-900);
+  }
+  .company-rating { font-size: 13px; color: var(--text-500); display: flex; align-items: center; gap: 4px; }
+
+  .details-footer {
+    padding: 16px 20px 32px;
+    background: var(--white);
+    border-top: 1px solid #F3F4F6;
+  }
+
+  /* ===== SCREEN 6: CONFIRMAÇÃO / PAINEL ===== */
+  #screen6 { background: var(--bg); }
+
+  .success-header {
+    background: linear-gradient(160deg, #16A34A, #22C55E);
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .success-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 0; right: 0;
+    height: 60px;
+    background: var(--bg);
+    border-radius: 30px 30px 0 0;
+  }
+  .success-icon-circle {
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    margin: 0 auto 20px;
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  .success-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 8px;
+  }
+  .success-sub { font-size: 14px; color: rgba(255,255,255,0.8); }
+
+  .panel-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .panel-scroll::-webkit-scrollbar { display: none; }
+
+  .candidatura-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+    margin-top: -8px;
+  }
+  .candidatura-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-500);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+  .cand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 14px;
+  }
+  .cand-row:last-child { border-bottom: none; }
+  .cand-key { color: var(--text-500); }
+  .cand-val { font-weight: 600; color: var(--text-900); }
+
+  .status-timeline {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+  }
+  .timeline-item {
+    display: flex;
+    gap: 14px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: 0;
+    width: 2px;
+    background: #F3F4F6;
+  }
+  .timeline-item:last-child::after { display: none; }
+  .timeline-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .timeline-dot.done { background: var(--success-light); }
+  .timeline-dot.current { background: var(--primary-light); box-shadow: 0 0 0 4px rgba(26,110,245,0.15); }
+  .timeline-dot.pending { background: #F3F4F6; }
+  .timeline-content { padding-top: 4px; }
+  .timeline-step {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-900);
+    margin-bottom: 2px;
+  }
+  .timeline-step.pending { color: var(--text-500); }
+  .timeline-desc { font-size: 12px; color: var(--text-500); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-box {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 16px 12px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-500); font-weight: 500; }
+
+  /* Transition animation */
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .screen.active { animation: slideIn 0.3s ease; }
+
+  /* Progress dots */
+  .progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+  }
+  .dot.active { background: white; width: 24px; border-radius: 4px; }
+
+  .note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-300);
+    padding: 12px 0 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">🔗 Conecta Diária</h1>
+<p class="page-subtitle">Protótipo UX/UI Mobile — Entrega Acadêmica de Design de Interação</p>
+
+<!-- Navigation -->
+<div class="screens-nav">
+  <button class="nav-btn active" onclick="showScreen(1)">1. Tela Inicial</button>
+  <button class="nav-btn" onclick="showScreen(2)">2. Escolha de Perfil</button>
+  <button class="nav-btn" onclick="showScreen(3)">3. Cadastro</button>
+  <button class="nav-btn" onclick="showScreen(4)">4. Lista de Diárias</button>
+  <button class="nav-btn" onclick="showScreen(5)">5. Detalhes</button>
+  <button class="nav-btn" onclick="showScreen(6)">6. Confirmação</button>
+</div>
+
+<!-- Phone Frame -->
+<div class="phone-frame">
+
+  <!-- SCREEN 1: SPLASH / INICIAL -->
+  <div class="screen active" id="screen1">
+    <div class="status-bar" style="color:white">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <span>📶</span><span>🔋</span>
+      </div>
+    </div>
+    <div class="splash-bg-circle splash-circle1"></div>
+    <div class="splash-bg-circle splash-circle2"></div>
+    <div class="splash-bg-circle splash-circle3"></div>
+    <div class="splash-content">
+      <div class="splash-logo-wrap">
+        <span class="splash-logo-icon">🔗</span>
+      </div>
+      <div class="splash-app-name">Conecta Diária</div>
+      <div class="splash-tagline">Trabalho por diária para quem precisa<br>de renda extra — rápido e simples.</div>
+      <div class="splash-illustration">
+        <div class="splash-pill">🧹 Diarista</div>
+        <div class="splash-pill">🍽️ Garçom</div>
+        <div class="splash-pill">🔨 Obras</div>
+      </div>
+      <div class="splash-cta">
+        <div class="progress-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <button class="btn-primary" onclick="showScreen(2)">Começar agora</button>
+        <div class="splash-login">Já tem conta? <span onclick="showScreen(4)">Entrar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: ESCOLHA DE PERFIL -->
+  <div class="screen" id="screen2">
+    <div class="status-bar" style="color: var(--text-900)">
+      <span class="status-time">9:41</span>
+      <div class="status-icons" style="color: var(--text-700)">📶 🔋</div>
+    </div>
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen(1)">← Voltar</button>
+      <h2>Como você vai usar o app?</h2>
+      <p>Escolha seu perfil para personalizarmos sua experiência</p>
+    </div>
+    <div class="profile-cards">
+      <div class="profile-card profissional" onclick="selectProfile(this, 'profissional')">
+        <div class="profile-icon-wrap">👷</div>
+        <h3>Sou Profissional</h3>
+        <p>Busco trabalho por diária para complementar minha renda com flexibilidade de horário</p>
+        <div class="profile-tags">
+          <span class="tag">Diarista</span>
+          <span class="tag">Garçom</span>
+          <span class="tag">Zelador</span>
+          <span class="tag">Ajudante</span>
+          <span class="tag">Eventos</span>
+        </div>
+      </div>
+      <div class="profile-card contratante" onclick="selectProfile(this, 'contratante')">
+        <div class="profile-icon-wrap">🏢</div>
+        <h3>Sou Contratante</h3>
+        <p>Preciso contratar profissionais por diária para meu negócio, evento ou residência</p>
+        <div class="profile-tags">
+          <span class="tag">Empresa</span>
+          <span class="tag">Evento</span>
+          <span class="tag">Residência</span>
+        </div>
+      </div>
+    </div>
+    <div class="profile-footer">
+      <button class="btn-primary-blue" onclick="showScreen(3)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: CADASTRO -->
+  <div class="screen" id="screen3">
+    <div class="status-bar" style="color: var(--text-900)">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">📶 🔋</div>
+    </div>
+    <div class="screen-header" style="padding-bottom:16px">
+      <button class="back-btn" onclick="showScreen(2)">← Voltar</button>
+      <h2>Criar sua conta</h2>
+      <p>Leva menos de 2 minutos. Simples assim.</p>
+    </div>
+    <div class="scroll-area">
+      <div class="form-section-title">Dados pessoais</div>
+      <div class="field-group">
+        <div class="field-item">
+          <span class="field-label">Nome completo</span>
+          <input class="field-input" placeholder="Ex: Maria Aparecida Silva" />
+        </div>
+        <div class="field-item">
+          <span class="field-label">Celular (WhatsApp)</span>
+          <input class="field-input" placeholder="(11) 99999-0000" />
+        </div>
+        <div class="field-item">
+          <span class="field-label">E-mail</span>
+          <input class="field-input" placeholder="seu@email.com" />
+        </div>
+        <div class="field-item">
+          <span class="field-label">Cidade / Estado</span>
+          <input class="field-input" placeholder="São Paulo, SP" />
+        </div>
+      </div>
+
+      <div class="form-section-title">Habilidades (escolha até 4)</div>
+      <div class="skills-grid">
+        <div class="skill-chip selected" onclick="this.classList.toggle('selected')">🧹 Diarista</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">🍽️ Garçom</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">🔨 Ajudante de Obra</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">🌿 Zelador</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">🎉 Eventos</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">📦 Mudanças</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">👴 Cuidador</div>
+        <div class="skill-chip" onclick="this.classList.toggle('selected')">🚗 Motorista</div>
+      </div>
+
+      <div class="form-section-title">Segurança</div>
+      <div class="field-group">
+        <div class="field-item">
+          <span class="field-label">Senha</span>
+          <input class="field-input" type="password" placeholder="Mínimo 8 caracteres" />
+        </div>
+      </div>
+
+      <button class="btn-primary-blue" onclick="showScreen(4)" style="margin-top:8px;margin-bottom:8px">Criar conta grátis 🎉</button>
+      <div class="note">Ao criar, você concorda com os Termos de Uso e Política de Privacidade</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: LISTA DE DIÁRIAS -->
+  <div class="screen" id="screen4">
+    <div class="status-bar" style="color:var(--text-900)">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">📶 🔋</div>
+    </div>
+    <div class="list-header">
+      <div class="list-header-top">
+        <div>
+          <div class="list-greeting">Olá, Maria 👋</div>
+          <div class="list-title">Diárias disponíveis</div>
+        </div>
+        <div class="avatar">M</div>
+      </div>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input placeholder="Buscar por cargo, bairro..." readonly />
+      </div>
+      <div class="filter-scroll">
+        <div class="filter-chip active">Todos</div>
+        <div class="filter-chip">Hoje</div>
+        <div class="filter-chip">Limpeza</div>
+        <div class="filter-chip">Eventos</div>
+        <div class="filter-chip">Construção</div>
+        <div class="filter-chip">Gastronomia</div>
+        <div class="filter-chip">Cuidados</div>
+      </div>
+    </div>
+
+    <div class="list-scroll">
+      <div class="section-label">🔥 Urgente — precisam de você hoje</div>
+
+      <div class="diaria-card" onclick="showScreen(5)">
+        <div class="diaria-card-top">
+          <div class="diaria-category">
+            <div class="category-icon orange">🍽️</div>
+            <div>
+              <div class="diaria-title">Garçom / Garçonete</div>
+              <div class="diaria-company">Buffet Estrela — Moema, SP</div>
+            </div>
+          </div>
+          <div class="diaria-price">
+            <div class="price-value">R$180</div>
+            <div class="price-label">por dia</div>
+          </div>
+        </div>
+        <div class="diaria-info">
+          <span class="info-item">📅 Hoje, 18h–23h</span>
+          <span class="info-item">⏱ 5 horas</span>
+          <span class="urgente-badge">🔴 Urgente</span>
+        </div>
+      </div>
+
+      <div class="diaria-card" onclick="showScreen(5)">
+        <div class="diaria-card-top">
+          <div class="diaria-category">
+            <div class="category-icon blue">🧹</div>
+            <div>
+              <div class="diaria-title">Diarista Residencial</div>
+              <div class="diaria-company">Família Souza — Pinheiros, SP</div>
+            </div>
+          </div>
+          <div class="diaria-price">
+            <div class="price-value">R$160</div>
+            <div class="price-label">por dia</div>
+          </div>
+        </div>
+        <div class="diaria-info">
+          <span class="info-item">📅 Amanhã, 8h–17h</span>
+          <span class="info-item">⏱ 8 horas</span>
+          <span class="urgente-badge">🔴 Urgente</span>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:8px">📋 Próximas diárias</div>
+
+      <div class="diaria-card" onclick="showScreen(5)">
+        <div class="diaria-card-top">
+          <div class="diaria-category">
+            <div class="category-icon green">🔨</div>
+            <div>
+              <div class="diaria-title">Ajudante de Obra</div>
+              <div class="diaria-company">Construtora Avança — Santo André, SP</div>
+            </div>
+          </div>
+          <div class="diaria-price">
+            <div class="price-value">R$200</div>
+            <div class="price-label">por dia</div>
+          </div>
+        </div>
+        <div class="diaria-info">
+          <span class="info-item">📅 Sex, 7h–16h</span>
+          <span class="info-item">⏱ 8 horas</span>
+        </div>
+      </div>
+
+      <div class="diaria-card" onclick="showScreen(5)">
+        <div class="diaria-card-top">
+          <div class="diaria-category">
+            <div class="category-icon purple">🎉</div>
+            <div>
+              <div class="diaria-title">Auxiliar de Eventos</div>
+              <div class="diaria-company">Casa de Festas Alegria — Osasco, SP</div>
+            </div>
+          </div>
+          <div class="diaria-price">
+            <div class="price-value">R$140</div>
+            <div class="price-label">por dia</div>
+          </div>
+        </div>
+        <div class="diaria-info">
+          <span class="info-item">📅 Sáb, 14h–22h</span>
+          <span class="info-item">⏱ 8 horas</span>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item active">
+        <span>🏠</span>
+        <span>Início</span>
+      </button>
+      <button class="nav-item">
+        <span>🔍</span>
+        <span>Buscar</span>
+      </button>
+      <button class="nav-item">
+        <span>📋</span>
+        <span>Minhas</span>
+      </button>
+      <button class="nav-item">
+        <span>👤</span>
+        <span>Perfil</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: DETALHES -->
+  <div class="screen" id="screen5">
+    <div class="details-hero">
+      <div class="status-bar" style="color:white;position:relative;top:0;left:0;right:0;padding:0;height:auto;margin-bottom:16px">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <button class="details-back" onclick="showScreen(4)">← Voltar</button>
+      <div class="details-hero-content">
+        <span class="details-category-badge">🍽️ Gastronomia</span>
+        <div class="details-title">Garçom / Garçonete</div>
+        <div class="details-company">Buffet Estrela · Moema, São Paulo</div>
+      </div>
+    </div>
+
+    <div class="details-scroll">
+      <div class="details-price-card">
+        <div>
+          <div class="big-price">R$ 180</div>
+          <div class="per-day">por diária · pagamento no dia</div>
+        </div>
+        <div class="urgente-tag">🔴 Urgente</div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-box-label">Data</div>
+          <div class="info-box-value">📅 Hoje</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">Horário</div>
+          <div class="info-box-value">⏰ 18h–23h</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">Duração</div>
+          <div class="info-box-value">⏱ 5 horas</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">Vagas</div>
+          <div class="info-box-value" style="color: var(--accent)">⚠️ 2 restam</div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Descrição da vaga</h3>
+        <p>Precisamos de garçons/garçonetes experientes para atender a um jantar corporativo com 80 convidados. Porte elegante e comunicação são essenciais. Uniforme fornecido pelo contratante.</p>
+      </div>
+
+      <div class="detail-section">
+        <h3>O que você vai precisar</h3>
+        <div class="requirement-item"><span class="req-dot"></span> Experiência mínima de 6 meses em eventos</div>
+        <div class="requirement-item"><span class="req-dot"></span> Boa apresentação pessoal</div>
+        <div class="requirement-item"><span class="req-dot"></span> Pontualidade (chegada 30 min antes)</div>
+        <div class="requirement-item"><span class="req-dot"></span> Uniforme: calça preta + camisa branca</div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Sobre o contratante</h3>
+        <div class="company-row">
+          <div class="company-avatar">🏢</div>
+          <div>
+            <div class="company-name">Buffet Estrela</div>
+            <div class="company-rating">⭐ 4.8 · 127 avaliações · Membro desde 2021</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+    <div class="details-footer">
+      <button class="btn-primary-blue" onclick="showScreen(6)">Me candidatar — R$ 180 💼</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: CONFIRMAÇÃO / PAINEL -->
+  <div class="screen" id="screen6">
+    <div class="success-header">
+      <div class="status-bar" style="color:white;position:relative;top:0;padding:0;height:auto;margin-bottom:16px">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">📶 🔋</div>
+      </div>
+      <div class="success-icon-circle">✅</div>
+      <div class="success-title">Candidatura enviada!</div>
+      <div class="success-sub">O contratante receberá seu perfil agora</div>
+    </div>
+
+    <div class="panel-scroll">
+      <div class="candidatura-card">
+        <div class="candidatura-label">Resumo da candidatura</div>
+        <div class="cand-row">
+          <span class="cand-key">Vaga</span>
+          <span class="cand-val">Garçom / Garçonete</span>
+        </div>
+        <div class="cand-row">
+          <span class="cand-key">Empresa</span>
+          <span class="cand-val">Buffet Estrela</span>
+        </div>
+        <div class="cand-row">
+          <span class="cand-key">Data</span>
+          <span class="cand-val">Hoje, 18h–23h</span>
+        </div>
+        <div class="cand-row">
+          <span class="cand-key">Local</span>
+          <span class="cand-val">Moema, SP</span>
+        </div>
+        <div class="cand-row">
+          <span class="cand-key">Remuneração</span>
+          <span class="cand-val" style="color: var(--primary); font-weight:800">R$ 180,00</span>
+        </div>
+      </div>
+
+      <div class="status-timeline">
+        <div class="candidatura-label">Status da candidatura</div>
+        <div class="timeline-item">
+          <div class="timeline-dot done">✅</div>
+          <div class="timeline-content">
+            <div class="timeline-step">Candidatura enviada</div>
+            <div class="timeline-desc">Agora mesmo</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot current">👀</div>
+          <div class="timeline-content">
+            <div class="timeline-step">Aguardando revisão</div>
+            <div class="timeline-desc">O contratante está analisando seu perfil</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot pending">📩</div>
+          <div class="timeline-content">
+            <div class="timeline-step pending">Confirmação</div>
+            <div class="timeline-desc">Você será notificado por WhatsApp</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot pending">💰</div>
+          <div class="timeline-content">
+            <div class="timeline-step pending">Pagamento</div>
+            <div class="timeline-desc">Receba no mesmo dia da diária</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Seu painel de diárias</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-number">1</span>
+          <span class="stat-label">Candidaturas</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">0</span>
+          <span class="stat-label">Confirmadas</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number">R$0</span>
+          <span class="stat-label">Ganhos</span>
+        </div>
+      </div>
+
+      <button class="btn-primary-blue" onclick="showScreen(4)" style="margin-top:4px;margin-bottom:8px">Ver mais diárias</button>
+      <button class="btn-outline" onclick="showScreen(4)">Compartilhar meu perfil</button>
+
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+</div><!-- end phone-frame -->
+
+<p style="margin-top:32px;color:#9CA3AF;font-size:12px;text-align:center">
+  Clique nos botões dentro do app para navegar entre as telas.<br>
+  Protótipo criado para entrega acadêmica – Design de Interação e Interface UX/UI.
+</p>
+
+<script>
+  function showScreen(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('screen' + n).classList.add('active');
+    document.querySelectorAll('.nav-btn')[n - 1].classList.add('active');
+    // scroll phone frame to top
+    document.querySelectorAll('.scroll-area, .list-scroll, .details-scroll, .panel-scroll').forEach(el => el.scrollTop = 0);
+  }
+
+  function selectProfile(el, type) {
+    document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+</body>
+</html>

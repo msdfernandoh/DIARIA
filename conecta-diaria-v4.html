@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conecta Diária v4 — Financeiro & Conta do Parceiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --P:#1557FF;--Pd:#0A3DBF;--Pl:#E8EEFF;
+  --A:#FF5C35;--Al:#FFF0EB;
+  --G:#F59E0B;--Gl:#FFFBEB;
+  --S:#10B981;--Sl:#ECFDF5;
+  --V:#7C3AED;--Vl:#F5F3FF;
+  --t9:#0A0D14;--t7:#2D3748;--t5:#718096;--t3:#E2E8F0;
+  --bg:#F0F2F7;--W:#fff;
+  --s1:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --s2:0 4px 16px rgba(21,87,255,.10);
+  --s3:0 8px 32px rgba(21,87,255,.14);
+  --r1:8px;--r2:14px;--r3:20px;--rf:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#C5CAD8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 56px;}
+
+.ph{text-align:center;margin-bottom:8px;}
+.ph h1{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#0A0D14;}
+.ph p{font-size:11px;color:#718096;margin-top:3px;}
+
+.url-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+.up{background:#fff;border:1.5px solid #E2E8F0;border-radius:var(--rf);padding:4px 12px;font-size:10px;color:#2D3748;cursor:pointer;transition:all .2s;}
+.up.on{border-color:var(--P);background:var(--P);color:#fff;}
+.ul{font-size:10px;color:#718096;font-weight:700;}
+
+.snrow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;}
+.sn{padding:5px 12px;border:1.5px solid #CBD5E0;border-radius:var(--rf);background:#fff;font-size:10px;font-weight:700;color:#4A5568;cursor:pointer;transition:all .2s;}
+.sn.on,.sn:hover{border-color:var(--P);background:var(--P);color:#fff;}
+
+.phone{width:390px;height:844px;background:var(--W);border-radius:52px;
+  box-shadow:0 40px 100px rgba(0,0,0,.26),0 0 0 10px #111827,0 0 0 12px #1F2937;
+  overflow:hidden;position:relative;}
+
+.sb-fixed{height:48px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;position:absolute;top:0;left:0;right:0;z-index:200;pointer-events:none;}
+.st{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;}
+.si{font-size:12px;display:flex;gap:4px;}
+
+.sc{position:absolute;inset:0;display:none;flex-direction:column;animation:fadeIn .25s ease;}
+.sc.on{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+.sv{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sv::-webkit-scrollbar{display:none;}
+
+/* ── shared ── */
+.hdr{background:#fff;padding:52px 20px 16px;box-shadow:0 1px 0 #E2E8F0;}
+.hdr h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--t9);margin-bottom:4px;}
+.hdr p{font-size:12px;color:var(--t5);line-height:1.5;}
+.bk{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--P);font-weight:700;cursor:pointer;background:none;border:none;margin-bottom:10px;padding:0;}
+.sec{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;}
+.sec:first-child{margin-top:0;}
+.fg{background:#fff;border-radius:var(--r2);overflow:hidden;box-shadow:var(--s1);margin-bottom:12px;}
+.fi{padding:12px 15px;border-bottom:1px solid #F7FAFC;display:flex;flex-direction:column;gap:3px;}
+.fi:last-child{border-bottom:none;}
+.fi.row{flex-direction:row;align-items:center;justify-content:space-between;}
+.fl{font-size:9px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.6px;}
+.fi input,.fi select{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--t9);border:none;outline:none;background:transparent;width:100%;}
+.fi input::placeholder{color:var(--t3);}
+.fi-val{font-size:13px;font-weight:600;color:var(--t9);}
+.fi-val.green{color:var(--S);}
+.fi-val.blue{color:var(--P);}
+.btn{width:100%;padding:15px;background:var(--P);color:#fff;border:none;border-radius:var(--r2);font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--s2);transition:all .2s;margin-top:8px;}
+.btn:hover{background:var(--Pd);transform:translateY(-1px);}
+.btn.wh{background:#fff;color:var(--P);box-shadow:0 5px 20px rgba(0,0,0,.14);}
+.btn.sm{padding:11px;font-size:12px;margin-top:6px;}
+.btn.out{background:transparent;color:var(--P);border:1.5px solid var(--P);box-shadow:none;}
+.btn.green{background:var(--S);box-shadow:0 4px 16px rgba(16,185,129,.25);}
+.btn.gold{background:var(--G);color:#92400E;box-shadow:0 4px 16px rgba(245,158,11,.25);}
+.tog{width:34px;height:19px;border-radius:var(--rf);background:var(--S);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+.tog::after{content:'';position:absolute;top:2.5px;right:2.5px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;}
+.tog.off{background:var(--t3);}
+.tog.off::after{transform:translateX(-15px);}
+.bnav{background:#fff;border-top:1px solid #F0F4F8;display:flex;padding:7px 0 26px;box-shadow:0 -4px 18px rgba(0,0,0,.06);}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px;cursor:pointer;font-size:8px;color:var(--t5);font-weight:700;border:none;background:none;transition:color .2s;}
+.bni.on{color:var(--P);}
+.bni .ico{font-size:20px;}
+.nw{position:relative;display:inline-block;}
+.ndot{width:6px;height:6px;background:var(--A);border-radius:50%;position:absolute;top:0;right:-2px;}
+
+/* ── stat mini-cards ── */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.stats-row.three{grid-template-columns:1fr 1fr 1fr;}
+.stat-card{background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);}
+.stat-n{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--P);}
+.stat-n.green{color:var(--S);}
+.stat-n.gold{color:var(--G);}
+.stat-n.red{color:var(--A);}
+.stat-l{font-size:10px;color:var(--t5);margin-top:2px;}
+
+/* ── hero gradients ── */
+.hero-blue{background:linear-gradient(155deg,#0A2A8F,#1557FF);padding:50px 20px 40px;position:relative;overflow:hidden;}
+.hero-blue::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--bg);border-radius:24px 24px 0 0;}
+.hero-green{background:linear-gradient(155deg,#065F46,#10B981);padding:50px 20px 40px;position:relative;overflow:hidden;}
+.hero-green::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--bg);border-radius:24px 24px 0 0;}
+.hero-gold{background:linear-gradient(155deg,#92400E,#F59E0B);padding:50px 20px 40px;position:relative;overflow:hidden;}
+.hero-gold::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--bg);border-radius:24px 24px 0 0;}
+.hero-purple{background:linear-gradient(155deg,#3730A3,#7C3AED);padding:50px 20px 40px;position:relative;overflow:hidden;}
+.hero-purple::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--bg);border-radius:24px 24px 0 0;}
+.hero-sb{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.hero-bk{color:rgba(255,255,255,.75);font-size:12px;cursor:pointer;background:none;border:none;padding:0;}
+.hero-ico-big{font-size:36px;margin-bottom:10px;}
+.hero-tit{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:3px;}
+.hero-sub{font-size:12px;color:rgba(255,255,255,.72);}
+.hero-stats{display:flex;gap:8px;margin-top:16px;}
+.hstat{background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.22);border-radius:var(--r2);padding:10px 14px;flex:1;text-align:center;}
+.hstat-n{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;}
+.hstat-l{font-size:9px;color:rgba(255,255,255,.68);margin-top:1px;}
+
+/* ── cards de produto/venda ── */
+.prod-card{background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s1);margin-bottom:10px;border:1.5px solid transparent;cursor:pointer;transition:all .2s;}
+.prod-card:hover{border-color:var(--P);box-shadow:var(--s3);}
+.prod-card.gold-border{border-color:var(--G);}
+.prod-card.active{border-color:var(--S);background:linear-gradient(135deg,#fff 85%,var(--Sl));}
+.prod-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.prod-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.prod-name{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--t9);}
+.prod-scope{font-size:10px;color:var(--t5);margin-top:1px;}
+.prod-price-row{display:flex;align-items:center;justify-content:space-between;}
+.prod-price{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--P);}
+.prod-period{font-size:10px;color:var(--t5);}
+.prod-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--rf);}
+.badge-local{background:var(--Vl);color:#5B21B6;}
+.badge-city{background:#FEF3C7;color:#92400E;}
+.badge-all{background:var(--Pl);color:var(--Pd);}
+.prod-desc{font-size:11px;color:var(--t7);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid #F7FAFC;}
+
+/* ── transações ── */
+.tx-item{padding:12px 0;border-bottom:1px solid #F7FAFC;display:flex;align-items:center;gap:10px;}
+.tx-item:last-child{border-bottom:none;}
+.tx-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tx-ico.green{background:var(--Sl);}
+.tx-ico.red{background:#FEE2E2;}
+.tx-ico.blue{background:var(--Pl);}
+.tx-ico.gold{background:var(--Gl);}
+.tx-info{flex:1;}
+.tx-name{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--t9);}
+.tx-date{font-size:10px;color:var(--t5);margin-top:1px;}
+.tx-val{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;}
+.tx-val.green{color:var(--S);}
+.tx-val.red{color:var(--A);}
+.tx-val.gold{color:var(--G);}
+
+/* ── pix / pagamento ── */
+.pix-box{background:linear-gradient(135deg,var(--Sl),#fff);border:1.5px solid var(--S);border-radius:var(--r2);padding:16px;margin-bottom:12px;}
+.pix-box-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.pix-logo{font-size:28px;}
+.pix-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:#065F46;}
+.pix-sub{font-size:11px;color:var(--S);}
+.pix-key{background:#fff;border-radius:var(--r1);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border:1px solid var(--t3);}
+.pix-key-val{font-size:12px;color:var(--t9);font-weight:600;}
+.pix-copy{font-size:10px;color:var(--P);font-weight:700;cursor:pointer;}
+
+/* ── cobrança plataforma ── */
+.fee-box{background:linear-gradient(135deg,var(--Pl),#fff);border:1.5px solid var(--P);border-radius:var(--r2);padding:16px;margin-bottom:12px;}
+.fee-tit{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--Pd);margin-bottom:6px;}
+.fee-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(21,87,255,.1);font-size:12px;}
+.fee-row:last-child{border-bottom:none;}
+.fee-key{color:var(--t7);}
+.fee-val{font-weight:700;color:var(--t9);}
+.fee-val.highlight{color:var(--P);font-size:14px;}
+
+/* ── config conta ── */
+.type-sel{display:flex;gap:6px;margin-bottom:12px;}
+.type-btn{flex:1;padding:10px;border:2px solid var(--t3);border-radius:var(--r1);background:#fff;font-size:11px;font-weight:700;color:var(--t7);cursor:pointer;text-align:center;transition:all .2s;}
+.type-btn.on{border-color:var(--P);background:var(--Pl);color:var(--P);}
+
+/* ── repasse card ── */
+.repasse-card{background:linear-gradient(135deg,var(--Gl),#fff);border:1.5px solid var(--G);border-radius:var(--r2);padding:16px;margin-bottom:12px;}
+.repasse-tit{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:#92400E;margin-bottom:8px;}
+.repasse-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:11px;}
+.repasse-key{color:#B45309;}
+.repasse-val{font-weight:700;color:#92400E;}
+
+/* ── planos admin ── */
+.plan-card{background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s1);margin-bottom:10px;border:2px solid transparent;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.plan-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 0 0 60px;opacity:.07;}
+.plan-city::before{background:var(--G);}
+.plan-region::before{background:var(--P);}
+.plan-national::before{background:var(--V);}
+.plan-card:hover{transform:translateY(-1px);box-shadow:var(--s3);}
+.plan-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.plan-name{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--t9);}
+.plan-scope-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--rf);}
+.plan-price{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-bottom:2px;}
+.plan-period{font-size:10px;color:var(--t5);}
+.plan-repasse{font-size:11px;font-weight:700;margin-top:8px;padding-top:8px;border-top:1px solid #F7FAFC;}
+.plan-features{margin-top:8px;}
+.plan-feat{font-size:11px;color:var(--t7);padding:3px 0;display:flex;align-items:center;gap:6px;}
+</style>
+</head>
+<body>
+
+<div class="ph">
+  <h1>🔗 Conecta Diária v4</h1>
+  <p>Conta do parceiro · Pix · Financeiro · Planos locais e premium · Repasse automático</p>
+</div>
+
+<div class="url-row">
+  <span class="ul">Instância:</span>
+  <div class="up on" onclick="setUrl(this,'sinop.conectadiaria.com.br')">📍 sinop.conectadiaria.com</div>
+  <div class="up" onclick="setUrl(this,'conectadiaria.com.br/78000-000')">🌎 /78000-000 (Cuiabá)</div>
+  <div class="up" onclick="setUrl(this,'buffetestrela.conectadiaria.com.br')">🏢 buffetestrela.conecta</div>
+</div>
+
+<div class="snrow">
+  <button class="sn on" onclick="go('cfg')">⚙️ Config. Conta</button>
+  <button class="sn" onclick="go('pix')">💚 Pix & Pagamento</button>
+  <button class="sn" onclick="go('produtos')">📦 Meus Produtos</button>
+  <button class="sn" onclick="go('vender')">💰 Vender Destaque</button>
+  <button class="sn" onclick="go('financeiro')">📊 Financeiro</button>
+  <button class="sn" onclick="go('planos')">🏙️ Planos Admin</button>
+  <button class="sn" onclick="go('cliente-paga')">💳 Tela Cliente Paga</button>
+</div>
+
+<div class="phone">
+
+<!-- ══════════════════ CONFIG CONTA ══════════════════ -->
+<div class="sc on" id="scfg">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-purple">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('financeiro')">← Financeiro</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hero-ico-big">⚙️</div>
+    <div class="hero-tit">Configurações da conta</div>
+    <div class="hero-sub" id="cfg-url-sub">sinop.conectadiaria.com.br</div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n" id="cfg-tipo-n">MEI</div><div class="hstat-l">Tipo de conta</div></div>
+      <div class="hstat"><div class="hstat-n">Ativo</div><div class="hstat-l">Status</div></div>
+      <div class="hstat"><div class="hstat-n">2 anos</div><div class="hstat-l">Na plataforma</div></div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div class="sec">Tipo de pessoa / empresa</div>
+    <div class="type-sel">
+      <div class="type-btn on" onclick="setTipo(this,'MEI')">👷 MEI</div>
+      <div class="type-btn" onclick="setTipo(this,'CNPJ')">🏢 CNPJ</div>
+      <div class="type-btn" onclick="setTipo(this,'PF')">👤 Pessoa Física</div>
+    </div>
+
+    <div class="fg">
+      <div class="fi"><span class="fl">Nome / Razão Social</span><input placeholder="Sinop Conecta Serviços ME" value="Sinop Conecta Serviços ME"/></div>
+      <div class="fi"><span class="fl">CPF / CNPJ</span><input placeholder="00.000.000/0001-00" value="12.345.678/0001-90"/></div>
+      <div class="fi"><span class="fl">Nome do responsável</span><input placeholder="João Carlos Silva" value="João Carlos Silva"/></div>
+      <div class="fi"><span class="fl">Celular (WhatsApp)</span><input placeholder="(66) 99999-0000" value="(66) 99123-4567"/></div>
+      <div class="fi"><span class="fl">E-mail</span><input placeholder="parceiro@email.com" value="joao@sinopconecta.com"/></div>
+    </div>
+
+    <div class="sec">Instância regional</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Link da sua instância</span><input value="sinop.conectadiaria.com.br" readonly style="color:var(--P);"/></div>
+      <div class="fi"><span class="fl">Região coberta (CEPs ou cidade)</span><input placeholder="Sinop, MT · 78550-000 a 78559-999" value="Sinop, MT · 78550-000 a 78559-999"/></div>
+      <div class="fi row">
+        <div><span class="fl">Instância pública (visível a todos)</span><div style="font-size:11px;color:var(--t5);margin-top:1px">Desativar para modo privado</div></div>
+        <div class="tog" onclick="this.classList.toggle('off')"></div>
+      </div>
+    </div>
+
+    <div class="sec">Personalização visual</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Nome exibido no app</span><input placeholder="Conecta Sinop" value="Conecta Sinop"/></div>
+      <div class="fi"><span class="fl">Cor principal (hex)</span><input placeholder="#1557FF" value="#1557FF"/></div>
+      <div class="fi"><span class="fl">Logo URL (opcional)</span><input placeholder="https://suaempresa.com/logo.png"/></div>
+    </div>
+
+    <button class="btn" onclick="go('pix')">Salvar e configurar Pix →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PIX & PAGAMENTO ══════════════════ -->
+<div class="sc" id="scpix">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-green">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('cfg')">← Config. conta</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hero-ico-big">💚</div>
+    <div class="hero-tit">Pix & Recebimentos</div>
+    <div class="hero-sub">Clientes pagam direto na sua conta</div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">R$1.240</div><div class="hstat-l">Recebido no mês</div></div>
+      <div class="hstat"><div class="hstat-n">R$124</div><div class="hstat-l">Taxa plataforma (10%)</div></div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div class="sec">Sua chave Pix (clientes pagam aqui)</div>
+    <div class="pix-box">
+      <div class="pix-box-head">
+        <div class="pix-logo">💚</div>
+        <div><div class="pix-title">Pix configurado</div><div class="pix-sub">Clientes pagam diretamente para você</div></div>
+      </div>
+      <div class="pix-key">
+        <div>
+          <div style="font-size:9px;color:var(--t5);font-weight:700;text-transform:uppercase;margin-bottom:2px">Chave Pix ativa</div>
+          <div class="pix-key-val">12.345.678/0001-90 (CNPJ)</div>
+        </div>
+        <span class="pix-copy" onclick="copyPix()">📋 Copiar</span>
+      </div>
+      <div id="pix-copied" style="display:none;font-size:10px;color:var(--S);font-weight:700;text-align:center;margin-bottom:6px">✅ Copiado!</div>
+      <div style="font-size:11px;color:#065F46;line-height:1.6">O app exibe esta chave na tela de pagamento do cliente. O dinheiro cai direto na sua conta, sem intermediário.</div>
+    </div>
+
+    <div class="sec">Adicionar / trocar chave Pix</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Tipo de chave</span>
+        <select>
+          <option>CNPJ</option>
+          <option>CPF</option>
+          <option>E-mail</option>
+          <option>Celular</option>
+          <option>Chave aleatória</option>
+        </select>
+      </div>
+      <div class="fi"><span class="fl">Chave</span><input placeholder="Cole ou digite sua chave Pix" value="12.345.678/0001-90"/></div>
+      <div class="fi"><span class="fl">Nome do banco / instituição</span><input placeholder="Ex: Nubank, Banco do Brasil, Inter..." value="Nubank"/></div>
+    </div>
+
+    <div class="sec">Como funciona o pagamento</div>
+    <div class="fg">
+      <div class="fi row"><div><span class="fl">Cliente vê sua chave Pix na tela</span><div style="font-size:11px;color:var(--t7);margin-top:1px">Ao comprar banner, fixar vaga ou candidato</div></div><span style="font-size:18px">✅</span></div>
+      <div class="fi row"><div><span class="fl">Paga direto para você</span><div style="font-size:11px;color:var(--t7);margin-top:1px">Sem passar pela plataforma</div></div><span style="font-size:18px">✅</span></div>
+      <div class="fi row"><div><span class="fl">App registra a venda automaticamente</span><div style="font-size:11px;color:var(--t7);margin-top:1px">Para controle de taxa de 10%</div></div><span style="font-size:18px">✅</span></div>
+      <div class="fi row"><div><span class="fl">Plataforma cobra 10% periodicamente</span><div style="font-size:11px;color:var(--t7);margin-top:1px">Por Pix quando saldo atingir limite</div></div><span style="font-size:18px">📊</span></div>
+    </div>
+
+    <button class="btn green" onclick="go('financeiro')">Ver meu financeiro →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PRODUTOS (o que o parceiro vende) ══════════════════ -->
+<div class="sc" id="scprodutos">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-gold">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('financeiro')">← Financeiro</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hero-ico-big">📦</div>
+    <div class="hero-tit">Produtos que você vende</div>
+    <div class="hero-sub">Configure preços e visibilidade</div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div class="sec">Produtos locais (só clientes da sua instância veem)</div>
+
+    <div class="prod-card active">
+      <div class="prod-head">
+        <div class="prod-ico" style="background:var(--Gl)">📌</div>
+        <div style="flex:1">
+          <div class="prod-name">Fixar vaga no topo</div>
+          <div class="prod-scope"><span class="prod-badge badge-local">🏘️ Só sua região</span></div>
+        </div>
+        <div class="tog" onclick="this.classList.toggle('off')"></div>
+      </div>
+      <div class="prod-price-row">
+        <div><div class="prod-price">R$ <input type="number" value="19" style="width:48px;font-family:Sora,sans-serif;font-size:18px;font-weight:800;color:var(--P);border:none;outline:none;background:transparent;"/></div><div class="prod-period">por semana</div></div>
+        <div style="text-align:right;font-size:10px;color:var(--t5)">Taxa plataforma:<br><strong style="color:var(--P)">R$ 1,90 (10%)</strong></div>
+      </div>
+      <div class="prod-desc">Empresa paga → vaga dela aparece primeiro nos resultados da sua instância. Clientes de outras regiões não veem.</div>
+    </div>
+
+    <div class="prod-card active">
+      <div class="prod-head">
+        <div class="prod-ico" style="background:var(--Pl)">⭐</div>
+        <div style="flex:1">
+          <div class="prod-name">Fixar candidato no topo</div>
+          <div class="prod-scope"><span class="prod-badge badge-local">🏘️ Só sua região</span></div>
+        </div>
+        <div class="tog" onclick="this.classList.toggle('off')"></div>
+      </div>
+      <div class="prod-price-row">
+        <div><div class="prod-price">R$ <input type="number" value="9" style="width:40px;font-family:Sora,sans-serif;font-size:18px;font-weight:800;color:var(--P);border:none;outline:none;background:transparent;"/></div><div class="prod-period">por semana</div></div>
+        <div style="text-align:right;font-size:10px;color:var(--t5)">Taxa plataforma:<br><strong style="color:var(--P)">R$ 0,90 (10%)</strong></div>
+      </div>
+      <div class="prod-desc">Profissional paga → perfil dele aparece primeiro na busca das empresas da sua região.</div>
+    </div>
+
+    <div class="prod-card active">
+      <div class="prod-head">
+        <div class="prod-ico" style="background:#FEE2E2">🏷️</div>
+        <div style="flex:1">
+          <div class="prod-name">Banner regional</div>
+          <div class="prod-scope"><span class="prod-badge badge-local">🏘️ Só sua região</span></div>
+        </div>
+        <div class="tog" onclick="this.classList.toggle('off')"></div>
+      </div>
+      <div class="prod-price-row">
+        <div><div class="prod-price">R$ <input type="number" value="49" style="width:48px;font-family:Sora,sans-serif;font-size:18px;font-weight:800;color:var(--P);border:none;outline:none;background:transparent;"/></div><div class="prod-period">por mês</div></div>
+        <div style="text-align:right;font-size:10px;color:var(--t5)">Taxa plataforma:<br><strong style="color:var(--P)">R$ 4,90 (10%)</strong></div>
+      </div>
+      <div class="prod-desc">Anunciante paga → banner discreto exibido para usuários da sua instância. Máximo 1 por tela.</div>
+    </div>
+
+    <div class="sec">Produto de oportunidade (seção "Oportunidades")</div>
+    <div class="prod-card">
+      <div class="prod-head">
+        <div class="prod-ico" style="background:var(--Gl)">💡</div>
+        <div style="flex:1">
+          <div class="prod-name">Card de oportunidade</div>
+          <div class="prod-scope"><span class="prod-badge badge-local">🏘️ Só sua região</span></div>
+        </div>
+        <div class="tog off" onclick="this.classList.toggle('off')"></div>
+      </div>
+      <div class="prod-price-row">
+        <div><div class="prod-price">R$ <input type="number" value="79" style="width:48px;font-family:Sora,sans-serif;font-size:18px;font-weight:800;color:var(--P);border:none;outline:none;background:transparent;"/></div><div class="prod-period">por mês</div></div>
+        <div style="text-align:right;font-size:10px;color:var(--t5)">Taxa plataforma:<br><strong style="color:var(--P)">R$ 7,90 (10%)</strong></div>
+      </div>
+      <div class="prod-desc">Negócios locais (franquias, revendas, parcerias) aparecem na aba Oportunidades. "Publicidade camuflada" como conteúdo relevante.</div>
+    </div>
+
+    <button class="btn" onclick="go('vender')">Vender para um cliente →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ VENDER DESTAQUE (fluxo de venda) ══════════════════ -->
+<div class="sc" id="scvender">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hdr">
+    <button class="bk" onclick="go('produtos')">← Produtos</button>
+    <h2>Nova venda 💰</h2>
+    <p>Configure e gere o link de pagamento para seu cliente</p>
+  </div>
+  <div class="sv" style="padding:12px 16px">
+    <div class="sec">1. Quem é o cliente?</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Nome / empresa do cliente</span><input placeholder="Ex: Restaurante Sabor Local" value="Restaurante Sabor Local"/></div>
+      <div class="fi"><span class="fl">Celular ou e-mail do cliente</span><input placeholder="(66) 99999-0000" value="(66) 98765-4321"/></div>
+    </div>
+
+    <div class="sec">2. Qual produto?</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <div class="prod-card active" style="padding:12px" onclick="selProd(this)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">📌</span><div><div style="font-size:12px;font-weight:700;color:var(--t9)">Fixar vaga no topo</div><div style="font-size:10px;color:var(--t5)">Sua região · 1 semana</div></div></div>
+          <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:800;color:var(--P)">R$ 19</div>
+        </div>
+      </div>
+      <div class="prod-card" style="padding:12px" onclick="selProd(this)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">⭐</span><div><div style="font-size:12px;font-weight:700;color:var(--t9)">Fixar candidato</div><div style="font-size:10px;color:var(--t5)">Sua região · 1 semana</div></div></div>
+          <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:800;color:var(--P)">R$ 9</div>
+        </div>
+      </div>
+      <div class="prod-card" style="padding:12px" onclick="selProd(this)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🏷️</span><div><div style="font-size:12px;font-weight:700;color:var(--t9)">Banner regional</div><div style="font-size:10px;color:var(--t5)">Sua região · 1 mês</div></div></div>
+          <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:800;color:var(--P)">R$ 49</div>
+        </div>
+      </div>
+      <div class="prod-card" style="padding:12px" onclick="selProd(this)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">💡</span><div><div style="font-size:12px;font-weight:700;color:var(--t9)">Card oportunidade</div><div style="font-size:10px;color:var(--t5)">Sua região · 1 mês</div></div></div>
+          <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:800;color:var(--P)">R$ 79</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">3. Valor e nota</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Valor cobrado (R$)</span><input type="number" value="19" id="sale-val" oninput="calcFee()"/></div>
+      <div class="fi row"><span class="fl">Taxa plataforma (10%)</span><span class="fi-val blue" id="fee-preview">R$ 1,90</span></div>
+      <div class="fi row"><span class="fl">Você fica com</span><span class="fi-val green" id="net-preview">R$ 17,10</span></div>
+      <div class="fi"><span class="fl">Observação interna (opcional)</span><input placeholder="Ex: banner semana do junino"/></div>
+    </div>
+
+    <div class="fee-box">
+      <div class="fee-tit">📊 Esta venda será registrada</div>
+      <div class="fee-row"><span class="fee-key">Produto</span><span class="fee-val">Fixar vaga no topo</span></div>
+      <div class="fee-row"><span class="fee-key">Cliente</span><span class="fee-val">Restaurante Sabor Local</span></div>
+      <div class="fee-row"><span class="fee-key">Valor</span><span class="fee-val highlight">R$ 19,00</span></div>
+      <div class="fee-row"><span class="fee-key">Taxa plataforma (10%)</span><span class="fee-val" style="color:var(--A)">− R$ 1,90</span></div>
+      <div class="fee-row"><span class="fee-key" style="font-weight:700">Seu lucro líquido</span><span class="fee-val" style="color:var(--S)">R$ 17,10</span></div>
+    </div>
+
+    <button class="btn gold" onclick="go('cliente-paga')">Gerar link de pagamento →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ TELA DO CLIENTE PAGANDO ══════════════════ -->
+<div class="sc" id="sccliente-paga">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-green">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('vender')">← Voltar</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hero-ico-big">💳</div>
+    <div class="hero-tit">Pagar destaque</div>
+    <div class="hero-sub">Restaurante Sabor Local · Conecta Sinop</div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div style="background:#fff;border-radius:var(--r2);padding:18px;box-shadow:var(--s2);margin-bottom:12px;margin-top:-4px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Resumo do pedido</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:700;color:var(--t9)">📌 Fixar vaga no topo</div>
+        <div style="font-family:Sora,sans-serif;font-size:20px;font-weight:800;color:var(--P)">R$ 19</div>
+      </div>
+      <div style="font-size:11px;color:var(--t5);line-height:1.6">Sua vaga aparece primeiro nos resultados de Sinop, MT · 7 dias corridos · Ativação imediata após confirmação</div>
+    </div>
+
+    <div class="pix-box">
+      <div class="pix-box-head">
+        <div class="pix-logo">💚</div>
+        <div><div class="pix-title">Pagar via Pix</div><div class="pix-sub">Rápido, gratuito e seguro</div></div>
+      </div>
+      <div style="font-size:11px;color:#065F46;margin-bottom:10px">Copie a chave abaixo e faça o Pix de <strong>R$ 19,00</strong> pelo seu banco ou carteira digital:</div>
+      <div class="pix-key">
+        <div>
+          <div style="font-size:9px;color:var(--t5);font-weight:700;text-transform:uppercase;margin-bottom:2px">Chave Pix do parceiro</div>
+          <div class="pix-key-val">12.345.678/0001-90</div>
+          <div style="font-size:10px;color:var(--t5)">Sinop Conecta Serviços ME · Nubank</div>
+        </div>
+        <span class="pix-copy" onclick="copyPix2()">📋 Copiar</span>
+      </div>
+      <div id="pix-copied2" style="display:none;font-size:10px;color:var(--S);font-weight:700;text-align:center;margin-bottom:6px">✅ Chave copiada! Abra seu banco e cole.</div>
+      <div style="font-size:10px;color:#065F46;margin-top:8px;padding:8px;background:rgba(16,185,129,.08);border-radius:var(--r1)">
+        ℹ️ Após pagar, clique em "Confirmar pagamento". Sua vaga será ativada automaticamente em até 5 minutos.
+      </div>
+    </div>
+
+    <div style="background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--t7);margin-bottom:8px">Ou pague com cartão (em breve)</div>
+      <div style="font-size:11px;color:var(--t5);line-height:1.5">Integração com cartão de crédito/débito chegando em breve. Por enquanto, use o Pix.</div>
+    </div>
+
+    <button class="btn green" onclick="confirmarPag()">✅ Confirmei o pagamento</button>
+    <div id="pag-confirm" style="display:none;margin-top:12px;background:var(--Sl);border-radius:var(--r2);padding:16px;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">🎉</div>
+      <div style="font-family:Sora,sans-serif;font-size:15px;font-weight:800;color:#065F46">Pagamento confirmado!</div>
+      <div style="font-size:11px;color:var(--S);margin-top:4px">Sua vaga já está no topo. Venda registrada no painel do parceiro.</div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ FINANCEIRO (painel do parceiro) ══════════════════ -->
+<div class="sc" id="scfinanceiro">
+  <div class="sb-fixed" style="color:#fff"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-blue">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('cfg')">⚙️ Config</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.65);margin-bottom:4px">Painel financeiro</div>
+    <div class="hero-tit">Conecta Sinop</div>
+    <div class="hero-sub">sinop.conectadiaria.com.br · MEI</div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">R$1.240</div><div class="hstat-l">Vendido (mês)</div></div>
+      <div class="hstat"><div class="hstat-n">R$124</div><div class="hstat-l">Taxa acumulada</div></div>
+      <div class="hstat"><div class="hstat-n">R$1.116</div><div class="hstat-l">Seu lucro</div></div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div class="sec">Visão geral</div>
+    <div class="stats-row three">
+      <div class="stat-card"><div class="stat-n green">18</div><div class="stat-l">Vendas no mês</div></div>
+      <div class="stat-card"><div class="stat-n">7</div><div class="stat-l">Clientes ativos</div></div>
+      <div class="stat-card"><div class="stat-n gold">R$124</div><div class="stat-l">Taxa pendente</div></div>
+    </div>
+
+    <div class="fee-box">
+      <div class="fee-tit">📊 Taxa da plataforma (10%)</div>
+      <div class="fee-row"><span class="fee-key">Total vendido no mês</span><span class="fee-val">R$ 1.240,00</span></div>
+      <div class="fee-row"><span class="fee-key">Taxa acumulada (10%)</span><span class="fee-val highlight">R$ 124,00</span></div>
+      <div class="fee-row"><span class="fee-key">Limite para cobrança</span><span class="fee-val">R$ 150,00</span></div>
+      <div class="fee-row"><span class="fee-key">Status</span><span class="fee-val" style="color:var(--G)">⏳ Aguardando limite</span></div>
+      <div style="font-size:10px;color:var(--t5);margin-top:8px;line-height:1.5">Quando a taxa acumulada atingir R$ 150, você receberá um Pix de cobrança automático. Enquanto isso, continue vendendo normalmente.</div>
+    </div>
+
+    <div class="sec">Últimas transações</div>
+    <div class="fg">
+      <div class="tx-item">
+        <div class="tx-ico green">📌</div>
+        <div class="tx-info"><div class="tx-name">Fixar vaga — Rest. Sabor Local</div><div class="tx-date">Hoje, 14h32</div></div>
+        <div class="tx-val green">+R$19</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico gold">💡</div>
+        <div class="tx-info"><div class="tx-name">Oportunidade — NaturBela</div><div class="tx-date">Ontem, 10h15</div></div>
+        <div class="tx-val green">+R$79</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico blue">🏷️</div>
+        <div class="tx-info"><div class="tx-name">Banner — Farmácia Central</div><div class="tx-date">23 Jun</div></div>
+        <div class="tx-val green">+R$49</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico green">⭐</div>
+        <div class="tx-info"><div class="tx-name">Fixar candidato — Maria Rosa</div><div class="tx-date">21 Jun</div></div>
+        <div class="tx-val green">+R$9</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico red">💳</div>
+        <div class="tx-info"><div class="tx-name">Taxa plataforma cobrada</div><div class="tx-date">15 Jun</div></div>
+        <div class="tx-val red">−R$87</div>
+      </div>
+    </div>
+
+    <div class="repasse-card">
+      <div class="repasse-tit">💛 Repasses recebidos (planos admin)</div>
+      <div class="repasse-row"><span class="repasse-key">Plano Cidade — Supermercado X</span><span class="repasse-val">+R$45</span></div>
+      <div class="repasse-row"><span class="repasse-key">Plano Regional — TechCorp</span><span class="repasse-val">+R$80</span></div>
+      <div style="font-size:10px;color:#B45309;margin-top:8px">Repasses caem direto na sua chave Pix quando o plano admin é pago. Você não precisa fazer nada.</div>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn out" style="flex:1" onclick="go('produtos')">📦 Produtos</button>
+      <button class="btn" style="flex:1" onclick="go('vender')">💰 Nova venda</button>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PLANOS ADMIN (aparecer em toda cidade) ══════════════════ -->
+<div class="sc" id="scplanos">
+  <div class="sb-fixed" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero-purple">
+    <div class="hero-sb">
+      <button class="hero-bk" onclick="go('financeiro')">← Financeiro</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hero-ico-big">🏙️</div>
+    <div class="hero-tit">Planos premium</div>
+    <div class="hero-sub">Apareça para TODOS — não só clientes do parceiro</div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div style="background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);margin-bottom:12px;margin-top:-4px;">
+      <div style="font-size:11px;color:var(--t7);line-height:1.65;">Os planos locais do parceiro <strong>só aparecem para usuários da instância dele</strong>. Para aparecer na cidade toda (todas as instâncias), o anunciante contrata um plano admin direto com a plataforma. O parceiro que trouxe o cliente recebe um <strong>repasse percentual automático no Pix</strong>.</div>
+    </div>
+
+    <div class="sec">Planos disponíveis</div>
+
+    <div class="plan-card plan-city" onclick="this.style.borderColor='var(--G)'">
+      <div class="plan-head">
+        <div><div class="plan-name">🏙️ Plano Cidade</div><div style="margin-top:3px"><span class="plan-scope-tag" style="background:var(--Gl);color:#92400E">Toda a cidade</span></div></div>
+        <div style="text-align:right"><div class="plan-price" style="color:var(--G)">R$149</div><div class="plan-period">por mês</div></div>
+      </div>
+      <div class="plan-repasse" style="color:var(--S)">💚 Parceiro recebe 20% de repasse = R$ 29,80/mês</div>
+      <div class="plan-features">
+        <div class="plan-feat">✅ Banner visível para todos da cidade</div>
+        <div class="plan-feat">✅ Aparece em todas as instâncias locais</div>
+        <div class="plan-feat">✅ Prioridade no feed geral</div>
+      </div>
+      <button class="btn sm gold" style="margin-top:10px">Contratar plano cidade</button>
+    </div>
+
+    <div class="plan-card plan-region" onclick="this.style.borderColor='var(--P)'">
+      <div class="plan-head">
+        <div><div class="plan-name">🗺️ Plano Regional</div><div style="margin-top:3px"><span class="plan-scope-tag" style="background:var(--Pl);color:var(--Pd)">Toda a região / estado</span></div></div>
+        <div style="text-align:right"><div class="plan-price" style="color:var(--P)">R$349</div><div class="plan-period">por mês</div></div>
+      </div>
+      <div class="plan-repasse" style="color:var(--S)">💚 Parceiro recebe 25% de repasse = R$ 87,25/mês</div>
+      <div class="plan-features">
+        <div class="plan-feat">✅ Tudo do plano cidade</div>
+        <div class="plan-feat">✅ Visível em todo o estado / região</div>
+        <div class="plan-feat">✅ Vaga fixada em múltiplas cidades</div>
+      </div>
+      <button class="btn sm" style="margin-top:10px">Contratar plano regional</button>
+    </div>
+
+    <div class="plan-card plan-national" onclick="this.style.borderColor='var(--V)'">
+      <div class="plan-head">
+        <div><div class="plan-name">🇧🇷 Plano Nacional</div><div style="margin-top:3px"><span class="plan-scope-tag" style="background:var(--Vl);color:#5B21B6">Todo o Brasil</span></div></div>
+        <div style="text-align:right"><div class="plan-price" style="color:var(--V)">R$799</div><div class="plan-period">por mês</div></div>
+      </div>
+      <div class="plan-repasse" style="color:var(--S)">💚 Parceiro recebe 30% de repasse = R$ 239,70/mês</div>
+      <div class="plan-features">
+        <div class="plan-feat">✅ Visível em todas as instâncias do Brasil</div>
+        <div class="plan-feat">✅ Destaque máximo no feed nacional</div>
+        <div class="plan-feat">✅ Badge "Empresa Verificada Nacional"</div>
+      </div>
+      <button class="btn sm" style="background:var(--V);color:#fff;margin-top:10px">Contratar plano nacional</button>
+    </div>
+
+    <div style="background:var(--Sl);border-radius:var(--r2);padding:14px;margin-bottom:12px;">
+      <div style="font-family:Sora,sans-serif;font-size:12px;font-weight:700;color:#065F46;margin-bottom:6px">💚 Como funciona o repasse ao parceiro</div>
+      <div style="font-size:11px;color:var(--S);line-height:1.65;">1. Anunciante contrata plano premium<br>2. Plataforma cobra o anunciante<br>3. Repasse cai automaticamente no Pix do parceiro que indicou<br>4. Parceiro não precisa fazer nada — renda passiva</div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<p style="margin-top:22px;font-size:10px;color:#9CA3AF;text-align:center">
+  Conecta Diária v4 · Módulo financeiro completo<br>
+  Config. conta (MEI/CNPJ/PF) · Pix direto ao parceiro · Produtos com preço editável · Venda com cálculo de taxa<br>
+  Tela do cliente pagando · Painel financeiro com transações · Planos admin com repasse automático
+</p>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.sn').forEach(b => b.classList.remove('on'));
+  const sc = document.getElementById('sc' + id);
+  if (sc) sc.classList.add('on');
+  const ids = ['cfg','pix','produtos','vender','financeiro','planos','cliente-paga'];
+  const idx = ids.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.sn')[idx].classList.add('on');
+}
+
+function setUrl(el, url) {
+  document.querySelectorAll('.up').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  const sub = document.getElementById('cfg-url-sub');
+  if (sub) sub.textContent = url;
+}
+
+function setTipo(el, tipo) {
+  el.closest('.type-sel').querySelectorAll('.type-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  const n = document.getElementById('cfg-tipo-n');
+  if (n) n.textContent = tipo;
+}
+
+function copyPix() {
+  const el = document.getElementById('pix-copied');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 2000);
+}
+function copyPix2() {
+  const el = document.getElementById('pix-copied2');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+
+function calcFee() {
+  const val = parseFloat(document.getElementById('sale-val').value) || 0;
+  const fee = val * 0.10;
+  const net = val - fee;
+  document.getElementById('fee-preview').textContent = 'R$ ' + fee.toFixed(2).replace('.',',');
+  document.getElementById('net-preview').textContent = 'R$ ' + net.toFixed(2).replace('.',',');
+}
+
+function selProd(el) {
+  el.closest('.sv').querySelectorAll('.prod-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function confirmarPag() {
+  document.getElementById('pag-confirm').style.display = 'block';
+  document.querySelector('#sccliente-paga .btn.green').style.display = 'none';
+}
+</script>
+</body>
+</html>

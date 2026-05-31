@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "web",
+  "rewrites": [
+    { "source": "/trabalhe", "destination": "/trabalhe.html" },
+    { "source": "/contrate", "destination": "/contrate.html" },
+    { "source": "/parceiro", "destination": "/parceiro.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ]
+}

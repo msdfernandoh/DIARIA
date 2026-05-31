@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abra sua Diária da Cidade — Seja um parceiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/leads.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#D97706;--gold-l:#FFFBEB;--gold-d:#92400E;
+  --green:#1D9E75;--blue:#1557FF;
+  --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
+  --bg:#F8FAFB;--white:#fff;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);}
+
+.hero{background:linear-gradient(160deg,#451A03 0%,#92400E 45%,#D97706 100%);min-height:100svh;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.hero-orb{position:absolute;border-radius:50%;background:rgba(255,255,255,.06);}
+.o1{width:400px;height:400px;top:-120px;right:-100px;}
+.o2{width:240px;height:240px;bottom:80px;left:-80px;}
+.o3{width:110px;height:110px;top:200px;left:30px;}
+
+.nav{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.logo-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.nav-cta{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 16px;color:#fff;font-size:13px;font-weight:700;text-decoration:none;backdrop-filter:blur(8px);}
+
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px 48px;position:relative;z-index:2;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff;margin-bottom:20px;backdrop-filter:blur(8px);width:fit-content;}
+.hero-h1{font-family:'Sora',sans-serif;font-size:36px;font-weight:800;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px;}
+.hero-h1 span{color:#FDE68A;}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.82);line-height:1.6;margin-bottom:32px;}
+
+.cta-block{display:flex;flex-direction:column;gap:12px;}
+.btn-main{display:block;width:100%;padding:18px;background:#fff;color:var(--gold-d);border:none;border-radius:16px;font-family:'Sora',sans-serif;font-size:17px;font-weight:800;text-align:center;text-decoration:none;box-shadow:0 8px 32px rgba(0,0,0,.18);transition:all .2s;cursor:pointer;}
+.btn-main:hover{transform:translateY(-2px);}
+.btn-sec{display:block;width:100%;padding:15px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:16px;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;}
+.cta-note{font-size:12px;color:rgba(255,255,255,.6);text-align:center;}
+
+.hero-numbers{display:flex;gap:0;margin-top:40px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;}
+.hnum{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.15);}
+.hnum:last-child{border-right:none;}
+.hnum-n{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.hnum-l{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.3;}
+
+section{padding:48px 24px;}
+.section-pill{display:inline-flex;align-items:center;gap:6px;background:var(--gold-l);color:var(--gold-d);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:14px;}
+.section-h2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:var(--dark);line-height:1.2;margin-bottom:10px;}
+.section-h2 span{color:var(--gold);}
+.section-sub{font-size:15px;color:var(--soft);line-height:1.6;margin-bottom:28px;}
+
+/* o que você ganha */
+.gain-card{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:10px;display:flex;gap:14px;border:1.5px solid var(--line);transition:border-color .2s;}
+.gain-card:hover{border-color:#D97706;}
+.gain-ico{font-size:28px;flex-shrink:0;}
+.gain-tit{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.gain-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+
+/* simulador de ganhos */
+.sim-card{background:linear-gradient(135deg,#451A03,#92400E,#D97706);border-radius:20px;padding:24px;margin-bottom:12px;}
+.sim-tit{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-bottom:4px;}
+.sim-sub{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:18px;}
+.sim-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.15);}
+.sim-row:last-child{border-bottom:none;}
+.sim-label{font-size:13px;color:rgba(255,255,255,.82);}
+.sim-val{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:#FDE68A;}
+.sim-total{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:14px;margin-top:14px;text-align:center;}
+.sim-total-n{font-family:'Sora',sans-serif;font-size:30px;font-weight:800;color:#fff;}
+.sim-total-l{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px;}
+
+/* como funciona parceiro */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);}
+.step:last-child{border-bottom:none;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--gold-l);color:var(--gold-d);font-family:'Sora',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-tit{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;}
+.step-desc{font-size:13px;color:var(--soft);line-height:1.5;}
+.step-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px;}
+.badge-g{background:#E1F5EE;color:#065F46;}
+.badge-b{background:#E8EEFF;color:#0A3DBF;}
+.badge-gold{background:var(--gold-l);color:var(--gold-d);}
+
+/* meta */
+.meta-card{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;}
+.meta-tit{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:14px;}
+.meta-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+.meta-row:last-child{border-bottom:none;}
+.meta-key{color:var(--soft);}
+.meta-val{font-weight:700;color:var(--dark);}
+
+/* comparativo livre vs pago */
+.compare{display:flex;gap:8px;margin-bottom:12px;}
+.compare-col{flex:1;border-radius:16px;padding:16px;border:2px solid var(--line);background:var(--white);}
+.compare-col.highlight{border-color:#1D9E75;background:linear-gradient(135deg,#E1F5EE,#fff);}
+.compare-head{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--dark);}
+.compare-price{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:10px;}
+.compare-feat{font-size:11px;color:var(--mid);padding:3px 0;display:flex;align-items:flex-start;gap:5px;line-height:1.4;}
+
+/* deps */
+.dep{background:var(--white);border-radius:18px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-bottom:12px;border-left:4px solid var(--gold);}
+.dep-txt{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.dep-person{display:flex;align-items:center;gap:10px;}
+.dep-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--dark);}
+.dep-role{font-size:11px;color:var(--soft);}
+.dep-stars{font-size:13px;color:#F59E0B;margin-top:1px;}
+
+/* faq */
+.faq-item{background:var(--white);border-radius:14px;padding:18px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.07);cursor:pointer;}
+.faq-q{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faq-a{font-size:13px;color:var(--soft);line-height:1.6;margin-top:10px;display:none;}
+.faq-a.open{display:block;}
+.faq-ico{flex-shrink:0;font-size:18px;}
+
+.cta-final{background:linear-gradient(160deg,#451A03,#D97706);padding:48px 24px;text-align:center;}
+.cta-final h2{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.2;}
+.cta-final p{font-size:15px;color:rgba(255,255,255,.78);margin-bottom:28px;line-height:1.6;}
+
+footer{background:var(--dark);padding:28px 24px;text-align:center;}
+footer p{font-size:12px;color:#718096;line-height:1.8;}
+footer a{color:#FDE68A;text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb o1"></div><div class="hero-orb o2"></div><div class="hero-orb o3"></div>
+  <nav class="nav">
+    <div class="logo"><div class="logo-mark">📅</div><div class="logo-name">Diária da Cidade</div></div>
+    <a href="#cadastro" class="nav-cta">Quero ser parceiro</a>
+  </nav>
+  <div class="hero-body">
+    <div class="hero-pill">💡 Modelo de negócio gratuito</div>
+    <h1 class="hero-h1">Abra a <span>Diária<br>da sua cidade.</span><br>É de graça.</h1>
+    <p class="hero-sub">Crie seu próprio app de vagas local com link personalizado. Você vende os destaques e fica com 90% do que receber.</p>
+    <div class="cta-block" id="cadastro">
+      <form id="lead-form" class="lead-form" autocomplete="on">
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" required maxlength="120" placeholder="Seu nome">
+        <label for="celular">WhatsApp</label>
+        <input id="celular" name="celular" required inputmode="tel" placeholder="(11) 99999-0000">
+        <label for="cidade">Cidade da instância</label>
+        <input id="cidade" name="cidade" required maxlength="80" placeholder="Cidade que você vai atender">
+        <label for="estado">UF</label>
+        <input id="estado" name="estado" maxlength="2" placeholder="MT" style="text-transform:uppercase">
+        <label for="email">E-mail (opcional)</label>
+        <input id="email" name="email" type="email" maxlength="120" placeholder="voce@email.com">
+        <button type="submit" class="btn-main" style="width:100%;border:none;cursor:pointer;margin-top:4px;">Quero abrir minha Diária →</button>
+        <p class="lead-form-msg" role="status"></p>
+      </form>
+      <a href="#como-funciona" class="btn-sec" style="margin-top:10px;display:block;">Ver como funciona</a>
+      <p class="cta-note">100% gratuito para começar · MEI, CNPJ ou pessoa física</p>
+    </div>
+    <div class="hero-numbers">
+      <div class="hnum"><div class="hnum-n">R$0</div><div class="hnum-l">para<br>começar</div></div>
+      <div class="hnum"><div class="hnum-n">90%</div><div class="hnum-l">das vendas<br>é seu</div></div>
+      <div class="hnum"><div class="hnum-n">3 meses</div><div class="hnum-l">período<br>gratuito</div></div>
+    </div>
+  </div>
+  <svg viewBox="0 0 390 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:40px;display:block;">
+    <path d="M0,20 C80,40 310,0 390,20 L390,40 L0,40 Z" fill="#F8FAFB"/>
+  </svg>
+</section>
+
+<!-- O QUE VOCÊ TEM -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">🎁 O que você recebe</div>
+  <h2 class="section-h2">Tudo que precisa<br><span>para começar hoje</span></h2>
+
+  <div class="gain-card">
+    <div class="gain-ico">🔗</div>
+    <div><div class="gain-tit">Link personalizado da sua cidade</div><div class="gain-desc">Ex: diaria.sinop.com.br ou nomecidade.diaria.cidade.com.br — completamente seu, com sua identidade.</div></div>
+  </div>
+  <div class="gain-card">
+    <div class="gain-ico">🏙️</div>
+    <div><div class="gain-tit">Logo e nome personalizados</div><div class="gain-desc">Coloque o nome da sua cidade, sua cor e sua logo. Parece que você criou do zero, mas está em uma plataforma nacional.</div></div>
+  </div>
+  <div class="gain-card">
+    <div class="gain-ico">🏦</div>
+    <div><div class="gain-tit">Sua chave Pix como recebimento</div><div class="gain-desc">O dinheiro das vendas de destaque cai direto na sua conta. Sem intermediário, sem espera.</div></div>
+  </div>
+  <div class="gain-card">
+    <div class="gain-ico">💰</div>
+    <div><div class="gain-tit">Você vende e fica com 90%</div><div class="gain-desc">Fixar vaga (R$19), fixar candidato (R$9), banner (R$49). Você define o preço e fica com 90% de cada venda.</div></div>
+  </div>
+  <div class="gain-card">
+    <div class="gain-ico">📊</div>
+    <div><div class="gain-tit">Painel de controle completo</div><div class="gain-desc">Veja usuários, vendas, transações e metas em tempo real. Tudo no seu celular.</div></div>
+  </div>
+  <div class="gain-card">
+    <div class="gain-ico">🌍</div>
+    <div><div class="gain-tit">Banco de dados nacional compartilhado</div><div class="gain-desc">Seus usuários acessam vagas da sua cidade e também de todo o Brasil. Produto completo desde o dia 1.</div></div>
+  </div>
+</section>
+
+<!-- SIMULADOR DE GANHOS -->
+<section style="background:#fff;">
+  <div class="section-pill">💰 Calcule seus ganhos</div>
+  <h2 class="section-h2">Quanto você pode<br><span>ganhar por mês?</span></h2>
+  <p class="section-sub">Com poucos clientes locais, o retorno já compensa o tempo investido.</p>
+
+  <div class="sim-card">
+    <div class="sim-tit">Cenário conservador · 1ª cidade</div>
+    <div class="sim-sub">Exemplo com vendas básicas nos primeiros meses</div>
+    <div class="sim-row"><span class="sim-label">2 vagas fixadas no topo (R$19/sem)</span><span class="sim-val">R$152</span></div>
+    <div class="sim-row"><span class="sim-label">1 banner regional (R$49/mês)</span><span class="sim-val">R$49</span></div>
+    <div class="sim-row"><span class="sim-label">3 candidatos fixados (R$9/sem)</span><span class="sim-val">R$108</span></div>
+    <div class="sim-row"><span class="sim-label">Taxa da plataforma (10%)</span><span class="sim-val" style="color:rgba(255,255,255,.55);">−R$31</span></div>
+    <div class="sim-total">
+      <div class="sim-total-n">R$ 278</div>
+      <div class="sim-total-l">lucro líquido mensal · com apenas 3 clientes</div>
+    </div>
+  </div>
+
+  <div style="background:var(--gold-l);border:1.5px solid #D97706;border-radius:16px;padding:16px;margin-bottom:10px;">
+    <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--gold-d);margin-bottom:6px;">💡 E se aparecer um plano premium?</div>
+    <div style="font-size:13px;color:var(--gold-d);line-height:1.6;">Quando um cliente seu contrata um <strong>Plano Cidade (R$149/mês)</strong>, você recebe automaticamente 20% = <strong>R$29,80/mês no Pix sem fazer nada</strong>. Renda passiva de verdade.</div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" style="background:#F8FAFB;">
+  <div class="section-pill">⚡ Passo a passo</div>
+  <h2 class="section-h2">Da inscrição ao<br><span>primeiro cliente</span></h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><div class="step-tit">Crie sua conta de parceiro</div><div class="step-desc">Nome da instância, cidade, CEP, chave Pix. MEI, CNPJ ou pessoa física — qualquer formato.</div><span class="step-badge badge-g">Grátis · 5 minutos</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><div class="step-tit">Receba seu link personalizado</div><div class="step-desc">diaria.suacidade.com.br fica pronto na hora. Você já pode divulgar.</div><span class="step-badge badge-gold">Instantâneo</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><div class="step-tit">Divulgue na sua cidade</div><div class="step-desc">WhatsApp, Instagram, boca a boca, panfleto — você conhece sua cidade melhor do que ninguém. Recrute os primeiros usuários.</div><span class="step-badge badge-b">Sua força de vendas</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div><div class="step-tit">Venda destaques para empresas locais</div><div class="step-desc">Aborde restaurantes, buffets, construtoras — ofereça visibilidade. Você cobra e recebe 90% no seu Pix.</div><span class="step-badge badge-gold">90% é seu</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div><div class="step-tit">Cumpra a meta e continue grátis</div><div class="step-desc">Nos primeiros 3 meses você tem meta mínima: 5 usuários ou 1 venda/mês. Simples. Se cumprir, continua grátis.</div><span class="step-badge badge-g">Meta simples</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- META GRATUITA -->
+<section style="background:#fff;">
+  <div class="section-pill">🎯 Período gratuito</div>
+  <h2 class="section-h2">3 meses grátis.<br><span>Regras simples.</span></h2>
+  <p class="section-sub">Durante os primeiros 3 meses você usa tudo gratuitamente. Para continuar gratuito depois, basta cumprir a meta mínima.</p>
+
+  <div class="meta-card">
+    <div class="meta-tit">Meta para manter acesso gratuito após 3 meses</div>
+    <div class="meta-row"><span class="meta-key">Opção 1</span><span class="meta-val">5+ usuários ativos na instância</span></div>
+    <div class="meta-row"><span class="meta-key">Opção 2</span><span class="meta-val">1+ venda de destaque por mês</span></div>
+    <div class="meta-row"><span class="meta-key">Se não cumprir</span><span class="meta-val">Assina por R$29/mês ou encerra</span></div>
+    <div class="meta-row"><span class="meta-key">Dados dos usuários</span><span class="meta-val">Preservados sempre</span></div>
+  </div>
+
+  <div class="compare">
+    <div class="compare-col highlight">
+      <div class="compare-head" style="color:#065F46;">✅ Meta cumprida</div>
+      <div class="compare-price" style="color:var(--green);">R$ 0</div>
+      <div class="compare-feat">✅ Instância ativa</div>
+      <div class="compare-feat">✅ Continua grátis</div>
+      <div class="compare-feat">✅ Novas metas mensais</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head">Plano pago</div>
+      <div class="compare-price" style="color:var(--blue);">R$ 29<span style="font-size:13px;font-weight:500;color:var(--soft);">/mês</span></div>
+      <div class="compare-feat">📦 Sem obrigação de meta</div>
+      <div class="compare-feat">✅ Instância permanente</div>
+      <div class="compare-feat">✅ Suporte prioritário</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section style="background:#F8FAFB;">
+  <div class="section-pill">⭐ Parceiros ativos</div>
+  <h2 class="section-h2">Empreendedores que<br><span>já abriram sua Diária</span></h2>
+
+  <div class="dep">
+    <p class="dep-txt">"Criei a Diária Sinop em uma semana. Em 30 dias tinha 60 usuários e já havia vendido 3 destaques para empresas locais. R$270 no mês, sem sair de casa para trabalhar nisso."</p>
+    <div class="dep-person">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#D97706,#92400E);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">JA</div>
+      <div><div class="dep-name">João Alves</div><div class="dep-role">Parceiro · Diária Sinop · MEI</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+  <div class="dep">
+    <p class="dep-txt">"Eu já tinha uma página de empregos no Instagram. Migrei para o app, criei a Diária Cuiabá e meus seguidores vieram junto. Hoje vendo destaque para 7 empresas toda semana."</p>
+    <div class="dep-person">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#5B21B6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;">AC</div>
+      <div><div class="dep-name">Ana Costa</div><div class="dep-role">Parceira · Diária Cuiabá · PF</div><div class="dep-stars">★★★★★</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#fff;">
+  <div class="section-pill">❓ Dúvidas</div>
+  <h2 class="section-h2">Perguntas<br><span>frequentes</span></h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Precisa ter CNPJ ou empresa? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Não. Pessoa física, MEI ou CNPJ — qualquer formato funciona. Você usa sua chave Pix pessoal ou empresarial para receber.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Como eu ganho dinheiro com isso? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Você vende produtos de destaque para empresas e profissionais da sua cidade: fixar vaga no topo (R$19/sem), fixar candidato (R$9/sem), banner (R$49/mês). Você cobra o preço que quiser e fica com 90% de cada venda. O dinheiro cai no seu Pix diretamente.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso ter mais de uma cidade? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Sim. Você pode criar instâncias para várias cidades. Cada uma tem seu link e painel separado, mas você gerencia tudo na mesma conta.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O que acontece se eu não cumprir a meta em 3 meses? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Você recebe um aviso com 15 dias de antecedência. Pode assinar o plano de R$29/mês para continuar sem meta, ou encerrar a instância. Os dados dos seus usuários são preservados e integrados à instância nacional.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A plataforma concorre comigo? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Não. A plataforma nacional não faz vendas de destaque local. Quem vende para empresas e profissionais da sua cidade é você. A plataforma só vende planos premium (cidade/regional/nacional) — e quando isso acontece, você recebe um repasse automático de 20% a 30%.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Precisa saber de tecnologia? <span class="faq-ico">+</span></div>
+    <div class="faq-a">Não. Tudo é configurado pelo app em menos de 10 minutos. Você preenche o nome, coloca sua chave Pix e começa. A parte técnica é toda nossa.</div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>Sua cidade está<br>esperando por isso</h2>
+  <p>Cadastre-se grátis e abra a Diária da sua cidade hoje.<br>Leva 5 minutos. Não precisa de nenhum investimento.</p>
+  <a href="#cadastro" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Quero abrir minha Diária →</a>
+  <p style="font-size:12px;color:rgba(255,255,255,.55);">Gratuito por 3 meses · MEI, CNPJ ou pessoa física</p>
+</section>
+
+<footer>
+  <p>© 2025 Diária da Cidade · <a href="#">Termos de Uso</a> · <a href="#">Contrato de Parceiro</a> · <a href="#">Privacidade</a><br>
+  Quer trabalhar? <a href="/trabalhe">Clique aqui</a> · Quer contratar? <a href="/contrate">Clique aqui</a></p>
+</footer>
+
+<script src="/js/config.js"></script>
+<script src="/js/lead-form.js"></script>
+<script>
+function toggleFaq(el) {
+  const a = el.querySelector('.faq-a');
+  const ico = el.querySelector('.faq-ico');
+  const open = a.classList.toggle('open');
+  ico.textContent = open ? '−' : '+';
+}
+initLeadForm({ formId: 'lead-form', tipoInteresse: 'empreendedor', origemPagina: 'parceiro' });
+</script>
+</body>
+</html>

@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diária da Cidade — Protótipo Completo v1</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --P:#1557FF;--Pd:#0A3DBF;--Pl:#E8EEFF;
+  --A:#FF5C35;--Al:#FFF0EB;
+  --G:#F59E0B;--Gl:#FFFBEB;
+  --S:#10B981;--Sl:#ECFDF5;
+  --V:#7C3AED;--Vl:#F5F3FF;
+  --t9:#0A0D14;--t7:#2D3748;--t5:#718096;--t3:#E2E8F0;
+  --bg:#F0F2F7;--W:#fff;
+  --s1:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --s2:0 4px 16px rgba(21,87,255,.10);
+  --s3:0 8px 32px rgba(21,87,255,.14);
+  --r1:8px;--r2:14px;--r3:20px;--rf:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#BEC4D2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 56px;}
+
+.ph{text-align:center;margin-bottom:8px;}
+.ph h1{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#0A0D14;}
+.ph p{font-size:11px;color:#5a6070;margin-top:3px;}
+
+.snrow{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:18px;}
+.sn{padding:5px 11px;border:1.5px solid #CBD5E0;border-radius:var(--rf);background:#fff;font-size:10px;font-weight:700;color:#4A5568;cursor:pointer;transition:all .2s;}
+.sn.on,.sn:hover{border-color:var(--P);background:var(--P);color:#fff;}
+
+.phone{width:390px;height:844px;background:var(--W);border-radius:52px;
+  box-shadow:0 40px 100px rgba(0,0,0,.26),0 0 0 10px #111827,0 0 0 12px #1F2937;
+  overflow:hidden;position:relative;}
+
+.sb0{height:48px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;position:absolute;top:0;left:0;right:0;z-index:200;pointer-events:none;}
+.st{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;}
+.si{font-size:12px;display:flex;gap:4px;}
+
+.sc{position:absolute;inset:0;display:none;flex-direction:column;animation:fi .24s ease;}
+.sc.on{display:flex;}
+@keyframes fi{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+
+.sv{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sv::-webkit-scrollbar{display:none;}
+
+/* shared */
+.hdr{background:#fff;padding:52px 20px 14px;box-shadow:0 1px 0 #E2E8F0;}
+.hdr h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--t9);margin-bottom:3px;}
+.hdr p{font-size:12px;color:var(--t5);line-height:1.5;}
+.bk{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--P);font-weight:700;cursor:pointer;background:none;border:none;margin-bottom:10px;padding:0;}
+.sec{font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:1px;margin:14px 0 7px;}
+.fg{background:#fff;border-radius:var(--r2);overflow:hidden;box-shadow:var(--s1);margin-bottom:10px;}
+.fi{padding:11px 14px;border-bottom:1px solid #F7FAFC;display:flex;flex-direction:column;gap:3px;}
+.fi:last-child{border-bottom:none;}
+.fi.row{flex-direction:row;align-items:center;justify-content:space-between;}
+.fl{font-size:9px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.6px;}
+.fi input,.fi select{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--t9);border:none;outline:none;background:transparent;width:100%;}
+.fi input::placeholder{color:var(--t3);}
+.btn{width:100%;padding:14px;background:var(--P);color:#fff;border:none;border-radius:var(--r2);font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--s2);transition:all .2s;margin-top:8px;}
+.btn:hover{background:var(--Pd);transform:translateY(-1px);}
+.btn.wh{background:#fff;color:var(--P);box-shadow:0 5px 20px rgba(0,0,0,.14);}
+.btn.sm{padding:10px;font-size:12px;margin-top:5px;}
+.btn.out{background:transparent;color:var(--P);border:1.5px solid var(--P);box-shadow:none;}
+.btn.green{background:var(--S);box-shadow:0 4px 14px rgba(16,185,129,.22);}
+.btn.gold{background:var(--G);color:#7C2D12;box-shadow:0 4px 14px rgba(245,158,11,.22);}
+.btn.red{background:#EF4444;box-shadow:0 4px 14px rgba(239,68,68,.22);}
+.tog{width:34px;height:19px;border-radius:var(--rf);background:var(--S);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+.tog::after{content:'';position:absolute;top:2.5px;right:2.5px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;}
+.tog.off{background:var(--t3);}
+.tog.off::after{transform:translateX(-15px);}
+
+/* hero */
+.hero{padding:50px 20px 40px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--bg);border-radius:24px 24px 0 0;}
+.hero.blue{background:linear-gradient(155deg,#0A2A8F,#1557FF);}
+.hero.green{background:linear-gradient(155deg,#065F46,#10B981);}
+.hero.gold{background:linear-gradient(155deg,#92400E,#F59E0B);}
+.hero.purple{background:linear-gradient(155deg,#3730A3,#7C3AED);}
+.hero.dark{background:linear-gradient(155deg,#111827,#374151);}
+.hsb{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.hbk{color:rgba(255,255,255,.75);font-size:12px;cursor:pointer;background:none;border:none;padding:0;}
+.hico{font-size:34px;margin-bottom:8px;}
+.htit{font-family:'Sora',sans-serif;font-size:19px;font-weight:800;color:#fff;margin-bottom:3px;}
+.hsub{font-size:11px;color:rgba(255,255,255,.7);}
+.hstats{display:flex;gap:7px;margin-top:14px;}
+.hs{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:var(--r2);padding:9px 12px;flex:1;text-align:center;}
+.hsn{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:#fff;}
+.hsl{font-size:9px;color:rgba(255,255,255,.65);margin-top:1px;}
+
+/* logo partner badge */
+.logo-partner{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.28);border-radius:var(--r2);padding:8px 12px;margin-bottom:12px;width:fit-content;}
+.logo-partner-img{width:32px;height:32px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-partner-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:#fff;}
+.logo-partner-tag{font-size:9px;color:rgba(255,255,255,.7);}
+
+/* bnav */
+.bnav{background:#fff;border-top:1px solid #F0F4F8;display:flex;padding:7px 0 24px;box-shadow:0 -4px 18px rgba(0,0,0,.06);}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px;cursor:pointer;font-size:8px;color:var(--t5);font-weight:700;border:none;background:none;transition:color .2s;}
+.bni.on{color:var(--P);}
+.bni .ico{font-size:19px;}
+.nw{position:relative;display:inline-block;}
+.ndot{width:5px;height:5px;background:var(--A);border-radius:50%;position:absolute;top:0;right:-2px;}
+
+/* cards */
+.card{background:#fff;border-radius:var(--r2);padding:14px;margin-bottom:9px;box-shadow:var(--s1);cursor:pointer;transition:all .2s;border:1.5px solid transparent;}
+.card:hover{border-color:var(--P);box-shadow:var(--s3);}
+.card.pin{border-color:var(--G);background:linear-gradient(135deg,#fff 82%,var(--Gl));}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.ci{width:38px;height:38px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ci.bl{background:var(--Pl)}.ci.or{background:var(--Al)}.ci.gr{background:var(--Sl)}.ci.pu{background:var(--Vl)}.ci.gl{background:var(--Gl)}
+.cinf{flex:1;padding-left:8px;}
+.ctit{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--t9);}
+.csub{font-size:10px;color:var(--t5);margin-top:1px;}
+.cval{text-align:right;}
+.cpr{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:var(--P);}
+.cpe{font-size:9px;color:var(--t5);}
+.cm{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.cm span{font-size:10px;color:var(--t5);}
+.bu{background:#FEE2E2;color:#DC2626;font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--rf);}
+.bpin{background:var(--Gl);color:#92400E;font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--rf);}
+.bn{background:var(--Sl);color:#065F46;font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--rf);}
+.bh{background:#E0F2FE;color:#0369A1;font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--rf);}
+
+/* stars */
+.stars{display:flex;gap:2px;}
+.star{font-size:13px;color:#D1D5DB;}
+.star.on{color:#F59E0B;}
+.rating-num{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--t9);margin-left:4px;}
+.rating-count{font-size:10px;color:var(--t5);}
+
+/* termo */
+.termo-box{background:#F7FAFC;border:1px solid var(--t3);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
+.termo-check{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.termo-cb{width:20px;height:20px;border:2px solid var(--t3);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;background:#fff;}
+.termo-cb.on{background:var(--P);border-color:var(--P);}
+.termo-txt{font-size:12px;color:var(--t7);line-height:1.5;}
+.termo-link{color:var(--P);font-size:10px;text-decoration:underline;cursor:pointer;margin-top:4px;display:inline-block;}
+
+/* meta/termômetro */
+.thermo-wrap{background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s1);margin-bottom:12px;}
+.thermo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.thermo-tit{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--t9);}
+.thermo-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--rf);}
+.thermo-bar-bg{height:14px;background:var(--t3);border-radius:var(--rf);overflow:hidden;margin-bottom:8px;}
+.thermo-bar-fill{height:100%;border-radius:var(--rf);transition:width .6s ease;background:linear-gradient(90deg,var(--S),#34D399);}
+.thermo-bar-fill.warn{background:linear-gradient(90deg,var(--G),#FCD34D);}
+.thermo-bar-fill.danger{background:linear-gradient(90deg,var(--A),#FCA5A5);}
+.thermo-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--t5);}
+.thermo-milestones{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.ms{padding:4px 10px;border-radius:var(--rf);font-size:9px;font-weight:700;background:var(--t3);color:var(--t5);}
+.ms.done{background:var(--Sl);color:#065F46;}
+.ms.current{background:var(--Pl);color:var(--P);}
+
+/* plano free vs pago */
+.plan-compare{display:flex;gap:8px;margin-bottom:12px;}
+.pc-col{flex:1;border-radius:var(--r2);padding:14px;border:2px solid var(--t3);background:#fff;}
+.pc-col.active{border-color:var(--P);background:linear-gradient(135deg,var(--Pl),#fff);}
+.pc-col h4{font-family:'Sora',sans-serif;font-size:12px;font-weight:700;margin-bottom:4px;}
+.pc-price{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px;}
+.pc-feat{font-size:10px;color:var(--t7);padding:2px 0;display:flex;align-items:center;gap:4px;}
+
+/* scope selector na vaga */
+.scope-sel{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.scope-btn{flex:1;min-width:0;padding:8px 4px;border:2px solid var(--t3);border-radius:var(--r1);background:#fff;font-size:10px;font-weight:700;color:var(--t7);cursor:pointer;text-align:center;transition:all .2s;line-height:1.3;}
+.scope-btn.on{border-color:var(--P);background:var(--Pl);color:var(--P);}
+.scope-btn.on.gold{border-color:var(--G);background:var(--Gl);color:#92400E;}
+.scope-btn.on.purple{border-color:var(--V);background:var(--Vl);color:var(--V);}
+
+/* feed header com logo parceiro */
+.feed-hdr{background:#fff;padding:48px 18px 0;box-shadow:0 1px 0 #E2E8F0;}
+.feed-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.feed-logo-wrap{display:flex;align-items:center;gap:8px;}
+.feed-logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--P),var(--V));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;font-family:'Sora',sans-serif;}
+.feed-nome{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--t9);}
+.feed-sub{font-size:10px;color:var(--t5);}
+.avy{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--P),var(--V));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;}
+.sb2{display:flex;align-items:center;background:var(--bg);border-radius:var(--r1);padding:8px 12px;gap:6px;margin-bottom:8px;}
+.sb2 input{border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:var(--t7);outline:none;flex:1;}
+.tab3{display:flex;gap:0;background:var(--bg);border-radius:var(--r1);overflow:hidden;}
+.t3b{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--t5);cursor:pointer;transition:all .2s;border-bottom:2.5px solid transparent;}
+.t3b.on{color:var(--P);border-bottom-color:var(--P);background:#fff;}
+.t3b.go.on{color:#B45309;border-bottom-color:var(--G);}
+.frow{display:flex;gap:5px;overflow-x:auto;padding:8px 0 10px;}
+.frow::-webkit-scrollbar{display:none;}
+.fc{white-space:nowrap;padding:4px 11px;border-radius:var(--rf);font-size:10px;font-weight:700;border:1.5px solid var(--t3);background:#fff;color:var(--t7);cursor:pointer;transition:all .2s;}
+.fc.on{background:var(--P);border-color:var(--P);color:#fff;}
+
+/* modal overlay */
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:flex-end;}
+.modal-overlay.hidden{display:none;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-height:80%;overflow-y:auto;}
+.modal-sheet::-webkit-scrollbar{display:none;}
+.modal-handle{width:36px;height:4px;background:var(--t3);border-radius:var(--rf);margin:0 auto 16px;}
+.modal-tit{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--t9);margin-bottom:12px;}
+.modal-body{font-size:11px;color:var(--t7);line-height:1.8;max-height:280px;overflow-y:auto;}
+.modal-body::-webkit-scrollbar{display:none;}
+
+/* tx */
+.tx-item{padding:10px 0;border-bottom:1px solid #F7FAFC;display:flex;align-items:center;gap:9px;}
+.tx-item:last-child{border-bottom:none;}
+.tx-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.tx-ico.gn{background:var(--Sl)}.tx-ico.rd{background:#FEE2E2}.tx-ico.bl{background:var(--Pl)}.tx-ico.gd{background:var(--Gl)}
+.tx-n{font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--t9);}
+.tx-d{font-size:9px;color:var(--t5);margin-top:1px;}
+.tx-v{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;}
+.tx-v.gn{color:var(--S)}.tx-v.rd{color:var(--A)}
+
+/* thermo big */
+.thermo-big{background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s1);margin-bottom:10px;}
+.thermo-big-bar{height:20px;background:var(--t3);border-radius:var(--rf);overflow:hidden;margin:10px 0 6px;}
+.thermo-big-fill{height:100%;border-radius:var(--rf);transition:width .8s ease;}
+.phase-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--rf);font-size:10px;font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="ph">
+  <h1>📅 Diária da Cidade</h1>
+  <p>v1 · Simples, gratuito, personalizável · Logo do parceiro · Termos · Meta gratuita · Termômetro · Estrelas do empregado</p>
+</div>
+
+<div class="snrow">
+  <button class="sn on" onclick="go('splash')">1·Splash</button>
+  <button class="sn" onclick="go('cadastro')">2·Cadastro</button>
+  <button class="sn" onclick="go('termo')">3·Termos</button>
+  <button class="sn" onclick="go('feed')">4·Feed</button>
+  <button class="sn" onclick="go('perfil-emp')">5·Perfil Empregado</button>
+  <button class="sn" onclick="go('publicar')">6·Publicar Vaga</button>
+  <button class="sn" onclick="go('meta')">7·Meta Gratuita</button>
+  <button class="sn" onclick="go('planos')">8·Planos</button>
+  <button class="sn" onclick="go('painel')">9·Painel Parceiro</button>
+</div>
+
+<div class="phone">
+
+<!-- ══════════ 1 SPLASH ══════════ -->
+<div class="sc on" id="scsplash">
+  <div class="sb0" style="color:#fff"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero blue" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:56px 32px 40px;">
+    <!-- logo do parceiro em destaque -->
+    <div style="background:rgba(255,255,255,.15);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.3);border-radius:20px;padding:12px 20px;margin-bottom:24px;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 8px;">🏙️</div>
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;" id="splash-nome">Diária Sinop</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.65);">diaria.sinop.com.br</div>
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,.75);text-align:center;line-height:1.6;margin-bottom:32px;">Trabalho, emprego e oportunidades<br>local e home office · 100% gratuito</div>
+    <div style="display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap;justify-content:center;">
+      <div style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:var(--rf);padding:7px 13px;color:#fff;font-size:11px;font-weight:700;">💼 Diárias</div>
+      <div style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:var(--rf);padding:7px 13px;color:#fff;font-size:11px;font-weight:700;">🏠 Home Office</div>
+      <div style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:var(--rf);padding:7px 13px;color:#fff;font-size:11px;font-weight:700;">📋 CLT</div>
+    </div>
+    <div style="width:100%">
+      <button class="btn wh" onclick="go('cadastro')">Começar — é grátis</button>
+      <div style="color:rgba(255,255,255,.6);font-size:12px;text-align:center;margin-top:10px;">Já tem conta? <b style="color:#fff;cursor:pointer" onclick="go('feed')">Entrar →</b></div>
+    </div>
+    <!-- powered by -->
+    <div style="margin-top:20px;font-size:9px;color:rgba(255,255,255,.35);text-align:center;">Powered by Diária da Cidade · diaria.cidade.com.br</div>
+  </div>
+</div>
+
+<!-- ══════════ 2 CADASTRO ══════════ -->
+<div class="sc" id="sccadastro">
+  <div class="sb0" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hdr">
+    <button class="bk" onclick="go('splash')">← Voltar</button>
+    <h2>Criar sua conta</h2>
+    <p>Menos de 2 minutos · sempre gratuito</p>
+  </div>
+  <div class="sv" style="padding:12px 16px">
+    <div class="sec">Você é…</div>
+    <div style="display:flex;gap:7px;margin-bottom:12px;">
+      <div class="scope-btn on" style="flex:1" onclick="selTipo(this,'prof')">👷<br>Profissional</div>
+      <div class="scope-btn" style="flex:1" onclick="selTipo(this,'emp')">🏢<br>Contratante</div>
+      <div class="scope-btn" style="flex:1" onclick="selTipo(this,'part')">💡<br>Parceiro</div>
+    </div>
+
+    <div class="sec">Dados</div>
+    <div class="fg">
+      <div class="fi"><span class="fl">Nome completo</span><input placeholder="João Carlos Silva"/></div>
+      <div class="fi"><span class="fl">Celular (WhatsApp)</span><input placeholder="(66) 99999-0000"/></div>
+      <div class="fi"><span class="fl">CEP / Cidade</span><input placeholder="78550-000 · Sinop, MT"/></div>
+      <div class="fi"><span class="fl">E-mail</span><input placeholder="joao@email.com"/></div>
+      <div class="fi"><span class="fl">Senha</span><input type="password" placeholder="Mínimo 8 caracteres"/></div>
+    </div>
+
+    <div class="sec">Tipo de trabalho</div>
+    <div class="fg">
+      <div class="fi row"><div><span class="fl">Presencial / Local</span></div><div class="tog off" onclick="this.classList.toggle('off')"></div></div>
+      <div class="fi row"><div><span class="fl">Home Office / Remoto</span></div><div class="tog off" onclick="this.classList.toggle('off')"></div></div>
+      <div class="fi row"><div><span class="fl">Ambos</span></div><div class="tog" onclick="this.classList.toggle('off')"></div></div>
+    </div>
+
+    <button class="btn" onclick="go('termo')">Próximo: Termos →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════ 3 TERMOS & ACEITE ══════════ -->
+<div class="sc" id="sctermo">
+  <div class="sb0" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hdr">
+    <button class="bk" onclick="go('cadastro')">← Voltar</button>
+    <h2>Termos e contrato</h2>
+    <p>Leia ou aceite para continuar</p>
+  </div>
+  <div class="sv" style="padding:12px 16px">
+
+    <div class="fg" style="margin-bottom:12px">
+      <div class="fi"><span class="fl">Resumo simples</span><div style="font-size:12px;color:var(--t7);line-height:1.65;margin-top:4px;">O app é <strong>gratuito</strong>. Conecta quem busca trabalho com quem contrata. Pagamentos acontecem diretamente entre as partes. O app não processa pagamentos e não é responsável por acordos particulares. Avaliações são públicas e permanentes. O parceiro tem metas de uso para manter acesso gratuito.</div></div>
+    </div>
+
+    <!-- Termos que precisam de aceite -->
+    <div class="sec">Aceites obrigatórios</div>
+
+    <div class="termo-box">
+      <div class="termo-check" onclick="toggleTermo('t1')">
+        <div class="termo-cb" id="t1">✓</div>
+        <div class="termo-txt">Li e aceito os <strong>Termos de Uso</strong> da plataforma Diária da Cidade</div>
+      </div>
+      <a class="termo-link" onclick="openModal('modal-uso')">↗ Ler Termos de Uso completos</a>
+    </div>
+
+    <div class="termo-box">
+      <div class="termo-check" onclick="toggleTermo('t2')">
+        <div class="termo-cb" id="t2"></div>
+        <div class="termo-txt">Li e aceito a <strong>Política de Privacidade</strong> e o tratamento dos meus dados</div>
+      </div>
+      <a class="termo-link" onclick="openModal('modal-priv')">↗ Ler Política de Privacidade</a>
+    </div>
+
+    <div class="termo-box">
+      <div class="termo-check" onclick="toggleTermo('t3')">
+        <div class="termo-cb" id="t3"></div>
+        <div class="termo-txt">Entendo que os <strong>pagamentos são feitos entre as partes</strong> e o app não é responsável por cobranças ou inadimplência</div>
+      </div>
+    </div>
+
+    <div class="termo-box" id="termo-parceiro" style="display:none">
+      <div class="termo-check" onclick="toggleTermo('t4')">
+        <div class="termo-cb" id="t4"></div>
+        <div class="termo-txt">Li e aceito o <strong>Contrato de Parceiro</strong>, incluindo as regras de meta gratuita e taxa de 10% sobre promoções vendidas</div>
+      </div>
+      <a class="termo-link" onclick="openModal('modal-parceiro')">↗ Ler Contrato de Parceiro</a>
+    </div>
+
+    <button class="btn" id="btn-criar" onclick="go('feed')" style="opacity:.5;pointer-events:none">Criar conta grátis 🎉</button>
+    <div style="font-size:10px;color:var(--t5);text-align:center;margin:8px 0 24px">Aceite todos os termos para continuar</div>
+
+    <!-- MODAL Termos de Uso -->
+    <div class="modal-overlay hidden" id="modal-uso">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-tit">📄 Termos de Uso</div>
+        <div class="modal-body">
+          <strong>1. Serviço gratuito</strong><br>A plataforma Diária da Cidade é gratuita para profissionais e contratantes. Recursos de destaque são opcionais e pagos diretamente ao parceiro regional.<br><br>
+          <strong>2. Cadastro</strong><br>O usuário é responsável pela veracidade das informações cadastradas. Dados falsos resultam em suspensão imediata.<br><br>
+          <strong>3. Pagamentos</strong><br>O app não processa pagamentos entre profissional e contratante. Acordos financeiros são de responsabilidade exclusiva das partes.<br><br>
+          <strong>4. Avaliações</strong><br>Avaliações são públicas, permanentes e baseadas em experiências reais. É proibido avaliações falsas ou manipuladas.<br><br>
+          <strong>5. Conduta</strong><br>É proibido assédio, discriminação ou qualquer forma de abuso na plataforma. Violações resultam em banimento.<br><br>
+          <strong>6. Dados</strong><br>Seus dados são usados apenas para operação do app, conforme a Política de Privacidade. Nunca são vendidos a terceiros.<br><br>
+          <strong>7. Modificações</strong><br>Os termos podem ser atualizados. Usuários serão notificados por e-mail com 30 dias de antecedência.
+        </div>
+        <button class="btn sm" onclick="closeModal('modal-uso');toggleTermo('t1')">✅ Li e aceito os Termos de Uso</button>
+      </div>
+    </div>
+
+    <!-- MODAL Privacidade -->
+    <div class="modal-overlay hidden" id="modal-priv">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-tit">🔒 Política de Privacidade</div>
+        <div class="modal-body">
+          <strong>Dados coletados:</strong> nome, celular, e-mail, CEP, histórico de vagas e avaliações.<br><br>
+          <strong>Como usamos:</strong> Para conectar profissionais e contratantes, enviar notificações relevantes e gerar relatórios anônimos de uso.<br><br>
+          <strong>Compartilhamento:</strong> Seus dados básicos (nome, cidade, habilidades, avaliações) são visíveis para outros usuários da plataforma. Celular só é compartilhado se você autorizar explicitamente.<br><br>
+          <strong>LGPD:</strong> Você pode solicitar exclusão ou exportação dos seus dados a qualquer momento pelo app.<br><br>
+          <strong>Cookies:</strong> Usamos apenas cookies essenciais para funcionamento. Nenhum cookie de rastreamento de terceiros.
+        </div>
+        <button class="btn sm" onclick="closeModal('modal-priv');toggleTermo('t2')">✅ Li e aceito a Política de Privacidade</button>
+      </div>
+    </div>
+
+    <!-- MODAL Parceiro -->
+    <div class="modal-overlay hidden" id="modal-parceiro">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-tit">🤝 Contrato de Parceiro</div>
+        <div class="modal-body">
+          <strong>1. Uso gratuito por 3 meses</strong><br>O parceiro tem acesso gratuito à plataforma pelos primeiros 90 dias. Durante esse período, deve cumprir metas mínimas de engajamento.<br><br>
+          <strong>2. Meta de engajamento</strong><br>Para manter o acesso gratuito após os 3 meses, o parceiro deve: registrar ao menos 5 usuários ativos na instância OU realizar ao menos 1 venda de destaque por mês.<br><br>
+          <strong>3. Não cumprimento da meta</strong><br>Caso a meta não seja cumprida, o parceiro pode: (a) assinar o plano pago; (b) encerrar a instância. Os dados dos usuários são preservados e migrados para a instância nacional.<br><br>
+          <strong>4. Taxa sobre promoções</strong><br>O parceiro retém 90% do valor de cada produto de destaque vendido. 10% é repassado à plataforma via Pix quando o saldo acumulado atingir R$ 150,00.<br><br>
+          <strong>5. Repasse em planos premium</strong><br>Quando um cliente do parceiro contrata um plano premium (cidade, regional, nacional), o parceiro recebe automaticamente entre 20% e 30% do valor via Pix.<br><br>
+          <strong>6. Propriedade dos dados</strong><br>Os usuários cadastrados na instância do parceiro pertencem ao banco de dados universal da plataforma. O parceiro não pode exportar ou comercializar esses dados.
+        </div>
+        <button class="btn sm" onclick="closeModal('modal-parceiro');toggleTermo('t4')">✅ Li e aceito o Contrato de Parceiro</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ 4 FEED com logo do parceiro ══════════ -->
+<div class="sc" id="scfeed">
+  <div class="sb0" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="feed-hdr">
+    <div class="feed-top">
+      <div class="feed-logo-wrap">
+        <!-- LOGO DO PARCEIRO em destaque no feed -->
+        <div class="feed-logo" id="feed-logo-box">D</div>
+        <div>
+          <div class="feed-nome" id="feed-nome-txt">Diária Sinop</div>
+          <div class="feed-sub">sinop · 78550-000</div>
+        </div>
+      </div>
+      <div class="avy">J</div>
+    </div>
+    <div class="sb2"><span>🔍</span><input placeholder="Cargo, bairro, empresa…"/></div>
+    <div class="tab3">
+      <button class="t3b on" id="tab-t" onclick="swT('t')">💼 Trabalho</button>
+      <button class="t3b" id="tab-e" onclick="swT('e')">📋 Emprego</button>
+      <button class="t3b go" id="tab-o" onclick="swT('o')">💡 Oprt.</button>
+    </div>
+    <div style="padding:0 0 0;background:#fff;border-bottom:1px solid var(--t3)">
+      <div class="frow">
+        <div class="fc on">Todos</div>
+        <div class="fc">🏠 Home Office</div>
+        <div class="fc">📍 Presencial</div>
+        <div class="fc">Urgente</div>
+        <div class="fc">Eventos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:10px 14px">
+    <div style="font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px">🔥 Urgente hoje</div>
+
+    <!-- card com estrelas do empregado visíveis para o empregador -->
+    <div class="card pin" onclick="go('perfil-emp')">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span class="bpin">📌 Destaque</span><span style="font-size:9px;color:var(--t5)">1,2km</span>
+      </div>
+      <div class="ctop">
+        <div class="ci or">🍽️</div>
+        <div class="cinf">
+          <div class="ctit">Garçom / Garçonete</div>
+          <div class="csub">Buffet Estrela · Moema</div>
+        </div>
+        <div class="cval"><div class="cpr">R$180</div><div class="cpe">por dia</div></div>
+      </div>
+      <div class="cm"><span>📅 Hoje 18h–23h</span><span>📍 Presencial</span><span class="bu">🔴 Urgente</span></div>
+      <!-- estrelas do candidato visível para o empregador -->
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #F7FAFC;display:flex;align-items:center;gap:6px;">
+        <div class="stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <span class="rating-num">4.9</span><span class="rating-count">(38 avaliações)</span>
+        <span style="font-size:9px;color:var(--S);font-weight:700;margin-left:auto">✅ Verificado</span>
+      </div>
+    </div>
+
+    <div class="card" onclick="go('perfil-emp')">
+      <div class="ctop">
+        <div class="ci bl">💻</div>
+        <div class="cinf"><div class="ctit">Suporte T.I. — Diária</div><div class="csub">TechHelp · Remoto</div></div>
+        <div class="cval"><div class="cpr">R$150</div><div class="cpe">por dia</div></div>
+      </div>
+      <div class="cm"><span>📅 Hoje 9h–18h</span><span class="bh">🏠 Home Office</span><span class="bu">🔴 Urgente</span></div>
+      <div style="margin-top:7px;padding-top:7px;border-top:1px solid #F7FAFC;display:flex;align-items:center;gap:5px;">
+        <div class="stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star" style="color:#D1D5DB">★</span></div>
+        <span class="rating-num">4.2</span><span class="rating-count">(12 avaliações)</span>
+      </div>
+    </div>
+
+    <div style="font-family:'Sora',sans-serif;font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin:10px 0 7px">📋 Próximas</div>
+
+    <div class="card" onclick="go('perfil-emp')">
+      <div class="ctop">
+        <div class="ci bl">🧹</div>
+        <div class="cinf"><div class="ctit">Diarista Residencial</div><div class="csub">Família Costa · Centro</div></div>
+        <div class="cval"><div class="cpr">R$160</div><div class="cpe">por dia</div></div>
+      </div>
+      <div class="cm"><span>📅 Amanhã 8h–17h</span><span>📍 Presencial</span></div>
+      <div style="margin-top:7px;padding-top:7px;border-top:1px solid #F7FAFC;display:flex;align-items:center;gap:5px;">
+        <div class="stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <span class="rating-num">5.0</span><span class="rating-count">(7 avaliações)</span>
+        <span style="font-size:9px;color:var(--G);font-weight:700;margin-left:auto">🆕 Novo</span>
+      </div>
+    </div>
+    <div style="height:6px"></div>
+  </div>
+
+  <div class="bnav">
+    <button class="bni on"><div class="ico">🏠</div>Início</button>
+    <button class="bni" onclick="go('publicar')"><div class="ico">➕</div>Publicar</button>
+    <button class="bni"><div class="nw"><div class="ico">💬</div><div class="ndot"></div></div>Chat</button>
+    <button class="bni" onclick="go('meta')"><div class="ico">📊</div>Minha meta</button>
+    <button class="bni" onclick="go('painel')"><div class="ico">👤</div>Perfil</button>
+  </div>
+</div>
+
+<!-- ══════════ 5 PERFIL DO EMPREGADO (com estrelas) ══════════ -->
+<div class="sc" id="scperfil-emp">
+  <div class="sb0" style="color:#fff"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero blue">
+    <div class="hsb">
+      <button class="hbk" onclick="go('feed')">← Voltar</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:4px;">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;font-family:Sora,sans-serif;border:3px solid rgba(255,255,255,.4)">MR</div>
+      <div>
+        <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:#fff;">Maria Rosa</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.72);">Diarista · Sinop, MT</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+          <div class="stars" style="font-size:16px;"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+          <span style="font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#fff;">4.9</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.65);">(38 avaliações)</span>
+        </div>
+      </div>
+    </div>
+    <div class="hstats" style="margin-top:14px">
+      <div class="hs"><div class="hsn">47</div><div class="hsl">Diárias feitas</div></div>
+      <div class="hs"><div class="hsn">100%</div><div class="hsl">Recomendado</div></div>
+      <div class="hs"><div class="hsn">2 anos</div><div class="hsl">Na plataforma</div></div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <!-- destaque de reputação para o empregador -->
+    <div style="background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s2);margin-bottom:12px;margin-top:-4px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">⭐ Reputação verificada</div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+        <div style="font-family:'Sora',sans-serif;font-size:40px;font-weight:800;color:var(--t9);">4.9</div>
+        <div>
+          <div class="stars" style="font-size:20px;"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+          <div style="font-size:11px;color:var(--t5);margin-top:3px;">38 avaliações · 100% recomendado</div>
+        </div>
+      </div>
+      <!-- barra de distribuição -->
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t5);">
+          <span style="width:14px">5★</span>
+          <div style="flex:1;height:6px;background:var(--t3);border-radius:var(--rf);overflow:hidden;"><div style="width:88%;height:100%;background:#F59E0B;border-radius:var(--rf);"></div></div>
+          <span>34</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t5);">
+          <span style="width:14px">4★</span>
+          <div style="flex:1;height:6px;background:var(--t3);border-radius:var(--rf);overflow:hidden;"><div style="width:10%;height:100%;background:#FCD34D;border-radius:var(--rf);"></div></div>
+          <span>4</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t5);">
+          <span style="width:14px">3★</span>
+          <div style="flex:1;height:6px;background:var(--t3);border-radius:var(--rf);overflow:hidden;"><div style="width:0%;height:100%;background:#E5E7EB;border-radius:var(--rf);"></div></div>
+          <span>0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- tópicos de destaque -->
+    <div style="background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Destaque nas avaliações</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">
+        <span style="background:var(--Sl);color:#065F46;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rf);">✅ Pontual (35x)</span>
+        <span style="background:var(--Sl);color:#065F46;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rf);">🔒 Confiável (32x)</span>
+        <span style="background:var(--Sl);color:#065F46;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rf);">🧹 Caprichosa (28x)</span>
+        <span style="background:var(--Sl);color:#065F46;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--rf);">💬 Comunicativa (20x)</span>
+      </div>
+    </div>
+
+    <!-- avaliações recentes -->
+    <div style="background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Avaliações recentes</div>
+      <div style="padding:8px 0;border-bottom:1px solid #F7FAFC;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--P),var(--V));display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;">MS</div>
+          <div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--t9);">Mercado Souza</div></div>
+          <div class="stars" style="font-size:12px;"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+          <div style="font-size:9px;color:var(--t5);">3 dias</div>
+        </div>
+        <div style="font-size:11px;color:var(--t7);line-height:1.5;">Pontual, prestativa e muito organizada!</div>
+        <div style="font-size:9px;color:var(--P);font-weight:700;background:var(--Pl);padding:1px 7px;border-radius:var(--rf);margin-top:4px;display:inline-block;">📍 Presencial · Auxiliar</div>
+      </div>
+      <div style="padding:8px 0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;">TP</div>
+          <div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--t9);">TechPro</div></div>
+          <div class="stars" style="font-size:12px;"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+          <div style="font-size:9px;color:var(--t5);">1 sem</div>
+        </div>
+        <div style="font-size:11px;color:var(--t7);line-height:1.5;">Ótima no suporte remoto, resolveu rápido!</div>
+        <div style="font-size:9px;color:var(--P);font-weight:700;background:var(--Pl);padding:1px 7px;border-radius:var(--rf);margin-top:4px;display:inline-block;">🏠 Home Office · Suporte</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button class="btn out sm" style="flex:1">💬 Mensagem</button>
+      <button class="btn sm" style="flex:2" onclick="go('feed')">Contratar — R$ 180 💼</button>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════ 6 PUBLICAR VAGA com escopo ══════════ -->
+<div class="sc" id="scpublicar">
+  <div class="sb0" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hdr">
+    <button class="bk" onclick="go('feed')">← Feed</button>
+    <h2>Publicar vaga</h2>
+    <p>Grátis · escolha onde quer aparecer</p>
+  </div>
+  <div class="sv" style="padding:12px 16px">
+    <div class="sec">Tipo de vaga</div>
+    <div style="display:flex;gap:7px;margin-bottom:12px">
+      <div class="scope-btn on" onclick="selTipo(this,'diaria')" style="flex:1">⚡<br>Diária</div>
+      <div class="scope-btn" onclick="selTipo(this,'fixo')" style="flex:1">📋<br>Emprego fixo</div>
+      <div class="scope-btn" onclick="selTipo(this,'remoto')" style="flex:1">🏠<br>Remoto</div>
+    </div>
+
+    <div class="fg">
+      <div class="fi"><span class="fl">Título da vaga</span><input placeholder="Ex: Garçom para evento de sábado"/></div>
+      <div class="fi"><span class="fl">Categoria</span><select><option>Gastronomia</option><option>Limpeza</option><option>Construção</option><option>T.I.</option><option>Eventos</option><option>Cuidados</option></select></div>
+      <div class="fi"><span class="fl">Data / Período</span><input placeholder="Ex: Sábado 25/01 · 14h–22h"/></div>
+      <div class="fi"><span class="fl">Remuneração (R$)</span><input type="number" placeholder="180"/></div>
+      <div class="fi"><span class="fl">Descrição</span><input placeholder="O que o profissional vai fazer…"/></div>
+    </div>
+
+    <!-- SCOPE SELECTOR: onde a vaga vai aparecer -->
+    <div class="sec">🌐 Onde quer aparecer? (termômetro)</div>
+    <div class="scope-sel" id="scope-sel">
+      <div class="scope-btn on" onclick="selScope(this,'local')" style="font-size:10px">
+        🏘️ Só minha<br>instância<br><strong style="color:var(--S)">GRÁTIS</strong>
+      </div>
+      <div class="scope-btn" onclick="selScope(this,'cidade')" style="font-size:10px">
+        🏙️ Toda a<br>cidade<br><strong style="color:var(--G)">GRÁTIS*</strong>
+      </div>
+      <div class="scope-btn" onclick="selScope(this,'estado')" style="font-size:10px">
+        🗺️ Estado<br>inteiro<br><strong style="color:var(--V)">GRÁTIS*</strong>
+      </div>
+    </div>
+    <div id="scope-note" style="font-size:10px;color:var(--S);background:var(--Sl);border-radius:var(--r1);padding:8px 10px;margin-bottom:10px">
+      ✅ <strong>Grátis agora</strong> — estamos em fase de lançamento. Aproveite enquanto o termômetro de crescimento estiver aberto!
+    </div>
+
+    <div style="background:#fff;border-radius:var(--r2);padding:12px;box-shadow:var(--s1);margin-bottom:10px">
+      <div style="font-size:10px;font-weight:700;color:var(--t5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📊 Termômetro da plataforma</div>
+      <div style="height:12px;background:var(--t3);border-radius:var(--rf);overflow:hidden;margin-bottom:6px">
+        <div style="width:34%;height:100%;background:linear-gradient(90deg,var(--S),#34D399);border-radius:var(--rf);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t5);">
+        <span>Lançamento</span><span>🎯 34% cheio</span><span>Limite</span>
+      </div>
+      <div style="font-size:10px;color:var(--t7);margin-top:7px;line-height:1.5;">Enquanto o termômetro não atingir 100%, tudo é gratuito. Quando atingir, planos de alcance serão ativados gradualmente.</div>
+    </div>
+
+    <button class="btn" onclick="go('feed')">Publicar vaga grátis 🚀</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════ 7 META GRATUITA ══════════ -->
+<div class="sc" id="scmeta">
+  <div class="sb0" style="color:var(--t9)"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hdr">
+    <button class="bk" onclick="go('feed')">← Voltar</button>
+    <h2>Minha meta gratuita</h2>
+    <p>3 meses para ativar sua instância</p>
+  </div>
+  <div class="sv" style="padding:12px 16px">
+
+    <!-- status geral -->
+    <div style="background:linear-gradient(135deg,var(--Pl),#fff);border:1.5px solid var(--P);border-radius:var(--r2);padding:16px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:28px;">🎯</span>
+        <div>
+          <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--Pd)">Período gratuito ativo</div>
+          <div style="font-size:11px;color:var(--P)">Iniciou em 01/06/2025 · Encerra em 01/09/2025</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t7);margin-bottom:6px;">
+        <span>Tempo restante</span><span style="font-weight:700;color:var(--P)">68 dias</span>
+      </div>
+      <div style="height:8px;background:var(--t3);border-radius:var(--rf);overflow:hidden;">
+        <div style="width:25%;height:100%;background:linear-gradient(90deg,var(--P),#60A5FA);border-radius:var(--rf);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t5);margin-top:3px;"><span>Início</span><span>25% do período</span><span>3 meses</span></div>
+    </div>
+
+    <div class="sec">Metas para manter acesso gratuito</div>
+
+    <!-- meta 1 -->
+    <div class="thermo-wrap">
+      <div class="thermo-head">
+        <div class="thermo-tit">👥 Usuários ativos na instância</div>
+        <span class="thermo-badge" style="background:var(--Sl);color:#065F46">✅ Cumprindo</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t7);margin-bottom:6px;">
+        <span>Progresso atual</span><span style="font-weight:700;color:var(--S)">12 / 5 mínimo</span>
+      </div>
+      <div class="thermo-bar-bg"><div class="thermo-bar-fill" style="width:100%"></div></div>
+      <div class="thermo-labels"><span>0</span><span>Meta: 5 usuários</span><span>✅ Superou!</span></div>
+      <div class="thermo-milestones">
+        <span class="ms done">1º usuário</span>
+        <span class="ms done">5 usuários</span>
+        <span class="ms current">10 usuários</span>
+        <span class="ms">50 usuários</span>
+      </div>
+    </div>
+
+    <!-- meta 2 -->
+    <div class="thermo-wrap">
+      <div class="thermo-head">
+        <div class="thermo-tit">💰 Vendas de destaque / mês</div>
+        <span class="thermo-badge" style="background:var(--Gl);color:#92400E">⏳ Em progresso</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t7);margin-bottom:6px;">
+        <span>Este mês</span><span style="font-weight:700;color:var(--G)">0 / 1 mínimo</span>
+      </div>
+      <div class="thermo-bar-bg"><div class="thermo-bar-fill warn" style="width:0%"></div></div>
+      <div class="thermo-labels"><span>0</span><span>Meta: 1 venda</span><span>+</span></div>
+      <div style="font-size:10px;color:#B45309;margin-top:8px;line-height:1.5;">Para manter o acesso gratuito após os 3 meses, realize ao menos <strong>1 venda de destaque por mês</strong>. Isso pode ser um banner, vaga fixada ou candidato fixado.</div>
+    </div>
+
+    <!-- o que acontece se não cumprir -->
+    <div class="sec">O que acontece ao final dos 3 meses</div>
+
+    <div class="plan-compare">
+      <div class="pc-col" style="border-color:var(--S);background:linear-gradient(135deg,var(--Sl),#fff)">
+        <h4 style="color:#065F46">✅ Meta cumprida</h4>
+        <div class="pc-price" style="color:var(--S)">Grátis</div>
+        <div class="pc-feat">✅ Continua sem pagar</div>
+        <div class="pc-feat">✅ Novas metas mensais</div>
+        <div class="pc-feat">✅ Instância ativa</div>
+      </div>
+      <div class="pc-col">
+        <h4 style="color:var(--A)">❌ Meta não cumprida</h4>
+        <div class="pc-price" style="color:var(--P)">R$29/mês</div>
+        <div class="pc-feat">📦 Plano pago ativado</div>
+        <div class="pc-feat">🔒 Ou instância encerra</div>
+        <div class="pc-feat">✅ Dados preservados</div>
+      </div>
+    </div>
+
+    <div style="background:var(--Sl);border-radius:var(--r2);padding:12px;margin-bottom:12px;">
+      <div style="font-size:11px;color:#065F46;line-height:1.65;"><strong>Boa notícia:</strong> suas metas atuais estão no caminho certo! Você já tem 12 usuários e o período ainda nem chegou na metade. Continue divulgando sua instância localmente.</div>
+    </div>
+
+    <button class="btn" onclick="go('painel')">Ver painel completo →</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════ 8 PLANOS ══════════ -->
+<div class="sc" id="scplanos">
+  <div class="sb0" style="color:#fff"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero dark">
+    <div class="hsb">
+      <button class="hbk" onclick="go('meta')">← Meta</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <div class="hico">💎</div>
+    <div class="htit">Planos após período gratuito</div>
+    <div class="hsub">Simples, sem surpresas</div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div style="background:#fff;border-radius:var(--r2);padding:14px;box-shadow:var(--s1);margin-bottom:12px;margin-top:-4px;">
+      <div style="font-size:11px;color:var(--t7);line-height:1.65;"><strong>O app é e sempre será gratuito para profissionais e contratantes.</strong> Planos pagos existem apenas para parceiros que querem manter instância ativa sem cumprir metas, ou contratar alcance premium.</div>
+    </div>
+
+    <!-- plano parceiro -->
+    <div class="sec">Plano parceiro (instância regional)</div>
+    <div style="background:#fff;border-radius:var(--r2);padding:16px;box-shadow:var(--s1);margin-bottom:10px;border:2px solid var(--P);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--t9)">Parceiro Ativo</div><div style="font-size:10px;color:var(--t5)">Sem obrigação de meta mensal</div></div>
+        <div style="text-align:right"><div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--P)">R$29</div><div style="font-size:9px;color:var(--t5)">/mês</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">
+        <div style="font-size:11px;color:var(--t7);display:flex;gap:6px;align-items:center;">✅ Instância regional ativa sem metas</div>
+        <div style="font-size:11px;color:var(--t7);display:flex;gap:6px;align-items:center;">✅ Logo e personalização completa</div>
+        <div style="font-size:11px;color:var(--t7);display:flex;gap:6px;align-items:center;">✅ Venda produtos de destaque (90% é seu)</div>
+        <div style="font-size:11px;color:var(--t7);display:flex;gap:6px;align-items:center;">✅ Repasse automático de planos premium</div>
+      </div>
+      <button class="btn sm">Assinar plano parceiro</button>
+    </div>
+
+    <!-- termômetro de fases -->
+    <div class="sec">🌡️ Termômetro de crescimento da plataforma</div>
+    <div class="thermo-big">
+      <div style="font-size:11px;color:var(--t7);line-height:1.6;margin-bottom:10px;">A plataforma vai liberando recursos gradualmente conforme cresce. Hoje tudo é gratuito. Quando o termômetro encher, limites começam a ser ativados por fase.</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--t9)">Crescimento atual</span>
+        <span style="font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--P)">34%</span>
+      </div>
+      <div class="thermo-big-bar"><div class="thermo-big-fill" style="width:34%;background:linear-gradient(90deg,var(--S),#34D399);"></div></div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="phase-tag" style="background:var(--Sl);color:#065F46">✅ 0–40%</span>
+          <span style="font-size:11px;color:var(--t7)">Tudo gratuito, sem limites</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="phase-tag" style="background:var(--Pl);color:var(--P)">⏳ 40–70%</span>
+          <span style="font-size:11px;color:var(--t7)">Alcance cidade/estado limitado para quem não paga</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="phase-tag" style="background:var(--Gl);color:#92400E">🔒 70–90%</span>
+          <span style="font-size:11px;color:var(--t7)">Vagas grátis só na instância local</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="phase-tag" style="background:#FEE2E2;color:#DC2626">🏆 90–100%</span>
+          <span style="font-size:11px;color:var(--t7)">Modelo freemium completo ativado</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════ 9 PAINEL PARCEIRO com logo ══════════ -->
+<div class="sc" id="scpainel">
+  <div class="sb0" style="color:#fff"><span class="st">9:41</span><span class="si">📶🔋</span></div>
+  <div class="hero blue">
+    <div class="hsb">
+      <button class="hbk" onclick="go('feed')">← Feed</button>
+      <span class="si" style="color:rgba(255,255,255,.7)">📶🔋</span>
+    </div>
+    <!-- LOGO DO PARCEIRO em destaque no painel -->
+    <div class="logo-partner">
+      <div class="logo-partner-img">🏙️</div>
+      <div>
+        <div class="logo-partner-name" id="painel-nome">Diária Sinop</div>
+        <div class="logo-partner-tag">diaria.sinop.com.br · MEI</div>
+      </div>
+    </div>
+    <div class="htit" style="font-size:16px">Painel do parceiro</div>
+    <div class="hstats">
+      <div class="hs"><div class="hsn">R$1.2k</div><div class="hsl">Vendido</div></div>
+      <div class="hs"><div class="hsn">12</div><div class="hsl">Usuários</div></div>
+      <div class="hs"><div class="hsn">4.8★</div><div class="hsl">Avaliação</div></div>
+    </div>
+  </div>
+
+  <div class="sv" style="padding:8px 16px">
+    <div class="sec">Meta gratuita</div>
+    <div class="thermo-wrap" style="margin-bottom:10px;">
+      <div class="thermo-head">
+        <div class="thermo-tit">🎯 Período gratuito</div>
+        <span class="thermo-badge" style="background:var(--Sl);color:#065F46">✅ No prazo</span>
+      </div>
+      <div class="thermo-bar-bg"><div class="thermo-bar-fill" style="width:25%"></div></div>
+      <div class="thermo-labels"><span>Início Jun</span><span>68 dias restantes</span><span>Set 2025</span></div>
+      <button class="btn out sm" onclick="go('meta')" style="margin-top:8px">Ver metas detalhadas</button>
+    </div>
+
+    <div class="sec">Últimas transações</div>
+    <div class="fg">
+      <div class="tx-item">
+        <div class="tx-ico gd">📌</div>
+        <div style="flex:1"><div class="tx-n">Fixar vaga — Rest. Sabor Local</div><div class="tx-d">Hoje 14h32</div></div>
+        <div class="tx-v gn">+R$19</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico gd">💡</div>
+        <div style="flex:1"><div class="tx-n">Oportunidade — NaturBela</div><div class="tx-d">Ontem 10h15</div></div>
+        <div class="tx-v gn">+R$79</div>
+      </div>
+      <div class="tx-item">
+        <div class="tx-ico rd">💳</div>
+        <div style="flex:1"><div class="tx-n">Taxa plataforma (10%)</div><div class="tx-d">15 Jun</div></div>
+        <div class="tx-v rd">−R$87</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="btn out sm" style="flex:1" onclick="go('meta')">📊 Meta</button>
+      <button class="btn out sm" style="flex:1" onclick="go('planos')">💎 Planos</button>
+      <button class="btn sm" style="flex:2" onclick="go('feed')">💰 Nova venda</button>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<p style="margin-top:22px;font-size:10px;color:#8892A0;text-align:center">
+  Diária da Cidade v1 · 9 telas · Logo do parceiro em destaque · Termos com aceite individual + link<br>
+  Estrelas do empregado visíveis para o empregador · Escopo de vaga com termômetro de fases<br>
+  Meta gratuita 3 meses · Comparativo cumpriu/não cumpriu · Planos simples · 100% gratuito no lançamento
+</p>
+
+<script>
+/* navegação */
+function go(id) {
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.sn').forEach(b=>b.classList.remove('on'));
+  const sc = document.getElementById('sc'+id);
+  if(sc) sc.classList.add('on');
+  const ids=['splash','cadastro','termo','feed','perfil-emp','publicar','meta','planos','painel'];
+  const idx=ids.indexOf(id);
+  if(idx>=0) document.querySelectorAll('.sn')[idx].classList.add('on');
+}
+
+/* tipo usuário no cadastro */
+function selTipo(el, tipo) {
+  el.closest('div').querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  // mostra termo de parceiro se for parceiro
+  const tp = document.getElementById('termo-parceiro');
+  if(tp) tp.style.display = tipo==='part' ? 'block' : 'none';
+}
+
+/* termos */
+const termoState = {t1:true,t2:false,t3:false,t4:false};
+function toggleTermo(id) {
+  termoState[id] = !termoState[id];
+  const cb = document.getElementById(id);
+  if(!cb) return;
+  cb.classList.toggle('on', termoState[id]);
+  cb.textContent = termoState[id] ? '✓' : '';
+  checkTermos();
+}
+function checkTermos() {
+  const allRequired = termoState.t1 && termoState.t2 && termoState.t3;
+  const btn = document.getElementById('btn-criar');
+  if(!btn) return;
+  btn.style.opacity = allRequired ? '1' : '.5';
+  btn.style.pointerEvents = allRequired ? 'auto' : 'none';
+}
+
+/* modais */
+function openModal(id) {
+  const m = document.getElementById(id);
+  if(m) m.classList.remove('hidden');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if(m) m.classList.add('hidden');
+}
+// fechar modal clicando fora
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e => {
+    if(e.target===m) m.classList.add('hidden');
+  });
+});
+
+/* scope da vaga */
+function selScope(el, scope) {
+  el.closest('.scope-sel').querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('on','gold','purple'));
+  el.classList.add('on');
+  const note = document.getElementById('scope-note');
+  if(!note) return;
+  const msgs = {
+    local: '✅ <strong>Grátis sempre</strong> — aparece apenas na sua instância regional.',
+    cidade: '✅ <strong>Grátis agora</strong> — estamos em fase de lançamento. Aproveite enquanto o termômetro estiver aberto! Quando atingir 40%, este recurso pode precisar de plano.',
+    estado: '✅ <strong>Grátis agora</strong> — fase de lançamento total. Quando o termômetro atingir 70%, alcance estadual passa a exigir plano regional.'
+  };
+  note.innerHTML = msgs[scope] || '';
+}
+
+/* feed tabs */
+function swT(t) {
+  ['t','e','o'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('on',x===t));
+}
+
+/* inicializa t1 como aceito */
+const cb1=document.getElementById('t1');
+if(cb1){cb1.classList.add('on');cb1.textContent='✓';}
+</script>
+</body>
+</html>
