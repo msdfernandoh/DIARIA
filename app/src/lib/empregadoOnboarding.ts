@@ -1,3 +1,5 @@
+import { grantSignupCoins } from "./coins";
+import { notifyEmpreendedorNovoGrupo } from "./notifications";
 import { supabase } from "./supabase";
 
 export type EmpregadoOnboardingDraft = {
@@ -174,13 +176,13 @@ export async function completeEmpregadoOnboarding(
       { onConflict: "user_id" }
     );
     if (grpErr) throw grpErr;
+    void notifyEmpreendedorNovoGrupo(draft.codigoEmpreendedorId);
   }
-}
 
-export async function routeAfterAuth(userId: string): Promise<"/(app)/home" | "/(onboarding)/empregado/dados"> {
-  const status = await fetchOnboardingStatus(userId);
-  if (status?.tipo === "empregado" && status.onboarding_completo !== true) {
-    return "/(onboarding)/empregado/dados";
-  }
-  return "/(app)/home";
+  await grantSignupCoins(
+    userId,
+    "empregado",
+    Boolean(draft.codigoValido && draft.codigoEmpreendedorId),
+    draft.codigoEmpreendedorId
+  );
 }

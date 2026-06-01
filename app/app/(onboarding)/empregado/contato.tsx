@@ -3,7 +3,10 @@ import { useState } from "react";
 import { Alert, StyleSheet, Switch, Text, View } from "react-native";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
-import { completeEmpregadoOnboarding } from "../../../src/lib/empregadoOnboarding";
+import {
+  completeEmpregadoOnboarding,
+} from "../../../src/lib/empregadoOnboarding";
+import { resolveAppRoute } from "../../../src/lib/authRouting";
 import { supabase } from "../../../src/lib/supabase";
 import { colors } from "../../../src/constants/theme";
 
@@ -18,7 +21,7 @@ export default function ContatoStep() {
       const id = data.user?.id;
       if (!id) throw new Error("Sessão expirada. Entre de novo.");
       await completeEmpregadoOnboarding(id, draft);
-      router.replace("/(app)/home");
+      router.replace(await resolveAppRoute(id));
     } catch (e) {
       Alert.alert(
         "Erro ao salvar",

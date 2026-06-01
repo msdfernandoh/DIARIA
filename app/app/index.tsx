@@ -2,7 +2,7 @@ import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { colors } from "../src/constants/theme";
-import { routeAfterAuth } from "../src/lib/empregadoOnboarding";
+import { resolveAppRoute, type AppRoute } from "../src/lib/authRouting";
 import { supabase, supabaseConfigured } from "../src/lib/supabase";
 
 export default function Index() {
@@ -18,7 +18,7 @@ export default function Index() {
       if (!data.session?.user?.id) {
         setTarget("/(auth)/choose-profile");
       } else {
-        setTarget(await routeAfterAuth(data.session.user.id));
+        setTarget(await resolveAppRoute(data.session.user.id));
       }
       setReady(true);
     });
@@ -44,7 +44,7 @@ export default function Index() {
     );
   }
 
-  if (target) return <Redirect href={target as "/(app)/home" | "/(auth)/choose-profile" | "/(onboarding)/empregado/dados"} />;
+  if (target) return <Redirect href={target as AppRoute} />;
   return <Redirect href="/(auth)/choose-profile" />;
 }
 

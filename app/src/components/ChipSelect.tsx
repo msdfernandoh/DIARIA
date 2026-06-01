@@ -8,9 +8,10 @@ type Props = {
   selected: string[];
   onChange: (ids: string[]) => void;
   max?: number;
+  accentColor?: string;
 };
 
-export function ChipSelect({ items, selected, onChange, max }: Props) {
+export function ChipSelect({ items, selected, onChange, max, accentColor = colors.green }: Props) {
   function toggle(id: string) {
     if (selected.includes(id)) {
       onChange(selected.filter((s) => s !== id));
@@ -28,9 +29,12 @@ export function ChipSelect({ items, selected, onChange, max }: Props) {
           <Pressable
             key={item.id}
             onPress={() => toggle(item.id)}
-            style={[styles.chip, on && styles.chipOn]}
+            style={[
+              styles.chip,
+              on && { borderColor: accentColor, backgroundColor: `${accentColor}18` },
+            ]}
           >
-            <Text style={[styles.chipText, on && styles.chipTextOn]}>
+            <Text style={[styles.chipText, on && { color: accentColor, fontWeight: "800" }]}>
               {item.emoji ? `${item.emoji} ` : ""}
               {item.label}
             </Text>

@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { colors } from "../../src/constants/theme";
-import { routeAfterAuth } from "../../src/lib/empregadoOnboarding";
+import { resolveAppRoute } from "../../src/lib/authRouting";
 import { supabase } from "../../src/lib/supabase";
 
 export default function Login() {
@@ -31,7 +31,7 @@ export default function Login() {
     const { data: userData } = await supabase.auth.getUser();
     const id = userData.user?.id;
     if (id) {
-      const next = await routeAfterAuth(id);
+      const next = await resolveAppRoute(id);
       router.replace(next);
     } else {
       router.replace("/(app)/home");

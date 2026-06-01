@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 import { colors } from "../../../src/constants/theme";

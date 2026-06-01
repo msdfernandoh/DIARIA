@@ -12,6 +12,8 @@ type Props = {
   nextLabel?: string;
   nextDisabled?: boolean;
   secondaryAction?: { label: string; onPress: () => void };
+  totalSteps?: number;
+  accentColor?: string;
 };
 
 export function OnboardingShell({
@@ -24,15 +26,17 @@ export function OnboardingShell({
   nextLabel = "Continuar",
   nextDisabled,
   secondaryAction,
+  totalSteps = ONBOARDING_STEPS,
+  accentColor = colors.green,
 }: Props) {
-  const pct = Math.round((step / ONBOARDING_STEPS) * 100);
+  const pct = Math.round((step / totalSteps) * 100);
   return (
     <View style={styles.wrap}>
       <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: `${pct}%` }]} />
+        <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: accentColor }]} />
       </View>
       <Text style={styles.step}>
-        Passo {step} de {ONBOARDING_STEPS}
+        Passo {step} de {totalSteps}
       </Text>
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.sub}>{subtitle}</Text> : null}
@@ -54,7 +58,11 @@ export function OnboardingShell({
           <Pressable
             onPress={onNext}
             disabled={nextDisabled}
-            style={[styles.nextBtn, nextDisabled && styles.nextDisabled]}
+            style={[
+              styles.nextBtn,
+              { backgroundColor: accentColor },
+              nextDisabled && styles.nextDisabled,
+            ]}
           >
             <Text style={styles.nextText}>{nextLabel}</Text>
           </Pressable>
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 12,
   },
-  progressFill: { height: "100%", backgroundColor: colors.green },
+  progressFill: { height: "100%" },
   step: { fontSize: 11, fontWeight: "700", color: colors.soft, marginBottom: 4 },
   title: { fontSize: 22, fontWeight: "800", color: colors.dark },
   sub: { color: colors.soft, marginTop: 6, marginBottom: 12, lineHeight: 20 },
@@ -95,7 +103,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
     borderRadius: 12,
-    backgroundColor: colors.green,
   },
   nextDisabled: { opacity: 0.45 },
   nextText: { fontWeight: "800", color: "#fff" },

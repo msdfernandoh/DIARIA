@@ -34,7 +34,9 @@ export default function CodigoStep() {
             codigoEmpreendedorId: row.user_id,
             codigoInstancia: row.nome_instancia,
           }));
-          setMsg(`Código de ${row.nome_instancia ?? row.codigo} confirmado!`);
+          setMsg(
+            `Código de ${row.nome_instancia ?? row.codigo} confirmado! +100 moedas de bônus (liberadas em 7 dias).`
+          );
         } else {
           setDraft((d) => ({
             ...d,
@@ -49,7 +51,7 @@ export default function CodigoStep() {
       } finally {
         setChecking(false);
       }
-    }, 400);
+    }, 600);
     return () => clearTimeout(t);
   }, [draft.codigo, setDraft]);
 

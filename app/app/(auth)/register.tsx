@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { colors } from "../../src/constants/theme";
-import { routeAfterAuth } from "../../src/lib/empregadoOnboarding";
+import { resolveAppRoute } from "../../src/lib/authRouting";
 import {
   supabase,
   upsertUserProfile,
@@ -73,7 +73,7 @@ export default function Register() {
         email: email.trim(),
         tipo,
       });
-      const next = await routeAfterAuth(userId);
+      const next = await resolveAppRoute(userId);
       router.replace(next);
     } catch (e) {
       Alert.alert("Perfil", e instanceof Error ? e.message : "Erro ao salvar perfil.");
