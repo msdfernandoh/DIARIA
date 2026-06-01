@@ -1,4 +1,4 @@
-import { REF_LINK_BASE } from "../constants/empreendedor";
+import { CONFIG } from "../constants/config";
 import { maybeNotifyMetaBatida, notifyMicrofranquia } from "./notifications";
 import { supabase } from "./supabase";
 
@@ -248,7 +248,7 @@ export async function fetchPainelData(userId: string): Promise<PainelData | null
     entrepreneur: microfranquiaNova
       ? { ...ent, microfranquia: true, microfranquia_em: new Date().toISOString() }
       : ent,
-    refLink: `${REF_LINK_BASE}/${ent.codigo}`,
+    refLink: CONFIG.refLink(ent.codigo),
     grupoEmpregados,
     grupoEmpregadores,
     totalGrupo,

@@ -4,7 +4,8 @@
   "rewrites": [
     { "source": "/trabalhe", "destination": "/trabalhe.html" },
     { "source": "/contrate", "destination": "/contrate.html" },
-    { "source": "/parceiro", "destination": "/parceiro.html" }
+    { "source": "/parceiro", "destination": "/parceiro.html" },
+    { "source": "/admin", "destination": "/admin.html" }
   ],
   "headers": [
     {

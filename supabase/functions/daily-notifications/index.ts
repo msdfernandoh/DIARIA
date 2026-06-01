@@ -155,8 +155,21 @@ Deno.serve(async (req) => {
     metasNotified += 1;
   }
 
+  const { data: expired } = await supabase
+    .from("jobs")
+    .update({
+      destaque_nivel: "organico",
+      destaque_grupo_id: null,
+      destaque_ate: null,
+    })
+    .lt("destaque_ate", new Date().toISOString())
+    .neq("destaque_nivel", "organico")
+    .select("id");
+
+  const highlightsExpired = expired?.length ?? 0;
+
   return new Response(
-    JSON.stringify({ ok: true, jobsNotified, metasNotified }),
+    JSON.stringify({ ok: true, jobsNotified, metasNotified, highlightsExpired }),
     { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
   );
 });

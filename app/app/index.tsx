@@ -16,7 +16,7 @@ export default function Index() {
     }
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session?.user?.id) {
-        setTarget("/(auth)/choose-profile");
+        setTarget("/(public)/vagas-preview");
       } else {
         setTarget(await resolveAppRoute(data.session.user.id));
       }

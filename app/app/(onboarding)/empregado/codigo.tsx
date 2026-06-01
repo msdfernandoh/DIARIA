@@ -1,15 +1,26 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TextInput, View } from "react-native";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 import { validateEntrepreneurCode } from "../../../src/lib/empregadoOnboarding";
+import { PENDING_REF_KEY } from "../../../src/lib/deepLinks";
 import { colors } from "../../../src/constants/theme";
 
 export default function CodigoStep() {
   const { draft, setDraft, setStep } = useEmpregadoOnboarding();
   const [checking, setChecking] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    void AsyncStorage.getItem(PENDING_REF_KEY).then((stored) => {
+      if (stored && !draft.codigo.trim()) {
+        setDraft((d) => ({ ...d, codigo: stored }));
+        void AsyncStorage.removeItem(PENDING_REF_KEY);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const code = draft.codigo.trim();

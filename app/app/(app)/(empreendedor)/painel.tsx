@@ -352,6 +352,13 @@ export default function EmpreendedorPainelScreen() {
             <Text style={styles.gridEmoji}>👥</Text>
             <Text style={styles.gridLabel}>Ver meu grupo</Text>
           </Pressable>
+          <Pressable
+            style={styles.gridBtn}
+            onPress={() => router.push("/(app)/(empreendedor)/oportunidades/nova")}
+          >
+            <Text style={styles.gridEmoji}>🎁</Text>
+            <Text style={styles.gridLabel}>Oportunidade física</Text>
+          </Pressable>
         </View>
       </View>
 

@@ -26,6 +26,15 @@ export default function EmpregadoTabLayout() {
         }}
       />
       <Tabs.Screen
+        name="oportunidades"
+        options={{
+          title: "Oportunidades",
+          tabBarLabel: "Brindes",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🎁" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="chat"
         options={{
           title: "Chat",
@@ -34,7 +43,15 @@ export default function EmpregadoTabLayout() {
           tabBarIcon: ({ focused }) => <TabIcon emoji="💬" focused={focused} />,
         }}
       />
-      <Tabs.Screen name="perfil" options={{ title: "Perfil", tabBarIcon: ({ focused }) => <TabIcon emoji="⭐" focused={focused} /> }} />
+      <Tabs.Screen
+        name="perfil"
+        options={{
+          title: "Perfil",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="⭐" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen name="destaque" options={{ href: null, title: "Destaque" }} />
     </Tabs>
   );
 }

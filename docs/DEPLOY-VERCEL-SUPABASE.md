@@ -29,7 +29,9 @@ Assim as variáveis `SUPABASE_URL` e `SUPABASE_ANON_KEY` entram no projeto Verce
 
 4. **Deploy** (pode ser o primeiro deploy **sem** Supabase — as landings abrem, mas os formulários avisam que falta config até o passo 2).
 
-5. Anote a URL de produção, ex.: `https://diaria-cidade.vercel.app` ou o domínio custom `diaria.cidade.com.br` depois.
+5. Domínios de produção:
+   - **Site:** `https://diariadacidade.com.br` (este projeto Vercel, pasta `web/`)
+   - **App / deep links:** `https://diariadacidade.app.br` (segundo projeto Vercel, pasta `web/redirect/` — ver `web/redirect/vercel.json`)
 
 ### Alternativa: CLI
 

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Alert, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
-import { EMPREENDEDOR_ONBOARDING_STEPS, REF_LINK_BASE } from "../../../src/constants/empreendedor";
+import { CONFIG } from "../../../src/constants/config";
+import { EMPREENDEDOR_ONBOARDING_STEPS } from "../../../src/constants/empreendedor";
 import { useEmpreendedorOnboarding } from "../../../src/context/EmpreendedorOnboardingContext";
 import {
   completeEmpreendedorOnboarding,
@@ -28,7 +29,7 @@ export default function ConclusaoStep() {
     });
   }, [codigo, draft.nome, setDraft]);
 
-  const link = codigo ? `${REF_LINK_BASE}/${codigo}` : "";
+  const link = codigo ? CONFIG.refLink(codigo) : "";
 
   async function finish() {
     setSaving(true);

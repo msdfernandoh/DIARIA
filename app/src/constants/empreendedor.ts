@@ -27,4 +27,4 @@ export const PIX_TIPOS = [
 
 export type PixTipo = (typeof PIX_TIPOS)[number]["id"];
 
-export const REF_LINK_BASE = "https://diaria-da-cidade.vercel.app/ref";
+export { CONFIG, REF_LINK_BASE } from "./config";

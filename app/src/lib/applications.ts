@@ -109,7 +109,36 @@ export async function setApplicationStatus(
     });
   }
 
+  if (status === "concluida") {
+    const T = NOTIFICATION_TYPES.SHARED.AVALIAR_DIARIA;
+    await sendNotification({
+      userId: app.candidato_id,
+      titulo: T.buildTitle(),
+      corpo: T.buildBody(),
+      data: T.data(applicationId),
+    });
+    await sendNotification({
+      userId: job.empregador_id,
+      titulo: T.buildTitle(),
+      corpo: T.buildBody(),
+      data: T.data(applicationId),
+    });
+    await insertSystemMessage(
+      applicationId,
+      actorUserId,
+      `✅ Diária marcada como concluída · ${systemTimeLabel()}`
+    );
+  }
+
   return data as ApplicationRow;
+}
+
+/** Empregador marca a diária como concluída (dispara prazo de avaliação). */
+export async function completeApplication(
+  applicationId: string,
+  actorUserId: string
+): Promise<ApplicationRow> {
+  return setApplicationStatus(applicationId, "concluida", actorUserId);
 }
 
 export async function ensureApplicationForChat(

@@ -164,6 +164,10 @@ export async function resolveNotificationRoute(
       return "/(app)/(empreendedor)/painel";
     case "grupo":
       return "/(app)/(empreendedor)/grupo";
+    case "avaliar": {
+      const applicationId = data.applicationId as string;
+      return applicationId ? `/(app)/avaliar/${applicationId}` : null;
+    }
     default:
       return null;
   }

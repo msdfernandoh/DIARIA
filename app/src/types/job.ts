@@ -36,6 +36,7 @@ export type JobDetail = JobRow & {
   empregador_nome: string;
   empregador_nota: number | null;
   total_avaliacoes: number;
+  empregador_top_topics?: { tag: string; count: number }[];
 };
 
 export type FeedFilters = {

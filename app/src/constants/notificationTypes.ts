@@ -6,7 +6,8 @@ export type NotificationDataTipo =
   | "candidatura"
   | "vaga"
   | "painel"
-  | "grupo";
+  | "grupo"
+  | "avaliar";
 
 export type NotificationPayload = {
   tipo: NotificationDataTipo;
@@ -52,6 +53,20 @@ export const NOTIFICATION_TYPES = {
       buildTitle: (nome: string) => `${nome} te mandou uma mensagem`,
       buildBody: (preview: string) => preview,
       data: (applicationId: string): NotificationPayload => ({ tipo: "chat", applicationId }),
+    },
+    AVALIAR_DIARIA: {
+      tipo: "avaliar" as const,
+      buildTitle: () => "✅ Diária concluída!",
+      buildBody: () => "Como foi? Avalie sua experiência",
+      data: (applicationId: string): NotificationPayload => ({ tipo: "avaliar", applicationId }),
+    },
+  },
+  SHARED: {
+    AVALIAR_DIARIA: {
+      tipo: "avaliar" as const,
+      buildTitle: () => "✅ Diária concluída!",
+      buildBody: () => "Como foi? Avalie sua experiência",
+      data: (applicationId: string): NotificationPayload => ({ tipo: "avaliar", applicationId }),
     },
   },
   EMPREGADOR: {

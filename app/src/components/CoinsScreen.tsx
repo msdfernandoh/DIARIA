@@ -14,7 +14,7 @@ import { useFocusEffect } from "expo-router";
 import { ConfirmModal } from "./ConfirmModal";
 import { COIN_PRODUCTS_EMPREGADO, COIN_PRODUCTS_EMPREGADOR, EARN_TIPS, type CoinProduct } from "../constants/coinProducts";
 import { colors } from "../constants/theme";
-import { REF_LINK_BASE } from "../constants/empreendedor";
+import { CONFIG } from "../constants/config";
 import { daysUntil, reasonLabel, relativeTxDate } from "../lib/coinReasons";
 import {
   checkAndUnlockCoins,
@@ -96,7 +96,7 @@ export function CoinsScreen({ profile }: Props) {
   }
 
   async function shareLink() {
-    const link = refCode ? `${REF_LINK_BASE}/${refCode}` : REF_LINK_BASE;
+    const link = refCode ? CONFIG.refLink(refCode) : `${CONFIG.APP_URL}/ref`;
     await Share.share({
       message: `Entre na Diária da Cidade pelo meu link: ${link}`,
       url: link,

@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -25,6 +25,8 @@ import {
   type ApplicationContext,
   type ChatMessage,
 } from "../lib/chat";
+import { completeApplication } from "../lib/applications";
+import { hasUserRated } from "../lib/ratings";
 import { supabase } from "../lib/supabase";
 
 type Props = {
@@ -59,6 +61,8 @@ export function ChatConversationScreen({ applicationId, accentColor }: Props) {
   const [sending, setSending] = useState(false);
   const [cardOpen, setCardOpen] = useState(true);
   const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [alreadyRated, setAlreadyRated] = useState(false);
+  const [actionBusy, setActionBusy] = useState(false);
   const listRef = useRef<FlatList>(null);
 
   const upsertMessage = useCallback((msg: ChatMessage) => {
@@ -83,6 +87,10 @@ export function ChatConversationScreen({ applicationId, accentColor }: Props) {
       setUserId(uid);
       const context = await fetchApplicationContext(applicationId, uid ?? "");
       setCtx(context);
+      if (uid) {
+        const rated = await hasUserRated(applicationId, uid);
+        setAlreadyRated(rated);
+      }
       const msgs = await fetchMessages(applicationId);
       setMessages(msgs);
       if (uid) await markMessagesRead(applicationId, uid);
@@ -160,6 +168,29 @@ export function ChatConversationScreen({ applicationId, accentColor }: Props) {
   }
 
   const showBanner = !ctx.myCelularVisivel && !bannerDismissed;
+  const isEmployer = userId === ctx.empregadorId;
+  const canComplete = isEmployer && ctx.status === "aceita";
+  const canRate = ctx.status === "concluida" && !alreadyRated;
+
+  async function onCompleteJob() {
+    if (!userId) return;
+    setActionBusy(true);
+    try {
+      await completeApplication(applicationId, userId);
+      setCtx({ ...ctx, status: "concluida" });
+      const msgs = await fetchMessages(applicationId);
+      setMessages(msgs);
+      Alert.alert("Concluída", "Agora vocês podem avaliar a experiência.");
+    } catch (e) {
+      Alert.alert("Erro", e instanceof Error ? e.message : "Não foi possível concluir.");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+  function onRate() {
+    router.push(`/(app)/avaliar/${applicationId}`);
+  }
 
   return (
     <KeyboardAvoidingView
@@ -197,6 +228,30 @@ export function ChatConversationScreen({ applicationId, accentColor }: Props) {
               <Text style={styles.bannerLater}>Agora não</Text>
             </Pressable>
           </View>
+        </View>
+      ) : null}
+
+      {canComplete || canRate ? (
+        <View style={styles.actionBar}>
+          {canComplete ? (
+            <Pressable
+              style={[styles.actionBtn, { borderColor: accentColor }]}
+              onPress={() => void onCompleteJob()}
+              disabled={actionBusy}
+            >
+              <Text style={[styles.actionBtnText, { color: accentColor }]}>
+                {actionBusy ? "Salvando..." : "Marcar diária como concluída"}
+              </Text>
+            </Pressable>
+          ) : null}
+          {canRate ? (
+            <Pressable
+              style={[styles.actionBtnPrimary, { backgroundColor: accentColor }]}
+              onPress={onRate}
+            >
+              <Text style={styles.actionBtnPrimaryText}>Avaliar experiência ⭐</Text>
+            </Pressable>
+          ) : null}
         </View>
       ) : null}
 
@@ -276,6 +331,27 @@ const styles = StyleSheet.create({
   bannerActions: { flexDirection: "row", gap: 16 },
   bannerBtn: { fontWeight: "800" },
   bannerLater: { color: colors.soft, fontWeight: "600" },
+  actionBar: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 8,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.line,
+  },
+  actionBtn: {
+    borderWidth: 2,
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  actionBtnText: { fontWeight: "800", fontSize: 13 },
+  actionBtnPrimary: {
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  actionBtnPrimaryText: { color: "#fff", fontWeight: "800", fontSize: 14 },
   empty: { textAlign: "center", color: colors.soft, transform: [{ scaleY: -1 }] },
   systemWrap: { alignItems: "center", marginVertical: 4 },
   system: {

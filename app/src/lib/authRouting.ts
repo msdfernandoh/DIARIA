@@ -7,7 +7,8 @@ export type AppRoute =
   | "/(onboarding)/empreendedor/personal"
   | "/(app)/(empregado)/vagas"
   | "/(app)/(empregador)/painel"
-  | "/(app)/(empreendedor)/painel";
+  | "/(app)/(empreendedor)/painel"
+  | "/(app)/(admin)/dashboard";
 
 export async function resolveAppRoute(userId: string): Promise<AppRoute> {
   const status = await fetchOnboardingStatus(userId);
@@ -23,6 +24,7 @@ export async function resolveAppRoute(userId: string): Promise<AppRoute> {
   if (status.tipo === "empregado") return "/(app)/(empregado)/vagas";
   if (status.tipo === "empregador") return "/(app)/(empregador)/painel";
   if (status.tipo === "empreendedor") return "/(app)/(empreendedor)/painel";
+  if (status.tipo === "admin_master") return "/(app)/(admin)/dashboard";
   return "/(auth)/choose-profile";
 }
 

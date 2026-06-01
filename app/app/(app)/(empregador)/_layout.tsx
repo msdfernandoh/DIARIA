@@ -62,6 +62,8 @@ export default function EmpregadorTabLayout() {
           tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
         }}
       />
+      <Tabs.Screen name="qr-scanner" options={{ href: null, title: "Confirmar QR" }} />
+      <Tabs.Screen name="destaque/[jobId]" options={{ href: null, title: "Destaque" }} />
     </Tabs>
   );
 }

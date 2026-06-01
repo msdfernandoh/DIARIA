@@ -1,6 +1,8 @@
+import * as Linking from "expo-linking";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { InAppNotificationBanner } from "../src/components/InAppNotificationBanner";
 import { resolveAppRoute } from "../src/lib/authRouting";
@@ -11,6 +13,7 @@ import {
 } from "../src/lib/notifications";
 import { supabase, supabaseConfigured } from "../src/lib/supabase";
 import { registerUnreadRefreshFromPush } from "../src/hooks/useUnreadChatCount";
+import { PENDING_REF_KEY, resolveIncomingLink } from "../src/lib/deepLinks";
 
 export default function RootLayout() {
   const router = useRouter();
@@ -22,7 +25,28 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (!supabaseConfigured) return;
+    function openUrl(url: string) {
+      const href = resolveIncomingLink(url);
+      if (href) {
+        const codigoMatch = href.match(/[?&]codigo=([^&]+)/);
+        if (codigoMatch?.[1]) {
+          void AsyncStorage.setItem(
+            PENDING_REF_KEY,
+            decodeURIComponent(codigoMatch[1]).toUpperCase()
+          );
+        }
+        router.push(href as never);
+      }
+    }
+
+    Linking.getInitialURL().then((url) => {
+      if (url) openUrl(url);
+    });
+    const linkSub = Linking.addEventListener("url", ({ url }) => openUrl(url));
+
+    if (!supabaseConfigured) {
+      return () => linkSub.remove();
+    }
     const removeListeners = setupNotificationListeners(router);
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -43,6 +67,7 @@ export default function RootLayout() {
     });
 
     return () => {
+      linkSub.remove();
       sub.subscription.unsubscribe();
       removeListeners();
     };
@@ -68,6 +93,7 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(public)" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/choose-profile" options={{ title: "Perfil" }} />
         <Stack.Screen name="(auth)/login" options={{ title: "Entrar" }} />
         <Stack.Screen name="(auth)/register" options={{ title: "Criar conta" }} />
@@ -76,7 +102,17 @@ export default function RootLayout() {
         <Stack.Screen name="(app)/(empregado)" options={{ headerShown: false }} />
         <Stack.Screen name="(app)/(empregador)" options={{ headerShown: false }} />
         <Stack.Screen name="(app)/(empreendedor)" options={{ headerShown: false }} />
+        <Stack.Screen name="(app)/(admin)/dashboard" options={{ title: "Admin" }} />
+        <Stack.Screen name="(app)/pagamento/pix" options={{ title: "Pagamento Pix" }} />
         <Stack.Screen name="(app)/home" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(app)/avaliar/[applicationId]"
+          options={{ title: "Avaliar diária" }}
+        />
+        <Stack.Screen
+          name="(app)/oportunidades/qrcode/confirmar"
+          options={{ title: "QR Code" }}
+        />
       </Stack>
       </View>
     </>

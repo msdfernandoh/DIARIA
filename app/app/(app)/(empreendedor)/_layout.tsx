@@ -18,6 +18,7 @@ export default function EmpreendedorTabLayout() {
       <Tabs.Screen name="config" options={{ title: "Config", tabBarIcon: ({ focused }) => <TabIcon emoji="⚙️" focused={focused} /> }} />
       <Tabs.Screen name="vendas" options={{ href: null, headerShown: false }} />
       <Tabs.Screen name="grupo" options={{ href: null, headerShown: false }} />
+      <Tabs.Screen name="oportunidades/nova" options={{ href: null, title: "Nova oportunidade" }} />
     </Tabs>
   );
 }

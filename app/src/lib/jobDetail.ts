@@ -1,17 +1,7 @@
 import type { JobDetail } from "../types/job";
 import { haversineKm } from "./jobFormat";
+import { fetchRatingSummary } from "./ratings";
 import { supabase } from "./supabase";
-
-async function employerRatings(empregadorId: string) {
-  const { data, error } = await supabase
-    .from("ratings")
-    .select("nota")
-    .eq("avaliado_id", empregadorId);
-  if (error) throw error;
-  if (!data?.length) return { avg: null as number | null, count: 0 };
-  const sum = data.reduce((a, r) => a + r.nota, 0);
-  return { avg: Math.round((sum / data.length) * 10) / 10, count: data.length };
-}
 
 export async function fetchJobDetail(jobId: string, viewerUserId: string): Promise<JobDetail | null> {
   const { data: job, error } = await supabase.from("jobs").select("*").eq("id", jobId).maybeSingle();
@@ -30,7 +20,7 @@ export async function fetchJobDetail(jobId: string, viewerUserId: string): Promi
     .eq("id", job.empregador_id)
     .maybeSingle();
 
-  const ratings = await employerRatings(job.empregador_id);
+  const ratingSummary = await fetchRatingSummary(job.empregador_id);
 
   let distancia_km: number | null = null;
   if (
@@ -52,8 +42,9 @@ export async function fetchJobDetail(jobId: string, viewerUserId: string): Promi
     empregador_nome: empregador?.nome ?? "Contratante",
     empregador_cidade: empregador?.cidade ?? job.cidade,
     empregador_desde: empregador?.criado_em ?? null,
-    empregador_nota: ratings.avg,
-    total_avaliacoes: ratings.count,
+    empregador_nota: ratingSummary.nota_media,
+    total_avaliacoes: ratingSummary.total_avaliacoes,
+    empregador_top_topics: ratingSummary.topicos_mais_citados,
     distancia_km,
   };
 }

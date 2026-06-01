@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RatingDisplay } from "../../../../src/components/RatingDisplay";
 import { colors } from "../../../../src/constants/theme";
 import { applyToJob, ensureApplicationForChat, findApplication } from "../../../../src/lib/applications";
 import { fetchJobDetail } from "../../../../src/lib/jobDetail";
@@ -40,7 +41,12 @@ function memberYear(iso: string | null | undefined): string {
 }
 
 export default function JobDetailScreen() {
-  const { id, job: jobParam } = useLocalSearchParams<{ id: string; job?: string }>();
+  const { id, job: jobParam, preview } = useLocalSearchParams<{
+    id: string;
+    job?: string;
+    preview?: string;
+  }>();
+  const isPreview = preview === "1";
   const insets = useSafeAreaInsets();
   const [job, setJob] = useState<JobDetail | null>(() => {
     if (!jobParam) return null;
@@ -59,12 +65,11 @@ export default function JobDetailScreen() {
     if (!id) return;
     try {
       const { data: auth } = await supabase.auth.getUser();
-      const uid = auth.user?.id;
-      if (!uid) return;
+      const uid = auth.user?.id ?? null;
       setUserId(uid);
       const { data: me } = await supabase.from("users").select("nome").eq("id", uid).maybeSingle();
       if (me?.nome) setUserNome(me.nome);
-      const detail = await fetchJobDetail(id, uid);
+      const detail = await fetchJobDetail(id, uid ?? "00000000-0000-0000-0000-000000000000");
       if (detail) setJob(detail);
     } finally {
       setLoading(false);
@@ -82,7 +87,22 @@ export default function JobDetailScreen() {
     });
   }
 
+  function previewGate() {
+    Alert.alert(
+      "Crie sua conta grátis",
+      "2 minutos. Sem cartão. Sem taxa.",
+      [
+        { text: "Depois", style: "cancel" },
+        { text: "Criar conta", onPress: () => router.push("/(auth)/choose-profile") },
+      ]
+    );
+  }
+
   async function onAsk() {
+    if (isPreview) {
+      previewGate();
+      return;
+    }
     if (!job || !userId || acting) return;
     setActing(true);
     try {
@@ -96,6 +116,10 @@ export default function JobDetailScreen() {
   }
 
   async function onApply() {
+    if (isPreview) {
+      previewGate();
+      return;
+    }
     if (!job || !userId || acting) return;
     setActing(true);
     try {
@@ -149,10 +173,6 @@ export default function JobDetailScreen() {
     job.formato !== "remoto" && job.lat != null && job.lng != null
       ? staticMapUrl(Number(job.lat), Number(job.lng))
       : null;
-  const stars =
-    job.empregador_nota != null
-      ? `★ ${job.empregador_nota.toFixed(1)}`
-      : "★ —";
   const dist =
     job.distancia_km != null ? `${job.distancia_km.toFixed(1)} km` : job.cidade ?? "Remoto";
 
@@ -194,8 +214,14 @@ export default function JobDetailScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.empName}>{job.empregador_nome}</Text>
               <Text style={styles.empCity}>{job.empregador_cidade ?? job.cidade ?? "—"}</Text>
-              <Text style={styles.empStars}>
-                {stars} · {job.total_avaliacoes} avaliações · membro desde {memberYear(job.empregador_desde)}
+              <RatingDisplay
+                variant="summary"
+                nota={job.empregador_nota}
+                total={job.total_avaliacoes}
+                topTopics={job.empregador_top_topics}
+              />
+              <Text style={styles.empMember}>
+                membro desde {memberYear(job.empregador_desde)}
               </Text>
             </View>
           </View>
@@ -342,7 +368,7 @@ const styles = StyleSheet.create({
   empAvText: { color: "#fff", fontWeight: "800" },
   empName: { fontWeight: "800", color: colors.dark },
   empCity: { fontSize: 13, color: colors.soft },
-  empStars: { fontSize: 12, color: colors.mid, marginTop: 4 },
+  empMember: { fontSize: 11, color: colors.soft, marginTop: 6 },
   body: { color: colors.mid, lineHeight: 22 },
   bullet: { color: colors.mid, lineHeight: 22, marginBottom: 4 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },

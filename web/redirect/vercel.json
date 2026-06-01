@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/ref/:codigo", "destination": "/index.html" },
+    { "source": "/qr/:token", "destination": "/index.html" },
+    { "source": "/vaga/:id", "destination": "/index.html" },
+    { "source": "/chat/:applicationId", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "https://diariadacidade.com.br", "permanent": true }
+  ]
+}

@@ -1,6 +1,9 @@
-import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../src/constants/theme";
+import { PENDING_REF_KEY } from "../../src/lib/deepLinks";
 import type { UserTipo } from "../../src/lib/supabase";
 
 const options: { tipo: UserTipo; title: string; subtitle: string; color: string }[] = [
@@ -25,10 +28,23 @@ const options: { tipo: UserTipo; title: string; subtitle: string; color: string 
 ];
 
 export default function ChooseProfile() {
+  const { codigo } = useLocalSearchParams<{ codigo?: string }>();
+
+  useEffect(() => {
+    if (codigo?.trim()) {
+      void AsyncStorage.setItem(PENDING_REF_KEY, codigo.trim().toUpperCase());
+    }
+  }, [codigo]);
+
   return (
     <View style={styles.wrap}>
       <Text style={styles.head}>Como você quer usar o app?</Text>
       <Text style={styles.sub}>Você pode mudar depois com suporte.</Text>
+      {codigo ? (
+        <Text style={styles.refBanner}>
+          Código de indicação: <Text style={styles.refCode}>{codigo.toUpperCase()}</Text>
+        </Text>
+      ) : null}
       {options.map((o) => (
         <Pressable
           key={o.tipo}
@@ -41,6 +57,12 @@ export default function ChooseProfile() {
           <Text style={styles.cardSub}>{o.subtitle}</Text>
         </Pressable>
       ))}
+      <Pressable onPress={() => router.push("/(public)/vagas-preview")} style={styles.linkWrap}>
+        <Text style={styles.link}>Ver vagas disponíveis →</Text>
+      </Pressable>
+      <Pressable onPress={() => router.push("/(public)/contratar-preview")} style={styles.linkWrap}>
+        <Text style={styles.link}>Ver como funciona para empresas →</Text>
+      </Pressable>
       <Pressable onPress={() => router.push("/(auth)/login")} style={styles.linkWrap}>
         <Text style={styles.link}>Já tem conta? Entrar</Text>
       </Pressable>
@@ -52,6 +74,15 @@ const styles = StyleSheet.create({
   wrap: { flex: 1, padding: 24, gap: 12 },
   head: { fontSize: 22, fontWeight: "800", color: colors.dark, marginBottom: 4 },
   sub: { color: colors.soft, marginBottom: 12 },
+  refBanner: {
+    backgroundColor: "#E8F5EF",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 8,
+    color: colors.mid,
+    fontSize: 13,
+  },
+  refCode: { fontWeight: "800", color: colors.green },
   card: {
     borderWidth: 2,
     borderRadius: 16,

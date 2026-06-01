@@ -50,6 +50,7 @@ export async function fetchFeedJobs(
     .select("*")
     .eq("ativa", true)
     .eq("pausada", false)
+    .eq("is_demo", false)
     .gt("vagas_restantes", 0)
     .order("criado_em", { ascending: false })
     .range(0, 199);
@@ -117,4 +118,22 @@ export async function fetchFeedJobs(
   });
 
   return rows.slice(offset, offset + limit);
+}
+
+/** Vagas de demonstração para visitantes (anon). */
+export async function fetchDemoJobs(): Promise<JobRow[]> {
+  const { data: jobs, error } = await supabase
+    .from("jobs")
+    .select("*")
+    .eq("is_demo", true)
+    .eq("ativa", true)
+    .order("urgente", { ascending: false })
+    .order("criado_em", { ascending: false })
+    .limit(20);
+  if (error) throw error;
+  return (jobs ?? []).map((j) => ({
+    ...(j as JobRow),
+    empregador_nome: "Contratante demo",
+    prioridade: 5,
+  }));
 }
