@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import { GUEST_ENTRY_ROUTE } from "../src/constants/config";
 import { InAppNotificationBanner } from "../src/components/InAppNotificationBanner";
 import { resolveAppRoute } from "../src/lib/authRouting";
 import {
@@ -51,7 +52,7 @@ export default function RootLayout() {
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_OUT") {
-        router.replace("/(auth)/choose-profile");
+        router.replace(GUEST_ENTRY_ROUTE);
         return;
       }
       if (event === "SIGNED_IN" && session?.user?.id) {

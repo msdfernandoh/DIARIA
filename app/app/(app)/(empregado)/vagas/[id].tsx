@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PreviewCandidaturaSheet } from "../../../../src/components/PreviewCandidaturaSheet";
 import { RatingDisplay } from "../../../../src/components/RatingDisplay";
 import { colors } from "../../../../src/constants/theme";
 import { applyToJob, ensureApplicationForChat, findApplication } from "../../../../src/lib/applications";
@@ -60,6 +61,7 @@ export default function JobDetailScreen() {
   const [acting, setActing] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [userNome, setUserNome] = useState("");
+  const [authSheet, setAuthSheet] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -88,14 +90,7 @@ export default function JobDetailScreen() {
   }
 
   function previewGate() {
-    Alert.alert(
-      "Crie sua conta grátis",
-      "2 minutos. Sem cartão. Sem taxa.",
-      [
-        { text: "Depois", style: "cancel" },
-        { text: "Criar conta", onPress: () => router.push("/(auth)/choose-profile") },
-      ]
-    );
+    setAuthSheet(true);
   }
 
   async function onAsk() {
@@ -279,6 +274,7 @@ export default function JobDetailScreen() {
           </Text>
         </Pressable>
       </View>
+      <PreviewCandidaturaSheet visible={authSheet} onClose={() => setAuthSheet(false)} />
     </View>
   );
 }

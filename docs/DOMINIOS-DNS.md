@@ -68,3 +68,13 @@ Se ainda não rodou após o deploy de avaliações:
 - `20260603110000_redeem_opportunity_rpc.sql`
 
 `supabase db push` ou SQL Editor.
+
+---
+
+## 6. Storage `avatars` (Supabase)
+
+Bucket **`avatars`** (público), limite **20 MB** por arquivo. Caminho no app: `{userId}/avatar.jpg` (`app/src/lib/profile.ts`).
+
+Políticas RLS: migration `20260530720000_storage_avatars_policies.sql` (leitura pública; insert/update/delete só na pasta do `auth.uid()`).
+
+Se o bucket já foi criado no painel, rode só essa migration no SQL Editor para aplicar as políticas (ou confira se já batem com o painel).

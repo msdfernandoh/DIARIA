@@ -3,6 +3,23 @@ import { haversineKm } from "./jobFormat";
 import { fetchRatingSummary } from "./ratings";
 import { supabase } from "./supabase";
 
+const emptyRatingSummary = {
+  nota_media: null,
+  total_avaliacoes: 0,
+  distribuicao: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  topicos_mais_citados: [] as { tag: string; count: number }[],
+};
+
+async function fetchRatingSummarySafe(userId: string) {
+  const { data: session } = await supabase.auth.getSession();
+  if (!session.session) return emptyRatingSummary;
+  try {
+    return await fetchRatingSummary(userId);
+  } catch {
+    return emptyRatingSummary;
+  }
+}
+
 export async function fetchJobDetail(jobId: string, viewerUserId: string): Promise<JobDetail | null> {
   const { data: job, error } = await supabase.from("jobs").select("*").eq("id", jobId).maybeSingle();
   if (error) throw error;
@@ -20,7 +37,7 @@ export async function fetchJobDetail(jobId: string, viewerUserId: string): Promi
     .eq("id", job.empregador_id)
     .maybeSingle();
 
-  const ratingSummary = await fetchRatingSummary(job.empregador_id);
+  const ratingSummary = await fetchRatingSummarySafe(job.empregador_id);
 
   let distancia_km: number | null = null;
   if (

@@ -4,6 +4,9 @@
   "rewrites": [
     { "source": "/trabalhe", "destination": "/trabalhe.html" },
     { "source": "/contrate", "destination": "/contrate.html" },
+    { "source": "/publicar-vaga", "destination": "/publicar-vaga.html" },
+    { "source": "/minhas-vagas", "destination": "/minhas-vagas.html" },
+    { "source": "/login-empregador", "destination": "/login-empregador.html" },
     { "source": "/parceiro", "destination": "/parceiro.html" },
     { "source": "/admin", "destination": "/admin.html" }
   ],

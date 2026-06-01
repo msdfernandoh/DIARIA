@@ -4,6 +4,9 @@ import { supabase } from "./supabase";
 
 const PROFILE_COINS_KEY = "perfil_completo_coins_awarded";
 
+/** Alinhado ao limite do bucket `avatars` no Supabase Storage (20 MB). */
+export const AVATAR_MAX_BYTES = 20 * 1024 * 1024;
+
 export type ProfileCompletion = {
   percent: number;
   missing: string[];
@@ -20,6 +23,9 @@ export async function updateProfile(
 export async function uploadAvatar(userId: string, imageUri: string): Promise<string> {
   const res = await fetch(imageUri);
   const blob = await res.blob();
+  if (blob.size > AVATAR_MAX_BYTES) {
+    throw new Error("A foto é muito grande. Use uma imagem de até 20 MB.");
+  }
   const path = `${userId}/avatar.jpg`;
   const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, {
     contentType: "image/jpeg",

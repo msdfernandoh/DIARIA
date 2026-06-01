@@ -2,6 +2,7 @@ import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { colors } from "../src/constants/theme";
+import { GUEST_ENTRY_ROUTE } from "../src/constants/config";
 import { resolveAppRoute, type AppRoute } from "../src/lib/authRouting";
 import { supabase, supabaseConfigured } from "../src/lib/supabase";
 
@@ -16,7 +17,7 @@ export default function Index() {
     }
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session?.user?.id) {
-        setTarget("/(public)/vagas-preview");
+        setTarget(GUEST_ENTRY_ROUTE);
       } else {
         setTarget(await resolveAppRoute(data.session.user.id));
       }
@@ -45,7 +46,7 @@ export default function Index() {
   }
 
   if (target) return <Redirect href={target as AppRoute} />;
-  return <Redirect href="/(auth)/choose-profile" />;
+  return <Redirect href={GUEST_ENTRY_ROUTE} />;
 }
 
 const styles = StyleSheet.create({

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -19,8 +18,6 @@ export default function VagasPreviewScreen() {
   const insets = useSafeAreaInsets();
   const [jobs, setJobs] = useState<JobRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sheet, setSheet] = useState(false);
-  const [selected, setSelected] = useState<JobRow | null>(null);
 
   useEffect(() => {
     void fetchDemoJobs()
@@ -29,7 +26,6 @@ export default function VagasPreviewScreen() {
   }, []);
 
   function openJob(job: JobRow) {
-    setSelected(job);
     router.push({
       pathname: "/(app)/(empregado)/vagas/[id]",
       params: { id: job.id, job: encodeURIComponent(JSON.stringify(job)), preview: "1" },
@@ -57,7 +53,11 @@ export default function VagasPreviewScreen() {
             <JobCard job={item} />
           </Pressable>
         )}
-        ListEmptyComponent={<Text style={styles.empty}>Carregando vagas de demonstração…</Text>}
+        ListEmptyComponent={
+          <Text style={styles.empty}>
+            Nenhuma vaga demo no momento. Rode a migration 20260604100000_fase2_demo_platform.sql no Supabase.
+          </Text>
+        }
       />
       <View style={[styles.footer, { paddingBottom: 12 + insets.bottom }]}>
         <Pressable style={styles.footerBtn} onPress={() => router.push("/(auth)/choose-profile")}>
@@ -66,33 +66,8 @@ export default function VagasPreviewScreen() {
           </Text>
         </Pressable>
       </View>
-
-      <Modal visible={sheet} transparent animationType="slide">
-        <View style={styles.sheetBg}>
-          <View style={styles.sheet}>
-            <Text style={styles.sheetTitle}>Para se candidatar, crie sua conta grátis</Text>
-            <Text style={styles.sheetSub}>2 minutos. Sem cartão. Sem taxa.</Text>
-            <Pressable
-              style={styles.sheetPrimary}
-              onPress={() => {
-                setSheet(false);
-                router.push("/(auth)/choose-profile");
-              }}
-            >
-              <Text style={styles.sheetPrimaryText}>Criar conta grátis →</Text>
-            </Pressable>
-            <Pressable onPress={() => router.push("/(auth)/login")}>
-              <Text style={styles.sheetLink}>Já tenho conta</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
-}
-
-export function showCandidaturaSheet(setSheet: (v: boolean) => void) {
-  setSheet(true);
 }
 
 const styles = StyleSheet.create({
@@ -119,16 +94,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footerBtnText: { color: "#fff", fontWeight: "800" },
-  sheetBg: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,.4)" },
-  sheet: { backgroundColor: colors.white, borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 24 },
-  sheetTitle: { fontSize: 18, fontWeight: "800", color: colors.dark },
-  sheetSub: { color: colors.soft, marginTop: 8, marginBottom: 16 },
-  sheetPrimary: {
-    backgroundColor: colors.green,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  sheetPrimaryText: { color: "#fff", fontWeight: "800" },
-  sheetLink: { textAlign: "center", marginTop: 14, color: colors.primary, fontWeight: "700" },
 });

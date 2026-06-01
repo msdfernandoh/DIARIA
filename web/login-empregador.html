@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Empregador</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/empregador-web.css">
+</head>
+<body>
+<header class="web-nav">
+  <a href="/contrate.html" class="logo"><span class="logo-mark">📅</span> Diária da Cidade</a>
+  <div id="web-nav-auth" class="web-nav-auth"></div>
+</header>
+<main class="page">
+  <h1>Entrar na conta</h1>
+  <p class="sub">Gerencie suas vagas e veja candidatos.</p>
+  <form id="login-form" class="form-card">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" required autocomplete="email">
+    <label for="password">Senha</label>
+    <input id="password" name="password" type="password" required autocomplete="current-password">
+    <button type="submit" class="btn-primary">Entrar</button>
+    <p id="form-msg" class="form-msg" role="status"></p>
+    <p style="font-size:13px;margin-top:16px;">
+      <a href="/contrate.html">Ainda não tenho conta</a>
+    </p>
+    <p style="font-size:13px;margin-top:8px;">
+      <a href="#" id="btn-reset">Esqueci minha senha</a>
+    </p>
+  </form>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/js/empregador-auth.js"></script>
+<script src="/js/login-empregador.js"></script>
+</body>
+</html>
