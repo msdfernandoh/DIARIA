@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://diariadacidade.app.br/sitemap.xml
