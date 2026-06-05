@@ -88,6 +88,18 @@ async function restoreSupabaseSession() {
   return session;
 }
 
+async function ensureSessionOnClient(session) {
+  if (!session?.access_token) return false;
+  saveSession(session);
+  const sb = getSupabase();
+  const { error } = await sb.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+  });
+  if (error) throw error;
+  return true;
+}
+
 async function getSessionUser() {
   await restoreSupabaseSession();
   const sb = getSupabase();
@@ -158,10 +170,20 @@ async function signUpEmployer({ nome, celular, email, cidade, estado, tipoContra
   const session = data.session;
   if (!user) throw new Error("Não foi possível criar a conta.");
 
-  if (session) {
-    saveSession(session);
-    await sb.auth.setSession(session);
+  if (!user.identities || user.identities.length === 0) {
+    return { existing: true, email: emailNorm };
   }
+
+  if (!session) {
+    return {
+      ok: true,
+      needsEmailConfirm: true,
+      email: emailNorm,
+      redirect: "/login-empregador.html",
+    };
+  }
+
+  await ensureSessionOnClient(session);
 
   await upsertEmployerProfile(user.id, {
     nome: nome.trim(),
@@ -172,27 +194,30 @@ async function signUpEmployer({ nome, celular, email, cidade, estado, tipoContra
     tipoContratante,
   });
 
-  if (!session) {
-    return {
-      ok: true,
-      needsEmailConfirm: true,
-      redirect: "/publicar-vaga.html",
-    };
-  }
-
   return { ok: true, redirect: "/publicar-vaga.html" };
 }
 
-async function signInEmployer(email, password) {
+async function signInEmployer(email, password, profile) {
   const sb = getSupabase();
   const emailNorm = String(email || "").trim().toLowerCase();
   const { data, error } = await sb.auth.signInWithPassword({
     email: emailNorm,
     password,
   });
-  if (error) throw error;
-  if (!data.session) throw new Error("Sessão inválida.");
-  saveSession(data.session);
+  if (error) {
+    const msg = (error.message || "").toLowerCase();
+    if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
+      throw new Error(
+        "E-mail ou senha incorretos. Primeiro acesso na web: senha = WhatsApp só números + @diaria"
+      );
+    }
+    throw error;
+  }
+  if (!data.session?.user) throw new Error("Sessão inválida.");
+  await ensureSessionOnClient(data.session);
+  if (profile) {
+    await upsertEmployerProfile(data.session.user.id, profile);
+  }
   return data.session;
 }
 

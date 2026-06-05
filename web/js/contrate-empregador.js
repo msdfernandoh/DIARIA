@@ -1,3 +1,14 @@
+function formProfileFromFormData(fd) {
+  return {
+    nome: fd.get("nome"),
+    celular: fd.get("celular"),
+    email: fd.get("email"),
+    cidade: fd.get("cidade"),
+    estado: fd.get("estado"),
+    tipoContratante: fd.get("tipo_contratante") || "pf",
+  };
+}
+
 function initContrateEmpregador() {
   const form = document.getElementById("lead-form");
   if (!form) return;
@@ -33,7 +44,7 @@ function initContrateEmpregador() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const msg = form.querySelector(".lead-form-msg");
-    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitBtn = document.getElementById("btn-cadastrar") || form.querySelector('button[type="submit"]');
     const loginBtn = document.getElementById("btn-existing-login");
 
     if (loginBlock && !loginBlock.classList.contains("panel-hidden")) {
@@ -66,7 +77,10 @@ function initContrateEmpregador() {
         if (loginBlock) loginBlock.classList.remove("panel-hidden");
         const emailField = form.querySelector('[name="email"]');
         if (emailField) emailField.readOnly = true;
-        submitBtn.style.display = "none";
+        if (submitBtn) {
+          submitBtn.style.display = "none";
+          submitBtn.disabled = true;
+        }
         msg.textContent = "";
         msg.className = "lead-form-msg";
         submitBtn.disabled = false;
@@ -75,8 +89,12 @@ function initContrateEmpregador() {
 
       if (result.needsEmailConfirm) {
         msg.textContent =
-          "Conta criada! Confirme o e-mail que enviamos e depois entre com sua senha (WhatsApp só números + @diaria).";
+          "Conta criada! Confirme o e-mail que enviamos. Depois entre em «Entrar na minha conta» com a senha: WhatsApp só números + @diaria.";
         msg.classList.add("ok");
+        if (existingPanel) existingPanel.classList.remove("panel-hidden");
+        if (loginBlock) loginBlock.classList.remove("panel-hidden");
+        pendingEmail = result.email || fd.get("email");
+        if (submitBtn) submitBtn.style.display = "none";
         submitBtn.disabled = false;
         return;
       }
@@ -94,12 +112,19 @@ function initContrateEmpregador() {
   if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
       const msg = form.querySelector(".lead-form-msg");
-      const pwd = document.getElementById("existing-password")?.value || "";
       msg.textContent = "";
       msg.className = "lead-form-msg";
       loginBtn.disabled = true;
       try {
-        await EmpregadorAuth.signInEmployer(pendingEmail || form.querySelector('[name="email"]')?.value, pwd);
+        const fd = new FormData(form);
+        const pwd =
+          document.getElementById("existing-password")?.value ||
+          EmpregadorAuth.defaultPasswordFromCelular(fd.get("celular"));
+        await EmpregadorAuth.signInEmployer(
+          pendingEmail || form.querySelector('[name="email"]')?.value,
+          pwd,
+          formProfileFromFormData(fd)
+        );
         window.location.href = "/publicar-vaga.html";
       } catch (err) {
         msg.textContent = err.message || "E-mail ou senha incorretos.";
