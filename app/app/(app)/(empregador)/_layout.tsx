@@ -28,6 +28,14 @@ export default function EmpregadorTabLayout() {
         }}
       />
       <Tabs.Screen
+        name="minhas-vagas"
+        options={{
+          title: "Minhas vagas",
+          tabBarLabel: "Vagas",
+          tabBarIcon: ({ focused }) => <TabIcon emoji="📋" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="publicar"
         options={{
           title: "Publicar vaga",

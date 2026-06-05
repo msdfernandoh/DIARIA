@@ -44,8 +44,8 @@ export const NOTIFICATION_TYPES = {
     },
     CANDIDATURA_ACEITA: {
       tipo: "chat" as const,
-      buildTitle: (empresa: string) => `${empresa} aceitou sua candidatura! 🎉`,
-      buildBody: () => "Fale agora pelo chat do app",
+      buildTitle: () => "🎉 Sua candidatura foi aceita!",
+      buildBody: () => "Fale agora pelo chat.",
       data: (applicationId: string): NotificationPayload => ({ tipo: "chat", applicationId }),
     },
     MENSAGEM_NOVA: {

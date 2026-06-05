@@ -95,15 +95,10 @@ export async function setApplicationStatus(
   if (error) throw error;
 
   if (status === "aceita") {
-    const { data: emp } = await supabase
-      .from("users")
-      .select("nome")
-      .eq("id", job.empregador_id)
-      .maybeSingle();
     const T = NOTIFICATION_TYPES.EMPREGADO.CANDIDATURA_ACEITA;
     await sendNotification({
       userId: app.candidato_id,
-      titulo: T.buildTitle(emp?.nome ?? "Contratante"),
+      titulo: T.buildTitle(),
       corpo: T.buildBody(),
       data: T.data(applicationId),
     });
