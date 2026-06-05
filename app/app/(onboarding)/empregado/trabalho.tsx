@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
+import { EMPREGADO_ACCENT } from "../../../src/constants/empregado";
 import { colors } from "../../../src/constants/theme";
 
 function Row({
@@ -40,6 +41,8 @@ export default function TrabalhoStep() {
   return (
     <OnboardingShell
       step={2}
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
       title="Que tipo de trabalho você busca?"
       subtitle="Você pode ativar os dois. Padrão: presencial e remoto."
       onBack={() => router.back()}

@@ -8,6 +8,7 @@ import {
 } from "../../../src/lib/empregadoOnboarding";
 import { resolveAppRoute } from "../../../src/lib/authRouting";
 import { supabase } from "../../../src/lib/supabase";
+import { EMPREGADO_ACCENT } from "../../../src/constants/empregado";
 import { colors } from "../../../src/constants/theme";
 
 export default function ContatoStep() {
@@ -34,7 +35,9 @@ export default function ContatoStep() {
 
   return (
     <OnboardingShell
-      step={7}
+      step={10}
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
       title="Contato com contratantes"
       subtitle="Por padrão seu número fica oculto — só no chat se você quiser."
       onBack={() => router.back()}

@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { Text } from "react-native";
 import { ChipSelect } from "../../../src/components/ChipSelect";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
-import { SKILLS } from "../../../src/constants/empregado";
+import { EMPREGADO_ACCENT, SKILLS } from "../../../src/constants/empregado";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 
 export default function HabilidadesStep() {
@@ -11,13 +11,15 @@ export default function HabilidadesStep() {
   return (
     <OnboardingShell
       step={3}
-      title="O que você sabe fazer?"
-      subtitle="Escolha até 6 habilidades — aparecem no seu perfil e nas buscas."
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
+      title="Suas áreas de atuação"
+      subtitle="Escolha até 6 categorias — aparecem no seu perfil e nas buscas."
       onBack={() => router.back()}
       onNext={() => {
         if (draft.skills.length === 0) return;
         setStep(4);
-        router.push("/(onboarding)/empregado/disponibilidade");
+        router.push("/(onboarding)/empregado/valor");
       }}
       nextDisabled={draft.skills.length === 0}
     >
@@ -26,6 +28,7 @@ export default function HabilidadesStep() {
         selected={draft.skills}
         onChange={(skills) => setDraft((d) => ({ ...d, skills }))}
         max={6}
+        accentColor={EMPREGADO_ACCENT}
       />
       <Text style={{ marginTop: 10, fontSize: 12, color: "#718096" }}>
         {draft.skills.length}/6 selecionadas

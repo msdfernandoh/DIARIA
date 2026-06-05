@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minhas Candidaturas — Diária da Cidade</title>
+<meta name="description" content="Acompanhe o status das suas candidaturas a vagas de diária.">
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/trabalhador-web.css">
+</head>
+<body class="trabalhador-app">
+<header class="web-nav">
+  <a href="/trabalhe.html" class="logo"><span class="logo-mark">📅</span> Diária da Cidade</a>
+  <div id="web-nav-auth" class="web-nav-auth"></div>
+</header>
+<main class="page">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+    <h1 style="margin:0;">Suas candidaturas</h1>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="/vagas-disponiveis.html" class="btn-secondary" style="width:auto;padding:10px 16px;margin:0;">Ver vagas</a>
+      <button type="button" class="nav-btn" id="btn-sair" style="color:var(--dark);border-color:var(--line);">Sair</button>
+    </div>
+  </div>
+  <div id="candidaturas-list"></div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/js/trabalhador-auth.js"></script>
+<script src="/js/web-nav.js"></script>
+<script src="/js/minhas-candidaturas.js"></script>
+</body>
+</html>

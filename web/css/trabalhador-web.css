@@ -1,0 +1,72 @@
+:root{
+  --green:#1D9E75;--green-d:#065F46;--green-l:#E1F5EE;
+  --dark:#0A0D14;--mid:#2D3748;--soft:#718096;--line:#E2E8F0;
+  --bg:#F8FAFB;--white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body.trabalhador-app{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;}
+.web-nav{background:var(--dark);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.web-nav .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-family:'Sora',sans-serif;font-weight:800;font-size:15px;}
+.web-nav .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green-d));display:flex;align-items:center;justify-content:center;}
+.web-nav-auth{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.nav-link{color:#A7F3D0;font-size:13px;font-weight:700;text-decoration:none;}
+.nav-link-muted{color:rgba(255,255,255,.55);font-size:12px;font-weight:600;text-decoration:none;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+.page{max-width:640px;margin:0 auto;padding:24px 20px 48px;}
+.page-wide{max-width:960px;margin:0 auto;padding:24px 20px 48px;}
+.page h1{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px;line-height:1.2;}
+.page .sub{color:var(--soft);font-size:15px;line-height:1.5;margin-bottom:20px;}
+.form-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.form-card label{display:block;font-size:12px;font-weight:700;color:var(--soft);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
+.form-card input,.form-card select,.form-card textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;font-size:14px;margin-bottom:14px;font-family:inherit;}
+.form-card textarea{min-height:88px;resize:vertical;}
+.form-row-2{display:grid;grid-template-columns:1fr 80px;gap:10px;}
+.check-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;font-size:13px;color:var(--mid);line-height:1.45;}
+.check-row input{margin-top:3px;flex-shrink:0;}
+.btn-primary{width:100%;padding:16px;background:var(--green);color:#fff;border:none;border-radius:14px;font-family:'Sora',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:8px;}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;}
+.btn-secondary{width:100%;padding:14px;background:#fff;color:var(--green-d);border:2px solid var(--line);border-radius:14px;font-weight:700;cursor:pointer;margin-top:10px;text-align:center;text-decoration:none;display:block;}
+.form-msg{font-size:13px;margin-top:12px;min-height:18px;line-height:1.45;}
+.form-msg.ok{color:var(--green);}
+.form-msg.err{color:#DC2626;}
+.form-msg.warn{color:var(--soft);}
+.panel-hidden{display:none;}
+.existing-panel{background:rgba(255,251,235,1);border:1px solid #FCD34D;border-radius:14px;padding:16px;margin-bottom:16px;}
+.existing-panel p{font-size:14px;color:var(--mid);line-height:1.5;margin-bottom:12px;}
+.codigo-msg{font-size:13px;margin:-6px 0 12px;line-height:1.4;}
+.codigo-msg.ok{color:var(--green);font-weight:700;}
+.codigo-msg.warn{color:var(--soft);}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;}
+.signup-section{background:var(--white);padding:52px 22px;border-top:1px solid var(--line);}
+.signup-section .sh2{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;margin-bottom:8px;}
+.signup-section .ssub{color:var(--soft);font-size:14px;margin-bottom:20px;line-height:1.55;}
+.signup-inner{max-width:520px;margin:0 auto;}
+.filter-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;-webkit-overflow-scrolling:touch;}
+.filter-chip{flex-shrink:0;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.filter-chip.on{border-color:var(--green);background:var(--green-l);color:var(--green-d);}
+.search-row{margin-bottom:16px;}
+.search-row input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;}
+.job-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
+.job-card h3{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;margin-bottom:8px;line-height:1.25;}
+.job-badges{margin-bottom:8px;}
+.badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;margin-right:6px;margin-bottom:4px;}
+.badge-urgente{background:#FEE2E2;color:#B91C1C;}
+.badge-remoto{background:#EDE9FE;color:#5B21B6;}
+.job-meta{font-size:12px;color:var(--soft);margin-bottom:6px;line-height:1.5;}
+.job-valor{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--green);margin:10px 0;}
+.job-desc{font-size:13px;color:var(--mid);line-height:1.5;margin-bottom:12px;}
+.job-card .btn-apply{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;}
+.job-card .btn-applied{width:100%;padding:12px;background:var(--green-l);color:var(--green-d);border:1px solid var(--green);border-radius:12px;font-weight:800;font-size:14px;cursor:default;}
+.empty-state{text-align:center;padding:32px 16px;}
+.empty-state p{color:var(--soft);line-height:1.6;margin-bottom:16px;}
+.modal-backdrop{position:fixed;inset:0;background:rgba(10,13,20,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px;z-index:200;}
+.modal-backdrop.panel-hidden{display:none;}
+.modal-sheet{background:#fff;border-radius:20px 20px 16px 16px;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-sheet h2{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.toast.panel-hidden{display:none;}
+.status-pendente{background:#FEF3C7;color:#92400E;}
+.status-aceita{background:#D1FAE5;color:#065F46;}
+.status-recusada{background:#FEE2E2;color:#991B1B;}
+.status-concluida{background:#E0E7FF;color:#3730A3;}
+.btn-wa{display:inline-block;margin-top:10px;padding:10px 14px;background:#25D366;color:#fff;border-radius:10px;font-weight:800;text-decoration:none;font-size:13px;}

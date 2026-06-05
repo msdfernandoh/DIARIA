@@ -6,6 +6,7 @@ import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 import { validateEntrepreneurCode } from "../../../src/lib/empregadoOnboarding";
 import { PENDING_REF_KEY } from "../../../src/lib/deepLinks";
+import { EMPREGADO_ACCENT } from "../../../src/constants/empregado";
 import { colors } from "../../../src/constants/theme";
 
 export default function CodigoStep() {
@@ -68,12 +69,14 @@ export default function CodigoStep() {
 
   return (
     <OnboardingShell
-      step={5}
+      step={8}
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
       title="Tem um código de indicação?"
       subtitle="Opcional — quem te indicou ganha crédito quando você usar o app."
       onBack={() => router.back()}
       onNext={() => {
-        setStep(6);
+        setStep(9);
         router.push("/(onboarding)/empregado/experiencias");
       }}
       secondaryAction={{
@@ -86,7 +89,7 @@ export default function CodigoStep() {
             codigoEmpreendedorId: null,
             codigoInstancia: null,
           }));
-          setStep(6);
+          setStep(9);
           router.push("/(onboarding)/empregado/experiencias");
         },
       }}

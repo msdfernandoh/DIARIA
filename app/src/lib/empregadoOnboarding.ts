@@ -11,10 +11,20 @@ export type EmpregadoOnboardingDraft = {
   trabalhaPresencial: boolean;
   trabalhaRemoto: boolean;
   skills: string[];
-  markedDates: Record<string, { selected: boolean; selectedColor: string }>;
+  valorMinDia: number;
+  valorMaxDia: number;
+  diasSemana: number[];
+  disponivelQualquerDia: boolean;
   turnos: string[];
+  horasPorDia: number;
+  horasPorSemana: number;
+  tipoJornada: string[];
+  semTransporteProprio: boolean;
+  temMoto: boolean;
+  temCarro: boolean;
+  temVan: boolean;
+  temBicicleta: boolean;
   raioKm: number;
-  recorrente: boolean;
   codigo: string;
   codigoValido: boolean;
   codigoEmpreendedorId: string | null;
@@ -40,10 +50,20 @@ export const defaultDraft = (): EmpregadoOnboardingDraft => ({
   trabalhaPresencial: true,
   trabalhaRemoto: true,
   skills: [],
-  markedDates: {},
+  valorMinDia: 100,
+  valorMaxDia: 250,
+  diasSemana: [1, 2, 3, 4, 5],
+  disponivelQualquerDia: false,
   turnos: ["manha", "tarde"],
+  horasPorDia: 8,
+  horasPorSemana: 40,
+  tipoJornada: ["diarias_avulsas"],
+  semTransporteProprio: true,
+  temMoto: false,
+  temCarro: false,
+  temVan: false,
+  temBicicleta: false,
   raioKm: 10,
-  recorrente: true,
   codigo: "",
   codigoValido: false,
   codigoEmpreendedorId: null,
@@ -75,21 +95,11 @@ export async function validateEntrepreneurCode(code: string) {
   return data;
 }
 
-function weekdaysFromMarkedDates(
-  marked: Record<string, { selected?: boolean }>
-): number[] {
-  const days = new Set<number>();
-  Object.keys(marked).forEach((iso) => {
-    const d = new Date(iso + "T12:00:00");
-    days.add(d.getDay());
-  });
-  return Array.from(days).sort((a, b) => a - b);
-}
-
-function specificDatesFromMarked(
-  marked: Record<string, { selected?: boolean }>
-): string[] {
-  return Object.keys(marked).filter((k) => marked[k]?.selected !== false).sort();
+function resolveDiasSemana(draft: EmpregadoOnboardingDraft): number[] {
+  if (draft.disponivelQualquerDia) {
+    return [0, 1, 2, 3, 4, 5, 6];
+  }
+  return draft.diasSemana.length ? [...draft.diasSemana].sort((a, b) => a - b) : [];
 }
 
 export async function completeEmpregadoOnboarding(
@@ -107,26 +117,37 @@ export async function completeEmpregadoOnboarding(
       trabalha_presencial: draft.trabalhaPresencial,
       trabalha_remoto: draft.trabalhaRemoto,
       celular_visivel: draft.celularVisivel,
+      valor_min_dia: draft.valorMinDia,
+      valor_max_dia: draft.valorMaxDia,
+      tem_moto: draft.temMoto,
+      tem_carro: draft.temCarro,
+      tem_van: draft.temVan,
+      tem_bicicleta: draft.temBicicleta,
       onboarding_completo: true,
     })
     .eq("id", userId);
   if (userErr) throw userErr;
 
-  const diasSemana = draft.recorrente
-    ? weekdaysFromMarkedDates(draft.markedDates)
-    : [];
-  const datasEspecificas = draft.recorrente
-    ? []
-    : specificDatesFromMarked(draft.markedDates);
+  const diasSemana = resolveDiasSemana(draft);
+  const turnos =
+    draft.turnos.includes("qualquer") || draft.turnos.length === 0
+      ? ["manha", "tarde", "noite", "madrugada"]
+      : draft.turnos.filter((t) => t !== "qualquer");
 
   const { error: availErr } = await supabase.from("user_availability").upsert(
     {
       user_id: userId,
       dias_semana: diasSemana.length ? diasSemana : [1, 2, 3, 4, 5],
-      datas_especificas: datasEspecificas.length ? datasEspecificas : null,
-      turnos: draft.turnos,
+      datas_especificas: null,
+      turnos,
       raio_km: draft.raioKm,
-      recorrente: draft.recorrente,
+      recorrente: true,
+      disponivel_qualquer_dia: draft.disponivelQualquerDia,
+      horas_por_dia: draft.horasPorDia,
+      horas_por_semana: draft.horasPorSemana,
+      tipo_jornada: draft.tipoJornada.length
+        ? draft.tipoJornada
+        : ["diarias_avulsas"],
       updated_at: new Date().toISOString(),
     },
     { onConflict: "user_id" }

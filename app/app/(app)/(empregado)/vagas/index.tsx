@@ -13,12 +13,17 @@ import {
 } from "react-native";
 import { JobCard } from "../../../../src/components/JobCard";
 import { colors } from "../../../../src/constants/theme";
-import { fetchFeedJobs } from "../../../../src/lib/jobsFeed";
+import {
+  fetchEmpregadoFeedProfile,
+  fetchFeedJobs,
+  isFeedProfilePersonalized,
+} from "../../../../src/lib/jobsFeed";
 import { supabase } from "../../../../src/lib/supabase";
 import type { FeedFilters, JobRow } from "../../../../src/types/job";
 
 const FILTER_CHIPS: { id: string; label: string; patch: Partial<FeedFilters> }[] = [
   { id: "all", label: "Todos", patch: {} },
+  { id: "compat", label: "✨ Compatível comigo", patch: { compativelComigo: true } },
   { id: "urg", label: "⚡ Urgente", patch: { urgente: true } },
   { id: "ho", label: "🏠 Home Office", patch: { formato: "home_office" } },
   { id: "pre", label: "📍 Presencial", patch: { formato: "presencial" } },
@@ -38,6 +43,7 @@ export default function EmpregadoFeedScreen() {
   const [activeChip, setActiveChip] = useState("all");
   const [search, setSearch] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
+  const [feedPersonalizado, setFeedPersonalizado] = useState(false);
 
   const filters: FeedFilters = useMemo(() => {
     const chip = FILTER_CHIPS.find((c) => c.id === activeChip);
@@ -62,6 +68,12 @@ export default function EmpregadoFeedScreen() {
         .eq("user_id", id)
         .maybeSingle();
       setGrupoId(g?.empreendedor_id ?? null);
+      try {
+        const profile = await fetchEmpregadoFeedProfile(id);
+        if (profile) setFeedPersonalizado(isFeedProfilePersonalized(profile));
+      } catch {
+        setFeedPersonalizado(false);
+      }
     });
   }, []);
 
@@ -116,9 +128,14 @@ export default function EmpregadoFeedScreen() {
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerText}>
           <Text style={styles.hello}>Olá, {nome || "…"} 👋</Text>
           <Text style={styles.headline}>Trabalhe hoje</Text>
+          {feedPersonalizado ? (
+            <View style={styles.personalBadge}>
+              <Text style={styles.personalBadgeText}>Personalizado para você</Text>
+            </View>
+          ) : null}
         </View>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{(nome[0] ?? "?").toUpperCase()}</Text>
@@ -225,8 +242,18 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     backgroundColor: colors.white,
   },
+  headerText: { flex: 1, paddingRight: 8 },
   hello: { fontSize: 13, color: colors.soft },
   headline: { fontSize: 20, fontWeight: "800", color: colors.dark },
+  personalBadge: {
+    alignSelf: "flex-start",
+    marginTop: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: "#E1F5EE",
+  },
+  personalBadgeText: { fontSize: 11, fontWeight: "700", color: "#065F46" },
   avatar: {
     width: 40,
     height: 40,

@@ -242,25 +242,13 @@ async function fetchEmployerProfile(userId) {
 }
 
 function initWebHeader() {
+  if (window.WebNav) {
+    void WebNav.initWebNav();
+    return;
+  }
   const el = document.getElementById("web-nav-auth");
   if (!el) return;
-  void (async () => {
-    const user = await getSessionUser();
-    if (user) {
-      const profile = await fetchEmployerProfile(user.id);
-      const nome = profile?.nome?.split(" ")[0] || "Conta";
-      el.innerHTML = `
-        <a href="/minhas-vagas.html" class="nav-link">Minhas vagas · ${escapeHtml(nome)}</a>
-        <button type="button" class="nav-btn" id="btn-nav-sair">Sair</button>
-      `;
-      document.getElementById("btn-nav-sair")?.addEventListener("click", async () => {
-        await signOutEmployer();
-        window.location.href = "/contrate.html";
-      });
-    } else {
-      el.innerHTML = `<a href="/login-empregador.html" class="nav-link">Entrar</a>`;
-    }
-  })();
+  el.innerHTML = `<a href="/login-empregador.html" class="nav-link">Entrar</a>`;
 }
 
 function escapeHtml(s) {

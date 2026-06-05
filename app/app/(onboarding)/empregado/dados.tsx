@@ -11,6 +11,7 @@ import {
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 import { buscarCep, formatCep } from "../../../src/lib/viacep";
+import { EMPREGADO_ACCENT } from "../../../src/constants/empregado";
 import { colors } from "../../../src/constants/theme";
 
 export default function DadosStep() {
@@ -54,6 +55,8 @@ export default function DadosStep() {
   return (
     <OnboardingShell
       step={1}
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
       title="Onde você mora?"
       subtitle="Usamos seu CEP para mostrar vagas perto de você."
       onNext={next}

@@ -44,4 +44,6 @@ export type FeedFilters = {
   categoria?: string;
   urgente?: boolean;
   formato?: "presencial" | "remoto" | "home_office";
+  /** Mostra só vagas compatíveis com user_skills (filtro manual). */
+  compativelComigo?: boolean;
 };

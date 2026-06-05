@@ -6,6 +6,7 @@
 <title>Trabalhe Hoje — Diária da Cidade</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/leads.css">
+<link rel="stylesheet" href="/css/trabalhador-web.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -129,6 +130,19 @@ section{padding:52px 22px;}
 footer{background:#060810;padding:28px 22px;border-top:1px solid rgba(255,255,255,.05);}
 footer p{font-size:11px;color:rgba(255,255,255,.28);line-height:1.9;text-align:center;}
 footer a{color:#34D399;text-decoration:none;}
+.nav .web-nav-auth .nav-link{color:rgba(255,255,255,.75);font-size:11px;font-weight:700;text-decoration:none;}
+.nav .web-nav-auth .nav-link-muted{color:rgba(255,255,255,.45);font-size:10px;}
+.nav .web-nav-auth .nav-btn{padding:5px 10px;font-size:10px;}
+.hero-cep-hint{font-size:11px;color:rgba(255,255,255,.65);margin:-6px 0 10px;min-height:16px;}
+.hero-cep-hint.ok{color:#A7F3D0;}
+.hero-cep-hint.err{color:#FECACA;}
+.hero-form-msg{font-size:12px;margin-top:8px;min-height:18px;line-height:1.45;}
+.hero-form-msg.ok{color:#A7F3D0;font-weight:700;}
+.hero-form-msg.err{color:#FECACA;font-weight:700;}
+.hero-form-msg.warn{color:rgba(255,255,255,.85);}
+.existing-panel-hero{margin-top:12px;padding:14px;border-radius:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);}
+.existing-panel-hero p{font-size:13px;color:#fff;margin-bottom:10px;line-height:1.45;}
+.panel-hidden{display:none;}
 </style>
 </head>
 <body>
@@ -140,6 +154,7 @@ footer a{color:#34D399;text-decoration:none;}
     <div class="logo-mark">📅</div>
     <div class="logo-name">Diária da Cidade</div>
   </div>
+  <div id="web-nav-auth" class="web-nav-auth" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"></div>
   <a href="#cadastro" class="nav-cta">Cadastrar grátis</a>
 </nav>
 
@@ -156,21 +171,29 @@ footer a{color:#34D399;text-decoration:none;}
       <div class="hn"><div class="hn-n">60+</div><div class="hn-l">tipos de<br>trabalho</div></div>
     </div>
     <div class="cta-block" id="cadastro">
-      <form id="lead-form" class="lead-form" autocomplete="on">
+      <form id="signup-trabalhador-rapido-form" class="lead-form" autocomplete="on">
         <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label for="nome">Nome</label>
-        <input id="nome" name="nome" required maxlength="120" placeholder="Seu nome completo">
-        <label for="celular">WhatsApp</label>
-        <input id="celular" name="celular" required inputmode="tel" placeholder="(11) 99999-0000">
-        <label for="cidade">Cidade</label>
-        <input id="cidade" name="cidade" required maxlength="80" placeholder="Sua cidade">
-        <label for="estado">UF</label>
-        <input id="estado" name="estado" maxlength="2" placeholder="MT" style="text-transform:uppercase">
-        <label for="email">E-mail (opcional)</label>
-        <input id="email" name="email" type="email" maxlength="120" placeholder="voce@email.com">
-        <button type="submit" class="btn-main" style="width:100%;border:none;cursor:pointer;margin-top:4px;">Quero trabalhar agora →</button>
-        <p class="lead-form-msg" role="status"></p>
+        <label for="rapido-nome">Nome completo *</label>
+        <input id="rapido-nome" name="nome" required maxlength="120" placeholder="Seu nome completo">
+        <label for="rapido-celular">WhatsApp *</label>
+        <input id="rapido-celular" name="celular" required inputmode="tel" placeholder="(99) 99999-9999">
+        <label for="rapido-email">E-mail *</label>
+        <input id="rapido-email" name="email" type="email" required maxlength="120" placeholder="voce@email.com">
+        <label for="rapido-cep">CEP *</label>
+        <input id="rapido-cep" name="cep" required inputmode="numeric" placeholder="99999-999">
+        <input type="hidden" name="cidade" id="rapido-cidade">
+        <input type="hidden" name="estado" id="rapido-estado">
+        <p id="rapido-cep-hint" class="hero-cep-hint" aria-live="polite"></p>
+        <label for="rapido-password">Senha *</label>
+        <input id="rapido-password" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+        <button type="submit" class="btn-main" id="btn-cadastrar-rapido" style="width:100%;border:none;cursor:pointer;margin-top:4px;">Quero trabalhar agora →</button>
+        <p class="form-msg hero-form-msg" role="status"></p>
       </form>
+      <div id="existing-account-panel-rapido" class="existing-panel-hero panel-hidden">
+        <p><strong>Este e-mail já tem conta.</strong> Informe sua senha para entrar.</p>
+        <input id="existing-password-rapido" type="password" placeholder="Sua senha" autocomplete="current-password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;margin-bottom:10px;">
+        <button type="button" class="btn-main" id="btn-existing-login-rapido" style="width:100%;border:none;cursor:pointer;">Entrar na minha conta</button>
+      </div>
       <a href="#categorias" class="btn-sec" style="margin-top:10px;display:block;">Ver todos os 60+ tipos de trabalho</a>
       <p class="hero-note">Cadastro em 2 minutos · sem cartão · sem taxa</p>
     </div>
@@ -530,8 +553,57 @@ footer a{color:#34D399;text-decoration:none;}
 <section class="cta-final">
   <h2>Sua próxima diária<br>começa agora</h2>
   <p>Cadastro grátis em 2 minutos.<br>40+ tipos de trabalho. Sem taxa. Sem complicação.</p>
-  <a href="#cadastro" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Quero trabalhar agora →</a>
+  <a href="#cadastro-completo" class="btn-main" style="max-width:340px;display:block;margin:0 auto 12px;">Quero trabalhar agora →</a>
   <p style="font-size:11px;color:rgba(255,255,255,.45);">Diária da Cidade · grátis para profissionais · sempre</p>
+</section>
+
+<!-- CADASTRO COMPLETO -->
+<section class="signup-section" id="cadastro-completo">
+  <div class="signup-inner">
+    <h2 class="sh2">Cadastre-se grátis e veja vagas agora</h2>
+    <p class="ssub">Crie sua conta em poucos minutos e acesse vagas na sua cidade ou home office.</p>
+    <form id="signup-trabalhador-form" class="form-card" autocomplete="on">
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label for="signup-nome">Nome completo *</label>
+      <input id="signup-nome" name="nome" required maxlength="120" placeholder="Seu nome completo">
+      <label for="signup-celular">WhatsApp *</label>
+      <input id="signup-celular" name="celular" required inputmode="tel" placeholder="(99) 99999-9999">
+      <label for="signup-email">E-mail *</label>
+      <input id="signup-email" name="email" type="email" required maxlength="120" placeholder="voce@email.com">
+      <label for="signup-cep">CEP *</label>
+      <input id="signup-cep" name="cep" required inputmode="numeric" placeholder="99999-999">
+      <div class="form-row-2">
+        <div>
+          <label for="signup-cidade">Cidade</label>
+          <input id="signup-cidade" name="cidade" required maxlength="80" placeholder="Sua cidade">
+        </div>
+        <div>
+          <label for="signup-estado">UF</label>
+          <input id="signup-estado" name="estado" required maxlength="2" placeholder="MT" style="text-transform:uppercase">
+        </div>
+      </div>
+      <label for="signup-codigo">Código de indicação (opcional)</label>
+      <input id="signup-codigo" name="codigo" maxlength="32" placeholder="EX: JOAO25" autocapitalize="characters">
+      <p id="codigo-msg" class="codigo-msg" role="status"></p>
+      <label for="signup-password">Senha *</label>
+      <input id="signup-password" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+      <label class="check-row"><input type="checkbox" name="termos" required> Li e aceito os Termos de Uso</label>
+      <label class="check-row"><input type="checkbox" name="pagamentos" required> Entendo que pagamentos são combinados diretamente com o contratante</label>
+      <button type="submit" class="btn-primary" id="btn-cadastrar-trabalhador">Cadastrar e ver vagas →</button>
+      <p class="form-msg" role="status"></p>
+      <p style="text-align:center;margin-top:14px;font-size:14px;">
+        <a href="/login-trabalhador.html" style="color:var(--G);font-weight:700;text-decoration:none;">Já tenho conta → Entrar</a>
+      </p>
+    </form>
+    <div id="existing-account-panel" class="existing-panel panel-hidden">
+      <p><strong>Este e-mail já tem conta.</strong> Informe sua senha para entrar.</p>
+    </div>
+    <div id="existing-login-fields" class="form-card panel-hidden" style="margin-top:12px;">
+      <label for="existing-password-trabalhador">Senha</label>
+      <input id="existing-password-trabalhador" type="password" autocomplete="current-password">
+      <button type="button" class="btn-primary" id="btn-existing-login-trabalhador">Entrar na minha conta</button>
+    </div>
+  </div>
 </section>
 
 <footer>
@@ -539,8 +611,11 @@ footer a{color:#34D399;text-decoration:none;}
   Você é uma empresa? <a href="/contrate">Clique aqui</a> · Quer empreender? <a href="/parceiro">Clique aqui</a> · <a href="/">Página inicial</a></p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js"></script>
-<script src="/js/lead-form.js"></script>
+<script src="/js/trabalhador-auth.js"></script>
+<script src="/js/web-nav.js"></script>
+<script src="/js/trabalhe-cadastro.js"></script>
 <script>
 function irParaCadastro(){ document.getElementById('cadastro').scrollIntoView({behavior:'smooth'}); }
 
@@ -565,7 +640,6 @@ function toggleFaq(el) {
   ico.textContent = open ? '−' : '+';
   ico.style.transform = open ? 'rotate(0deg)' : '';
 }
-initLeadForm({ formId: 'lead-form', tipoInteresse: 'empregado', origemPagina: 'trabalhe' });
 </script>
 </body>
 </html>

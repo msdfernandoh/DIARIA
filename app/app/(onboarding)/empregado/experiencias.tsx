@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { ChipSelect } from "../../../src/components/ChipSelect";
 import { OnboardingShell } from "../../../src/components/OnboardingShell";
-import { HIGHLIGHT_TAGS } from "../../../src/constants/empregado";
+import { EMPREGADO_ACCENT, HIGHLIGHT_TAGS } from "../../../src/constants/empregado";
 import { useEmpregadoOnboarding } from "../../../src/context/EmpregadoOnboardingContext";
 import { colors } from "../../../src/constants/theme";
 
@@ -54,18 +54,20 @@ export default function ExperienciasStep() {
 
   return (
     <OnboardingShell
-      step={6}
+      step={9}
+      totalSteps={10}
+      accentColor={EMPREGADO_ACCENT}
       title="Suas experiências"
       subtitle="Opcional — ajuda contratantes a confiar no seu perfil."
       onBack={() => router.back()}
       onNext={() => {
-        setStep(7);
+        setStep(10);
         router.push("/(onboarding)/empregado/contato");
       }}
       secondaryAction={{
         label: "Pular esta etapa",
         onPress: () => {
-          setStep(7);
+          setStep(10);
           router.push("/(onboarding)/empregado/contato");
         },
       }}
@@ -108,6 +110,7 @@ export default function ExperienciasStep() {
           items={HIGHLIGHT_TAGS}
           selected={draft.highlightTags}
           onChange={(highlightTags) => setDraft((d) => ({ ...d, highlightTags }))}
+          accentColor={EMPREGADO_ACCENT}
         />
       </ScrollView>
     </OnboardingShell>
