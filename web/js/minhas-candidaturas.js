@@ -85,7 +85,7 @@ function renderList(rows) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (window.WebNav) WebNav.initWebNav();
-  const user = await TrabalhadorAuth.requireWorkerAuth("/trabalhe.html");
+  const user = await TrabalhadorAuth.requireWorkerOnboardingComplete("/trabalhe.html");
   if (!user) return;
 
   document.getElementById("btn-sair")?.addEventListener("click", async () => {

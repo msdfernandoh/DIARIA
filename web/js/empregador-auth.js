@@ -132,11 +132,13 @@ async function upsertEmployerProfile(userId, profile) {
 
 function isAlreadyRegisteredError(err) {
   const msg = (err?.message || "").toLowerCase();
+  const code = String(err?.code || "").toLowerCase();
   return (
+    code === "user_already_registered" ||
     msg.includes("already registered") ||
     msg.includes("already been registered") ||
-    msg.includes("user already") ||
-    err?.status === 422
+    msg.includes("user already registered") ||
+    msg.includes("email address is already registered")
   );
 }
 

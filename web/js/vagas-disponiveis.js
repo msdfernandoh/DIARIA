@@ -259,7 +259,7 @@ async function confirmApply(userId) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (window.WebNav) WebNav.initWebNav();
-  const user = await TrabalhadorAuth.requireWorkerAuth("/trabalhe.html");
+  const user = await TrabalhadorAuth.requireWorkerOnboardingComplete("/trabalhe.html");
   if (!user) return;
 
   userProfile = await TrabalhadorAuth.fetchWorkerProfile(user.id);

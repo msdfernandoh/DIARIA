@@ -1,4 +1,4 @@
-const REDIRECT_URL = "/vagas-disponiveis.html";
+const REDIRECT_AFTER_SIGNUP = "/completar-perfil-trabalhador.html";
 
 function wireCepField(form, cepInput, cidadeInput, estadoInput, hintEl) {
   if (!cepInput) return;
@@ -119,7 +119,7 @@ async function runWorkerSignup(form, fd, codigoStateRef, ui) {
   msg.className = msg.classList.contains("hero-form-msg")
     ? "form-msg hero-form-msg ok"
     : "form-msg ok";
-  window.location.href = result.redirect || REDIRECT_URL;
+  window.location.href = result.redirect || REDIRECT_AFTER_SIGNUP;
   return { type: "redirect" };
 }
 
@@ -256,7 +256,10 @@ function bindSignupForm(form, options) {
         const pwd = pwdInput?.value;
         if (!pwd) throw new Error("Informe sua senha.");
         await TrabalhadorAuth.signInWorker(email, pwd);
-        window.location.href = REDIRECT_URL;
+        const logged = await TrabalhadorAuth.getSessionUser();
+        window.location.href = logged
+          ? await TrabalhadorAuth.resolveWorkerLanding(logged)
+          : "/login-trabalhador.html";
       } catch (err) {
         msg.textContent = err.message || "E-mail ou senha incorretos.";
         msg.className = msg.classList.contains("hero-form-msg")

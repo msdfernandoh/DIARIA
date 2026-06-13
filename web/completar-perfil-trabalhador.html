@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seu perfil — Diária da Cidade</title>
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/trabalhador-web.css">
+<style>
+.skill-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.skill-chip{border:1.5px solid var(--line);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;background:#fff;cursor:pointer;}
+.skill-chip.on{border-color:var(--green);background:var(--green-l);color:var(--green-d);font-weight:800;}
+.week-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.day-chip{min-width:44px;padding:10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:13px;cursor:pointer;text-align:center;}
+.day-chip.on{border-color:var(--green);background:var(--green-l);color:var(--green-d);}
+.toggle-row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;}
+</style>
+</head>
+<body class="trabalhador-app">
+<header class="web-nav">
+  <a href="/trabalhe.html" class="logo"><span class="logo-mark">📅</span> Diária da Cidade</a>
+  <div id="web-nav-auth" class="web-nav-auth"></div>
+</header>
+<main class="page">
+  <h1>Quase lá! Complete seu perfil</h1>
+  <p class="sub">Escolha suas habilidades para ver vagas compatíveis. Disponibilidade é opcional — você pode pular.</p>
+  <form id="completar-perfil-form" class="form-card">
+    <label>Suas habilidades * (até 6)</label>
+    <div id="skills-grid" class="skill-grid"></div>
+    <p id="skills-count" class="form-msg" style="margin-top:-8px;"></p>
+    <label style="margin-top:8px;">Quando você está disponível? (opcional)</label>
+    <div class="toggle-row">
+      <span style="flex:1;font-weight:700;font-size:14px;">Disponível qualquer dia</span>
+      <input type="checkbox" id="qualquer-dia" name="qualquer_dia">
+    </div>
+    <div id="weekdays-wrap">
+      <div class="week-row" id="weekdays"></div>
+    </div>
+    <button type="button" class="btn-secondary" id="btn-skip-avail" style="margin-bottom:14px;">Definir disponibilidade depois</button>
+    <button type="submit" class="btn-primary" id="btn-salvar-perfil">Salvar e ver vagas →</button>
+    <p class="form-msg" role="status"></p>
+  </form>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js"></script>
+<script src="/js/job-categories.js"></script>
+<script src="/js/trabalhador-auth.js"></script>
+<script src="/js/web-nav.js"></script>
+<script src="/js/completar-perfil-trabalhador.js"></script>
+</body>
+</html>

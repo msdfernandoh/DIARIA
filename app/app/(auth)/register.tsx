@@ -51,7 +51,7 @@ export default function Register() {
       email: email.trim(),
       password: senha,
       options: {
-        data: { nome: nome.trim(), celular, tipo },
+        data: { nome: nome.trim(), celular, tipo, email: email.trim() },
       },
     });
     if (error) {

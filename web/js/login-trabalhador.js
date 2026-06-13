@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   if (window.WebNav) WebNav.initWebNav();
 
-  void TrabalhadorAuth.getSessionUser().then((user) => {
-    if (user) window.location.href = "/vagas-disponiveis.html";
+  void TrabalhadorAuth.getSessionUser().then(async (user) => {
+    if (user) {
+      window.location.href = await TrabalhadorAuth.resolveWorkerLanding(user);
+    }
   });
 
   const form = document.getElementById("login-form");
@@ -16,7 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const fd = new FormData(form);
     try {
       await TrabalhadorAuth.signInWorker(fd.get("email"), fd.get("password"));
-      window.location.href = "/vagas-disponiveis.html";
+      const user = await TrabalhadorAuth.getSessionUser();
+      window.location.href = user
+        ? await TrabalhadorAuth.resolveWorkerLanding(user)
+        : "/vagas-disponiveis.html";
     } catch (err) {
       msg.textContent = err.message || "Não foi possível entrar.";
       msg.className = "form-msg err";

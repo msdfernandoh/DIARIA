@@ -10,6 +10,7 @@
     { "source": "/vagas-disponiveis", "destination": "/vagas-disponiveis.html" },
     { "source": "/minhas-candidaturas", "destination": "/minhas-candidaturas.html" },
     { "source": "/login-trabalhador", "destination": "/login-trabalhador.html" },
+    { "source": "/completar-perfil-trabalhador", "destination": "/completar-perfil-trabalhador.html" },
     { "source": "/parceiro", "destination": "/parceiro.html" },
     { "source": "/admin", "destination": "/admin.html" }
   ],

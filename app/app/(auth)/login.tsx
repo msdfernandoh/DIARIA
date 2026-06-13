@@ -31,6 +31,29 @@ export default function Login() {
     const { data: userData } = await supabase.auth.getUser();
     const id = userData.user?.id;
     if (id) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", id)
+        .maybeSingle();
+      if (!profile && userData.user) {
+        const meta = userData.user.user_metadata || {};
+        const cel = String(meta.celular || "").replace(/\D/g, "");
+        if (cel.length >= 10 && meta.tipo) {
+          await supabase.from("users").upsert(
+            {
+              id,
+              nome: String(meta.nome || "Usuário").trim(),
+              celular: cel,
+              email: userData.user.email,
+              tipo: meta.tipo,
+              termo_aceito_em: new Date().toISOString(),
+              onboarding_completo: meta.tipo !== "empregado",
+            },
+            { onConflict: "id" }
+          );
+        }
+      }
       const next = await resolveAppRoute(id);
       router.replace(next);
     } else {
