@@ -3,6 +3,30 @@
  * Depende de: config.js, @supabase/supabase-js (CDN)
  */
 const SESSION_KEY = "diaria_trabalhador_session";
+const AUTH_MSG_KEY = "diaria_worker_auth_msg";
+
+function logCadastro(event, meta = {}) {
+  console.info("[TRABALHADOR_CADASTRO]", {
+    event,
+    ts: new Date().toISOString(),
+    ...meta,
+  });
+}
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function classifySignInFailure(error) {
+  const msg = (error?.message || "").toLowerCase();
+  if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
+    return "email_not_confirmed";
+  }
+  if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
+    return "wrong_password";
+  }
+  return "unknown";
+}
 
 function digitsOnly(s) {
   return String(s || "").replace(/\D/g, "");
@@ -128,21 +152,30 @@ function isAlreadyRegisteredError(err) {
   );
 }
 
-/** Supabase anti-enum: e-mail duplicado pode vir sem erro, só identities vazio. */
-async function trySignInAfterDuplicate(sb, emailNorm, password) {
+async function signInWithPasswordDetailed(sb, emailNorm, password) {
   const { data, error } = await sb.auth.signInWithPassword({
     email: emailNorm,
     password,
   });
-  if (error || !data.session?.user) return null;
-  return data.session;
+  if (error || !data.session?.user) {
+    return { ok: false, error: error || { message: "Sessão inválida." } };
+  }
+  return { ok: true, session: data.session };
 }
 
-async function finishWorkerSignupAfterSession(session, profile, codigo, codigoValido, codigoEmpreendedorId) {
-  await ensureSessionOnClient(session);
-  const userId = session.user.id;
-  await upsertWorkerProfile(userId, profile);
+async function hasSignupCoinsGranted(userId) {
+  const sb = getSupabase();
+  const { data } = await sb
+    .from("coin_transactions")
+    .select("id")
+    .eq("user_id", userId)
+    .in("reason", ["cadastro_sem_codigo", "cadastro_com_codigo"])
+    .limit(1);
+  return Boolean(data?.length);
+}
 
+async function grantSignupCoinsIfNeeded(userId, codigo, codigoValido, codigoEmpreendedorId) {
+  if (await hasSignupCoinsGranted(userId)) return;
   try {
     if (codigoValido && codigoEmpreendedorId && codigo) {
       await linkEntrepreneurGroup(userId, codigoEmpreendedorId, codigo);
@@ -153,9 +186,155 @@ async function finishWorkerSignupAfterSession(session, profile, codigo, codigoVa
   } catch (coinErr) {
     console.warn("Moedas/código pós-cadastro:", coinErr);
   }
+}
 
-  const landing = await resolveWorkerLanding(session.user);
-  return { ok: true, redirect: landing };
+async function mergeWorkerProfileFromSignup(userId, profile, existing) {
+  const sb = getSupabase();
+  const row = {
+    id: userId,
+    nome: profile.nome.trim(),
+    celular: digitsOnly(profile.celular),
+    email: profile.email ? profile.email.trim().toLowerCase() : null,
+    cep: profile.cep ? digitsOnly(profile.cep) : null,
+    cidade: profile.cidade?.trim() || null,
+    estado: profile.estado ? profile.estado.trim().slice(0, 2).toUpperCase() : null,
+    tipo: "empregado",
+    termo_aceito_em: existing?.termo_aceito_em || new Date().toISOString(),
+    onboarding_completo: existing?.onboarding_completo === true,
+  };
+  const { error } = await sb.from("users").upsert(row, { onConflict: "id" });
+  if (error) {
+    const msg = (error.message || "").toLowerCase();
+    if (error.code === "23505" || msg.includes("celular")) {
+      throw new Error(
+        "Este WhatsApp já está vinculado a outra conta. Entre com seu e-mail ou use outro número."
+      );
+    }
+    throw error;
+  }
+}
+
+/**
+ * Após sessão autenticada (cadastro novo ou e-mail já existente).
+ * Retorna objeto com `type` para a UI.
+ */
+async function resolveWorkerSignupAfterSession(
+  session,
+  profile,
+  codigo,
+  codigoValido,
+  codigoEmpreendedorId,
+  source
+) {
+  await ensureSessionOnClient(session);
+  const userId = session.user.id;
+  let existing = await fetchWorkerProfile(userId);
+
+  if (existing && existing.tipo && existing.tipo !== "empregado") {
+    logCadastro("TRABALHADOR_CADASTRO_TIPO_CONFLITO", { userId, tipo: existing.tipo });
+    return {
+      type: "profile_type_conflict",
+      email: profile.email,
+      message:
+        "Este e-mail já está em uso como outro perfil (contratante ou parceiro). Entre pela área correta ou use outro e-mail.",
+    };
+  }
+
+  const profileMissing = !existing;
+  if (profileMissing) {
+    await upsertWorkerProfile(userId, profile);
+    logCadastro(
+      source === "duplicate" ? "TRABALHADOR_PERFIL_AUSENTE_RECRIADO" : "TRABALHADOR_PERFIL_CRIADO",
+      { userId }
+    );
+    existing = await fetchWorkerProfile(userId);
+    await grantSignupCoinsIfNeeded(userId, codigo, codigoValido, codigoEmpreendedorId);
+  } else if (existing.onboarding_completo !== true) {
+    await mergeWorkerProfileFromSignup(userId, profile, existing);
+    logCadastro("TRABALHADOR_CADASTRO_RETOMADO", { userId });
+    existing = await fetchWorkerProfile(userId);
+    await grantSignupCoinsIfNeeded(userId, codigo, codigoValido, codigoEmpreendedorId);
+  } else {
+    logCadastro("TRABALHADOR_CADASTRO_COMPLETO_EXISTENTE", { userId });
+    const landing = await resolveWorkerLanding(session.user);
+    return {
+      type: "already_complete",
+      email: profile.email,
+      redirectTo: landing,
+      message: "Este e-mail já possui cadastro. Acesse sua conta com sua senha.",
+    };
+  }
+
+  const redirectTo = await resolveWorkerLanding(session.user);
+  if (profileMissing && source === "signup") {
+    return {
+      type: "created",
+      email: profile.email,
+      redirectTo,
+      message: "Conta criada! Redirecionando…",
+    };
+  }
+  if (profileMissing) {
+    return {
+      type: "auth_without_profile",
+      email: profile.email,
+      redirectTo,
+      message:
+        "Encontramos seu acesso, mas seu perfil ainda não foi finalizado. Vamos completar agora.",
+    };
+  }
+  return {
+    type: "resume_onboarding",
+    email: profile.email,
+    redirectTo,
+    message:
+      "Encontramos um cadastro iniciado com este e-mail. Vamos continuar de onde você parou.",
+  };
+}
+
+async function handleDuplicateEmailSignup(sb, emailNorm, password, profilePayload, codigo, codigoValido, codigoEmpreendedorId) {
+  logCadastro("TRABALHADOR_AUTH_EXISTENTE", { email: emailNorm });
+  const signIn = await signInWithPasswordDetailed(sb, emailNorm, password);
+  if (signIn.ok) {
+    logCadastro("TRABALHADOR_SIGNIN_DUPLICADO_SUCESSO", { userId: signIn.session.user.id });
+    return resolveWorkerSignupAfterSession(
+      signIn.session,
+      profilePayload,
+      codigo,
+      codigoValido,
+      codigoEmpreendedorId,
+      "duplicate"
+    );
+  }
+
+  logCadastro("TRABALHADOR_SIGNIN_DUPLICADO_FALHOU", {
+    reason: classifySignInFailure(signIn.error),
+  });
+  const kind = classifySignInFailure(signIn.error);
+  if (kind === "email_not_confirmed") {
+    logCadastro("TRABALHADOR_CADASTRO_EMAIL_NAO_CONFIRMADO", { email: emailNorm });
+    return {
+      type: "email_not_confirmed",
+      email: emailNorm,
+      message:
+        "Seu cadastro foi iniciado, mas o e-mail ainda precisa ser confirmado. Verifique sua caixa de entrada.",
+    };
+  }
+  if (kind === "wrong_password") {
+    logCadastro("TRABALHADOR_CADASTRO_SENHA_INVALIDA", { email: emailNorm });
+    return {
+      type: "wrong_password_existing_email",
+      email: emailNorm,
+      message:
+        "Este e-mail já possui cadastro. Informe a senha correta ou use recuperação de senha.",
+    };
+  }
+  return {
+    type: "wrong_password_existing_email",
+    email: emailNorm,
+    message:
+      "Este e-mail já possui um cadastro iniciado. Entre com sua senha ou use recuperação de senha para continuar.",
+  };
 }
 
 async function validateEntrepreneurCode(code) {
@@ -253,9 +432,6 @@ async function grantSignupCoins(userId, withCode, refId) {
   }
 }
 
-/**
- * Cadastro novo trabalhador.
- */
 async function signUpWorker({
   nome,
   celular,
@@ -269,13 +445,15 @@ async function signUpWorker({
   codigoEmpreendedorId,
 }) {
   const sb = getSupabase();
-  const emailNorm = String(email || "").trim().toLowerCase();
+  const emailNorm = normalizeEmail(email);
   if (!emailNorm.includes("@")) throw new Error("Informe um e-mail válido.");
   const cel = digitsOnly(celular);
   if (cel.length < 10) throw new Error("Informe um WhatsApp válido.");
   if (String(password || "").length < 8) {
     throw new Error("A senha deve ter no mínimo 8 caracteres.");
   }
+
+  logCadastro("TRABALHADOR_CADASTRO_INICIADO", { email: emailNorm, channel: "web" });
 
   const profilePayload = {
     nome,
@@ -303,12 +481,17 @@ async function signUpWorker({
 
   if (error) {
     if (isAlreadyRegisteredError(error)) {
-      const resumed = await trySignInAfterDuplicate(sb, emailNorm, password);
-      if (resumed) {
-        return finishWorkerSignupAfterSession(resumed, profilePayload, codigo, codigoValido, codigoEmpreendedorId);
-      }
-      return { existing: true, email: emailNorm };
+      return handleDuplicateEmailSignup(
+        sb,
+        emailNorm,
+        password,
+        profilePayload,
+        codigo,
+        codigoValido,
+        codigoEmpreendedorId
+      );
     }
+    logCadastro("TRABALHADOR_CADASTRO_ERRO_DESCONHECIDO", { message: error.message });
     throw error;
   }
 
@@ -317,28 +500,42 @@ async function signUpWorker({
   if (!user) throw new Error("Não foi possível criar a conta.");
 
   if (!user.identities || user.identities.length === 0) {
-    const resumed = await trySignInAfterDuplicate(sb, emailNorm, password);
-    if (resumed) {
-      return finishWorkerSignupAfterSession(resumed, profilePayload, codigo, codigoValido, codigoEmpreendedorId);
-    }
-    return { existing: true, email: emailNorm };
+    return handleDuplicateEmailSignup(
+      sb,
+      emailNorm,
+      password,
+      profilePayload,
+      codigo,
+      codigoValido,
+      codigoEmpreendedorId
+    );
   }
 
   if (!session) {
+    logCadastro("TRABALHADOR_CADASTRO_EMAIL_NAO_CONFIRMADO", { email: emailNorm });
     return {
-      ok: true,
-      needsEmailConfirm: true,
+      type: "email_not_confirmed",
       email: emailNorm,
-      redirect: "/login-trabalhador.html",
+      message:
+        "Conta criada! Confirme o e-mail que enviamos e depois entre para continuar o cadastro.",
+      redirectTo: "/login-trabalhador.html",
     };
   }
 
-  return finishWorkerSignupAfterSession(session, profilePayload, codigo, codigoValido, codigoEmpreendedorId);
+  logCadastro("TRABALHADOR_AUTH_CRIADO", { userId: user.id });
+  return resolveWorkerSignupAfterSession(
+    session,
+    profilePayload,
+    codigo,
+    codigoValido,
+    codigoEmpreendedorId,
+    "signup"
+  );
 }
 
 async function signInWorker(email, password) {
   const sb = getSupabase();
-  const emailNorm = String(email || "").trim().toLowerCase();
+  const emailNorm = normalizeEmail(email);
   const { data, error } = await sb.auth.signInWithPassword({
     email: emailNorm,
     password,
@@ -397,6 +594,17 @@ async function completeWorkerWebOnboarding(userId, { skills, diasSemana, disponi
     throw new Error("Escolha pelo menos uma habilidade.");
   }
 
+  let profile = await fetchWorkerProfile(userId);
+  if (!profile) {
+    const { data: authData } = await sb.auth.getUser();
+    const authUser = authData.user;
+    if (!authUser) {
+      throw new Error("Sua sessão expirou. Entre novamente para continuar seu cadastro.");
+    }
+    await ensureWorkerProfileFromAuth(authUser);
+    profile = await fetchWorkerProfile(userId);
+  }
+
   await sb.from("user_skills").delete().eq("user_id", userId);
   const { error: skErr } = await sb.from("user_skills").insert(
     skills.map((skill) => ({ user_id: userId, skill }))
@@ -448,6 +656,8 @@ async function completeWorkerWebOnboarding(userId, { skills, diasSemana, disponi
     .update({ onboarding_completo: true })
     .eq("id", userId);
   if (userErr) throw userErr;
+
+  logCadastro("TRABALHADOR_ONBOARDING_FINALIZADO", { userId });
 }
 
 function mapAuthError(error) {
@@ -473,10 +683,17 @@ async function resolveWorkerLanding(user) {
   return "/vagas-disponiveis.html";
 }
 
-async function requireWorkerAuth(redirectTo = "/trabalhe.html") {
+async function requireWorkerAuth(redirectTo = "/trabalhe.html", options = {}) {
   const user = await getSessionUser();
   if (!user) {
-    window.location.href = redirectTo;
+    if (options.sessionExpiredMessage) {
+      try {
+        sessionStorage.setItem(AUTH_MSG_KEY, options.sessionExpiredMessage);
+      } catch {
+        /* ignore */
+      }
+    }
+    window.location.href = options.loginRedirect || redirectTo;
     return null;
   }
   try {
@@ -488,10 +705,40 @@ async function requireWorkerAuth(redirectTo = "/trabalhe.html") {
   } catch (e) {
     console.error(e);
     await signOutWorker();
-    window.location.href = redirectTo;
+    if (options.sessionExpiredMessage) {
+      try {
+        sessionStorage.setItem(AUTH_MSG_KEY, options.sessionExpiredMessage);
+      } catch {
+        /* ignore */
+      }
+    }
+    window.location.href = options.loginRedirect || redirectTo;
     return null;
   }
   return user;
+}
+
+async function redirectLoggedInWorkerFromSignupPage() {
+  const user = await getSessionUser();
+  if (!user) return false;
+  try {
+    const landing = await resolveWorkerLanding(user);
+    window.location.replace(landing);
+    return true;
+  } catch (e) {
+    console.warn("redirectLoggedInWorkerFromSignupPage:", e);
+    return false;
+  }
+}
+
+function consumeAuthFlashMessage() {
+  try {
+    const msg = sessionStorage.getItem(AUTH_MSG_KEY);
+    if (msg) sessionStorage.removeItem(AUTH_MSG_KEY);
+    return msg;
+  } catch {
+    return null;
+  }
 }
 
 async function requireWorkerOnboardingComplete(redirectTo = "/trabalhe.html") {
@@ -521,6 +768,7 @@ async function buscarCep(cep) {
 
 window.TrabalhadorAuth = {
   SESSION_KEY,
+  AUTH_MSG_KEY,
   digitsOnly,
   maskPhone,
   maskCep,
@@ -539,5 +787,8 @@ window.TrabalhadorAuth = {
   ensureWorkerProfileFromAuth,
   completeWorkerWebOnboarding,
   resolveWorkerLanding,
+  redirectLoggedInWorkerFromSignupPage,
+  consumeAuthFlashMessage,
   buscarCep,
+  logCadastro,
 };

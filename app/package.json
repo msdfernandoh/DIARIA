@@ -37,7 +37,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test:fase1": "ts-node --project tsconfig.scripts.json --transpile-only src/tests/fase1-checklist.ts",
-    "test:fase2": "ts-node --project tsconfig.scripts.json --transpile-only src/tests/fase2-checklist.ts"
+    "test:fase2": "ts-node --project tsconfig.scripts.json --transpile-only src/tests/fase2-checklist.ts",
+    "test:trabalhador": "ts-node --project tsconfig.scripts.json --transpile-only src/tests/trabalhador-jornada-checklist.ts"
   },
   "private": true
 }

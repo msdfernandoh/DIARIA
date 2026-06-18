@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { colors } from "../../src/constants/theme";
 import { resolveAppRoute } from "../../src/lib/authRouting";
+import { registerEmpregado } from "../../src/lib/empregadoAuth";
 import {
   supabase,
   upsertUserProfile,
@@ -27,6 +28,72 @@ export default function Register() {
   const [senha, setSenha] = useState("");
   const [aceite, setAceite] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  async function onRegisterEmpregado() {
+    const outcome = await registerEmpregado({
+      nome: nome.trim(),
+      celular,
+      email: email.trim(),
+      senha,
+    });
+
+    switch (outcome.type) {
+      case "created":
+      case "resume_onboarding":
+      case "auth_without_profile":
+        router.replace(outcome.route as never);
+        break;
+      case "already_complete":
+        Alert.alert("Conta existente", outcome.message, [
+          { text: "Continuar", onPress: () => router.replace(outcome.route as never) },
+        ]);
+        break;
+      case "email_not_confirmed":
+        Alert.alert("Confirme seu e-mail", outcome.message);
+        break;
+      case "wrong_password":
+        Alert.alert("E-mail já cadastrado", outcome.message, [
+          { text: "Ir para entrar", onPress: () => router.replace("/(auth)/login") },
+        ]);
+        break;
+      case "profile_type_conflict":
+        Alert.alert("E-mail em outro perfil", outcome.message);
+        break;
+      case "error":
+        Alert.alert("Erro", outcome.message);
+        break;
+      default:
+        Alert.alert("Erro", "Não foi possível concluir o cadastro.");
+    }
+  }
+
+  async function onRegisterLegacy() {
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password: senha,
+      options: {
+        data: { nome: nome.trim(), celular, tipo, email: email.trim() },
+      },
+    });
+    if (error) {
+      Alert.alert("Erro", error.message);
+      return;
+    }
+    const userId = data.user?.id;
+    if (!userId) {
+      Alert.alert("Erro", "Não foi possível criar a conta.");
+      return;
+    }
+    await upsertUserProfile({
+      id: userId,
+      nome: nome.trim(),
+      celular,
+      email: email.trim(),
+      tipo,
+    });
+    const next = await resolveAppRoute(userId);
+    router.replace(next);
+  }
 
   async function onRegister() {
     if (!nome.trim() || celular.replace(/\D/g, "").length < 10) {
@@ -47,34 +114,12 @@ export default function Register() {
     }
 
     setLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email: email.trim(),
-      password: senha,
-      options: {
-        data: { nome: nome.trim(), celular, tipo, email: email.trim() },
-      },
-    });
-    if (error) {
-      setLoading(false);
-      Alert.alert("Erro", error.message);
-      return;
-    }
-    const userId = data.user?.id;
-    if (!userId) {
-      setLoading(false);
-      Alert.alert("Erro", "Não foi possível criar a conta.");
-      return;
-    }
     try {
-      await upsertUserProfile({
-        id: userId,
-        nome: nome.trim(),
-        celular,
-        email: email.trim(),
-        tipo,
-      });
-      const next = await resolveAppRoute(userId);
-      router.replace(next);
+      if (tipo === "empregado") {
+        await onRegisterEmpregado();
+      } else {
+        await onRegisterLegacy();
+      }
     } catch (e) {
       Alert.alert("Perfil", e instanceof Error ? e.message : "Erro ao salvar perfil.");
     } finally {

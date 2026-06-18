@@ -1,14 +1,26 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (window.WebNav) WebNav.initWebNav();
+
+  const params = new URLSearchParams(window.location.search);
+  const next = params.get("next") || "";
+
+  const flash = TrabalhadorAuth.consumeAuthFlashMessage?.();
+  const msg = document.getElementById("form-msg");
+  if (flash && msg) {
+    msg.textContent = flash;
+    msg.className = "form-msg warn";
+  }
 
   void TrabalhadorAuth.getSessionUser().then(async (user) => {
     if (user) {
-      window.location.href = await TrabalhadorAuth.resolveWorkerLanding(user);
+      const landing = next && next.startsWith("/")
+        ? next
+        : await TrabalhadorAuth.resolveWorkerLanding(user);
+      window.location.href = landing;
     }
   });
 
   const form = document.getElementById("login-form");
-  const msg = document.getElementById("form-msg");
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     msg.textContent = "";
@@ -19,6 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await TrabalhadorAuth.signInWorker(fd.get("email"), fd.get("password"));
       const user = await TrabalhadorAuth.getSessionUser();
+      if (next && next.startsWith("/")) {
+        window.location.href = next;
+        return;
+      }
       window.location.href = user
         ? await TrabalhadorAuth.resolveWorkerLanding(user)
         : "/vagas-disponiveis.html";

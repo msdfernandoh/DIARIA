@@ -11,8 +11,25 @@ const WEEKDAYS = [
 document.addEventListener("DOMContentLoaded", async () => {
   if (window.WebNav) WebNav.initWebNav();
 
-  const user = await TrabalhadorAuth.requireWorkerAuth("/trabalhe.html");
+  const user = await TrabalhadorAuth.requireWorkerAuth("/login-trabalhador.html", {
+    sessionExpiredMessage:
+      "Sua sessão expirou. Entre novamente para continuar seu cadastro.",
+    loginRedirect: "/login-trabalhador.html?next=/completar-perfil-trabalhador.html",
+  });
   if (!user) return;
+
+  try {
+    await TrabalhadorAuth.ensureWorkerProfileFromAuth(user);
+  } catch (err) {
+    const main = document.querySelector("main.page");
+    if (main) {
+      const p = document.createElement("p");
+      p.className = "form-msg err";
+      p.textContent = err.message || "Não foi possível carregar seu perfil.";
+      main.prepend(p);
+    }
+    return;
+  }
 
   const profile = await TrabalhadorAuth.fetchWorkerProfile(user.id);
   if (profile?.onboarding_completo === true) {

@@ -1,4 +1,23 @@
 const REDIRECT_AFTER_SIGNUP = "/completar-perfil-trabalhador.html";
+const LOGIN_URL = "/login-trabalhador.html";
+
+const REDIRECT_OUTCOME_TYPES = new Set([
+  "created",
+  "resume_onboarding",
+  "auth_without_profile",
+  "already_complete",
+]);
+
+const LOGIN_PANEL_TYPES = new Set(["wrong_password_existing_email"]);
+
+function setMsgClass(msg, variant) {
+  const hero = msg.classList.contains("hero-form-msg");
+  const base = hero ? "form-msg hero-form-msg" : "form-msg";
+  if (variant === "ok") return `${base} ok`;
+  if (variant === "warn") return `${base} warn`;
+  if (variant === "err") return `${base} err`;
+  return base;
+}
 
 function wireCepField(form, cepInput, cidadeInput, estadoInput, hintEl) {
   if (!cepInput) return;
@@ -85,8 +104,62 @@ async function resolveCodigoState(fd, codigoStateRef) {
   return codigoStateRef.current;
 }
 
-async function runWorkerSignup(form, fd, codigoStateRef, ui) {
-  const { msg, submitBtn } = ui;
+function applySignupOutcome(outcome, ui, helpers) {
+  const { msg, submitBtn, existingPanel, loginBlock, emailField } = ui;
+  const { pendingEmailRef, showLoginPanel } = helpers;
+
+  if (!outcome?.type) {
+    return { handled: false };
+  }
+
+  pendingEmailRef.current = outcome.email || pendingEmailRef.current;
+
+  if (REDIRECT_OUTCOME_TYPES.has(outcome.type)) {
+    msg.textContent = outcome.message || "Redirecionando…";
+    msg.className = setMsgClass(msg, "ok");
+    const target = outcome.redirectTo || REDIRECT_AFTER_SIGNUP;
+    window.location.href = target;
+    return { handled: true };
+  }
+
+  if (outcome.type === "email_not_confirmed") {
+    msg.textContent =
+      outcome.message ||
+      "Seu cadastro foi iniciado, mas o e-mail ainda precisa ser confirmado. Verifique sua caixa de entrada.";
+    msg.className = setMsgClass(msg, "warn");
+    if (submitBtn) submitBtn.disabled = false;
+    return { handled: true };
+  }
+
+  if (outcome.type === "profile_type_conflict") {
+    msg.textContent = outcome.message || "Este e-mail já está em uso em outro perfil.";
+    msg.className = setMsgClass(msg, "err");
+    if (submitBtn) submitBtn.disabled = false;
+    return { handled: true };
+  }
+
+  if (outcome.type === "error") {
+    msg.textContent = outcome.message || "Não foi possível concluir o cadastro agora. Tente novamente.";
+    msg.className = setMsgClass(msg, "err");
+    if (submitBtn) submitBtn.disabled = false;
+    return { handled: true };
+  }
+
+  if (LOGIN_PANEL_TYPES.has(outcome.type)) {
+    showLoginPanel();
+    if (emailField) emailField.readOnly = true;
+    if (submitBtn) submitBtn.style.display = "none";
+    msg.textContent = outcome.message || "Este e-mail já possui cadastro.";
+    msg.className = setMsgClass(msg, outcome.type === "already_complete" ? "warn" : "warn");
+    if (submitBtn) submitBtn.disabled = false;
+    return { handled: true };
+  }
+
+  return { handled: false };
+}
+
+async function runWorkerSignup(form, fd, codigoStateRef, ui, helpers) {
+  const { msg } = ui;
   const cidade = String(fd.get("cidade") || "").trim();
   const estado = String(fd.get("estado") || "").trim();
   if (!cidade || !estado) {
@@ -109,18 +182,7 @@ async function runWorkerSignup(form, fd, codigoStateRef, ui) {
     codigoEmpreendedorId: st.codigoEmpreendedorId,
   });
 
-  if (result.existing) {
-    return { type: "existing", email: result.email };
-  }
-  if (result.needsEmailConfirm) {
-    return { type: "confirm", email: result.email || fd.get("email") };
-  }
-  msg.textContent = "Conta criada! Redirecionando…";
-  msg.className = msg.classList.contains("hero-form-msg")
-    ? "form-msg hero-form-msg ok"
-    : "form-msg ok";
-  window.location.href = result.redirect || REDIRECT_AFTER_SIGNUP;
-  return { type: "redirect" };
+  return applySignupOutcome(result, ui, helpers);
 }
 
 function bindSignupForm(form, options) {
@@ -164,12 +226,21 @@ function bindSignupForm(form, options) {
   const loginBlock = loginBlockId ? document.getElementById(loginBlockId) : null;
   const loginBtn = existingLoginBtnId ? document.getElementById(existingLoginBtnId) : null;
   const pwdInput = existingPasswordId ? document.getElementById(existingPasswordId) : null;
-  let pendingEmail = "";
+  const pendingEmailRef = { current: "" };
+  let submitting = false;
+
+  function showLoginPanel() {
+    if (existingPanel) existingPanel.classList.remove("panel-hidden");
+    if (loginBlock) loginBlock.classList.remove("panel-hidden");
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (submitting) return;
+
     const msg = form.querySelector(".form-msg");
     const submitBtn = submitBtnId ? document.getElementById(submitBtnId) : form.querySelector('button[type="submit"]');
+    const emailField = form.querySelector('[name="email"]');
 
     if (loginBlock && !loginBlock.classList.contains("panel-hidden")) {
       return;
@@ -181,67 +252,38 @@ function bindSignupForm(form, options) {
     if (requireCheckboxes) {
       if (!form.querySelector('[name="termos"]')?.checked) {
         msg.textContent = "Aceite os Termos de Uso para continuar.";
-        msg.className = msg.classList.contains("hero-form-msg")
-          ? "form-msg hero-form-msg err"
-          : "form-msg err";
+        msg.className = setMsgClass(msg, "err");
         return;
       }
       if (!form.querySelector('[name="pagamentos"]')?.checked) {
         msg.textContent = "Confirme que entende como funcionam os pagamentos.";
-        msg.className = msg.classList.contains("hero-form-msg")
-          ? "form-msg hero-form-msg err"
-          : "form-msg err";
+        msg.className = setMsgClass(msg, "err");
         return;
       }
     }
 
     msg.textContent = "";
-    msg.className = msg.classList.contains("hero-form-msg") ? "form-msg hero-form-msg" : "form-msg";
+    msg.className = setMsgClass(msg, null);
     if (submitBtn) submitBtn.disabled = true;
+    submitting = true;
 
     try {
       const fd = new FormData(form);
       if (fd.get("website")) {
         if (submitBtn) submitBtn.disabled = false;
+        submitting = false;
         return;
       }
 
-      const outcome = await runWorkerSignup(form, fd, codigoStateRef, { msg, submitBtn });
-
-      if (outcome.type === "existing") {
-        pendingEmail = outcome.email;
-        if (existingPanel) existingPanel.classList.remove("panel-hidden");
-        if (loginBlock) loginBlock.classList.remove("panel-hidden");
-        const emailField = form.querySelector('[name="email"]');
-        if (emailField) emailField.readOnly = true;
-        if (submitBtn) submitBtn.style.display = "none";
-        msg.textContent = "Este e-mail já está cadastrado. Use sua senha para entrar.";
-        msg.className = msg.classList.contains("hero-form-msg")
-          ? "form-msg hero-form-msg warn"
-          : "form-msg warn";
-        if (submitBtn) submitBtn.disabled = false;
-        return;
-      }
-
-      if (outcome.type === "confirm") {
-        pendingEmail = outcome.email;
-        if (existingPanel) existingPanel.classList.remove("panel-hidden");
-        if (loginBlock) loginBlock.classList.remove("panel-hidden");
-        if (submitBtn) submitBtn.style.display = "none";
-        msg.textContent =
-          "Conta criada! Confirme o e-mail que enviamos e depois entre em «Entrar».";
-        msg.className = msg.classList.contains("hero-form-msg")
-          ? "form-msg hero-form-msg ok"
-          : "form-msg ok";
-        if (submitBtn) submitBtn.disabled = false;
-        return;
-      }
+      const helpers = { pendingEmailRef, showLoginPanel };
+      const ui = { msg, submitBtn, existingPanel, loginBlock, emailField };
+      await runWorkerSignup(form, fd, codigoStateRef, ui, helpers);
     } catch (err) {
       msg.textContent = err.message || "Não foi possível cadastrar. Tente novamente.";
-      msg.className = msg.classList.contains("hero-form-msg")
-        ? "form-msg hero-form-msg err"
-        : "form-msg err";
+      msg.className = setMsgClass(msg, "err");
       if (submitBtn) submitBtn.disabled = false;
+    } finally {
+      submitting = false;
     }
   });
 
@@ -249,22 +291,20 @@ function bindSignupForm(form, options) {
     loginBtn.addEventListener("click", async () => {
       const msg = form.querySelector(".form-msg");
       msg.textContent = "";
-      msg.className = msg.classList.contains("hero-form-msg") ? "form-msg hero-form-msg" : "form-msg";
+      msg.className = setMsgClass(msg, null);
       loginBtn.disabled = true;
       try {
-        const email = pendingEmail || form.querySelector('[name="email"]')?.value;
+        const email = pendingEmailRef.current || form.querySelector('[name="email"]')?.value;
         const pwd = pwdInput?.value;
         if (!pwd) throw new Error("Informe sua senha.");
         await TrabalhadorAuth.signInWorker(email, pwd);
         const logged = await TrabalhadorAuth.getSessionUser();
         window.location.href = logged
           ? await TrabalhadorAuth.resolveWorkerLanding(logged)
-          : "/login-trabalhador.html";
+          : LOGIN_URL;
       } catch (err) {
         msg.textContent = err.message || "E-mail ou senha incorretos.";
-        msg.className = msg.classList.contains("hero-form-msg")
-          ? "form-msg hero-form-msg err"
-          : "form-msg err";
+        msg.className = setMsgClass(msg, "err");
         loginBtn.disabled = false;
       }
     });
@@ -299,7 +339,23 @@ function initTrabalheCadastro() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (window.WebNav) WebNav.initWebNav();
+
+  const flash = TrabalhadorAuth.consumeAuthFlashMessage?.();
+  if (flash) {
+    const anchor = document.querySelector("#signup-trabalhador-rapido-form .form-msg") ||
+      document.querySelector("#signup-trabalhador-form .form-msg");
+    if (anchor) {
+      anchor.textContent = flash;
+      anchor.className = anchor.classList.contains("hero-form-msg")
+        ? "form-msg hero-form-msg warn"
+        : "form-msg warn";
+    }
+  }
+
+  const redirected = await TrabalhadorAuth.redirectLoggedInWorkerFromSignupPage?.();
+  if (redirected) return;
+
   initTrabalheCadastro();
 });
